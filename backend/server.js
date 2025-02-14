@@ -21,3 +21,6 @@ app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
 const employeeRoutes = require('./src/routes/employeeRoutes');
 app.use('/employees', employeeRoutes);
+
+const contractRoutes = require('./src/routes/contractRoutes');
+app.use('/contracts', contractRoutes);

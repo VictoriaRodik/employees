@@ -1,7 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const { getEmployees } = require('../controllers/employeeController');
+const {
+  getEmployees,
+  createEmployee,
+  editEmployee,
+  removeEmployee,
+} = require("../controllers/employeeController");
 
-router.get('/', getEmployees);
+router.get("/", getEmployees);
+router.post("/", createEmployee);
+router.put("/:id", editEmployee);
+router.delete("/:id", removeEmployee);
 
 module.exports = router;
