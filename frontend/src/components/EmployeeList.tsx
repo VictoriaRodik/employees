@@ -4,19 +4,18 @@ import Search from "../components/Search";
 import Sort from "../components/Sort";
 import AddEmployeeButton from "../components/AddEmployeeButton";
 import EmployeeFormModal from "../components/EmployeeFormModal";
-import {
-  useEmployees,
-  useAddEmployee,
-  useUpdateEmployee,
-  useDeleteEmployee,
-} from "../hooks/useEmployees";
+import { useEmployees } from "../hooks/useEmployees";
 import { EmployeeInterface } from "../types/employee";
 
 const EmployeeList = () => {
-  const { data: employees = [], isLoading, error } = useEmployees();
-  const addEmployee = useAddEmployee();
-  const updateEmployee = useUpdateEmployee();
-  const deleteEmployee = useDeleteEmployee();
+  const {
+    data: employees = [],
+    isLoading,
+    error,
+    createEmployee,
+    updateEmployee,
+    deleteEmployee,
+  } = useEmployees();
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("fullName");
@@ -30,6 +29,7 @@ const EmployeeList = () => {
   };
 
   const handleEdit = (employee: EmployeeInterface) => {
+    console.log(employee);
     setEditingEmployee(employee);
     setModalOpen(true);
   };
@@ -42,7 +42,7 @@ const EmployeeList = () => {
     if (employee.id) {
       updateEmployee.mutate(employee);
     } else {
-      addEmployee.mutate(employee);
+      createEmployee.mutate(employee);
     }
     setModalOpen(false);
   };
@@ -61,7 +61,6 @@ const EmployeeList = () => {
 
   return (
     <div>
-      <AddEmployeeButton onClick={handleAdd} />
       <Search value={search} onChange={(e) => setSearch(e.target.value)} />
       <Sort
         value={sort}
@@ -72,15 +71,18 @@ const EmployeeList = () => {
         ]}
       />
       <EmployeeTable
-        employees={employees}
+        employees={sortedEmployees}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
+      <AddEmployeeButton onClick={handleAdd} />
       <EmployeeFormModal
+        key={editingEmployee?.id || "new"}
         open={modalOpen}
+        title={editingEmployee ? `Редагувати` : "Додати"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmployee}
+        initialValues={editingEmployee || undefined}
       />
     </div>
   );

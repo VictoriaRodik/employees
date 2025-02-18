@@ -1,39 +1,54 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { fetchEmployees, addEmployee, updateEmployee, deleteEmployee } from "../api/employees";
+import axios from "axios";
+import { EmployeeInterface } from "../types/employee";
+import { mapFromApiEmployee, mapToApiEmployee } from "../utils/employeeMapper";
+
+const API_URL = import.meta.env.VITE_API_URL + "/employees";
 
 export const useEmployees = () => {
-  return useQuery({ queryKey: ["employees"], queryFn: fetchEmployees });
-};
-
-export const useAddEmployee = () => {
   const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: addEmployee,
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["employees"],
+    queryFn: async () => {
+      const response = await axios.get(API_URL);
+      return response.data.map(mapFromApiEmployee);
+    },
+  });
+
+  const createEmployee = useMutation({
+    mutationFn: async (employee: EmployeeInterface) => {
+      await axios.post(API_URL, mapToApiEmployee(employee));
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
-};
 
-export const useUpdateEmployee = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: updateEmployee,
+  const updateEmployee = useMutation({
+    mutationFn: async (employee: EmployeeInterface) => {
+      await axios.put(`${API_URL}/${employee.id}`, mapToApiEmployee(employee));
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
-};
 
-export const useDeleteEmployee = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: deleteEmployee,
+  const deleteEmployee = useMutation({
+    mutationFn: async (id: number) => {
+      await axios.delete(`${API_URL}/${id}`);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
     },
   });
+
+  return {
+    data,
+    isLoading,
+    error,
+    createEmployee,
+    updateEmployee,
+    deleteEmployee,
+  };
 };

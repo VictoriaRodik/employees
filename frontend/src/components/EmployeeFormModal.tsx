@@ -5,13 +5,15 @@ import { EmployeeInterface } from "../types/employee";
 interface EmployeeFormModalProps {
   open: boolean;
   onClose: () => void;
+  onSubmit: (employee: EmployeeInterface) => void;
+  title: string;
   initialValues?: EmployeeInterface;
 }
 
-const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ open, onClose, initialValues }) => {
+const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ open, onClose, title, onSubmit, initialValues }) => {
   return (
-    <Modal open={open} onClose={onClose}>
-      <EmployeeForm initialValues={initialValues} onClose={onClose} />
+    <Modal open={open} onClose={onClose} title={title}>
+      <EmployeeForm onSubmit={onSubmit} initialValues={initialValues} onClose={onClose} />
     </Modal>
   );
 };

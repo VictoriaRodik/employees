@@ -1,32 +1,28 @@
 import React from "react";
 import GeneralTable from "../components/Table";
 import Actions from "../components/Actions";
-
-interface Employee {
-  id: number;
-  fullName: string;
-  personnelNumber: string;
-  taxNumber: string;
-}
+import { EmployeeInterface } from "../types/employee";
 
 interface EmployeeTableProps {
-  employees: Employee[];
-  onEdit: (employee: Employee) => void;
-  onDelete: (employee: Employee) => void;
+  employees: EmployeeInterface[];
+  onEdit: (employee: EmployeeInterface) => void;
+  onDelete: (id: number) => void;
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDelete }) => {
   const columns = [
-    { key: "fullName" as keyof Employee, label: "ПІБ" },
-    { key: "personnelNumber" as keyof Employee, label: "Табельний номер" },
-    { key: "taxNumber" as keyof Employee, label: "ІПН" },
+    { key: "fullName" as keyof EmployeeInterface, label: "ПІБ" },
+    { key: "personnelNumber" as keyof EmployeeInterface, label: "Табельний номер" },
+    { key: "taxNumber" as keyof EmployeeInterface, label: "ІПН" },
   ];
 
   return (
     <GeneralTable
       data={employees}
       columns={columns}
-      renderActions={(employee) => <Actions onEdit={() => onEdit(employee)} onDelete={() => onDelete(employee)} />}
+      renderActions={(employee) => (
+        <Actions onEdit={() => onEdit(employee)} onDelete={() => onDelete(employee.id)} />
+      )}
     />
   );
 };

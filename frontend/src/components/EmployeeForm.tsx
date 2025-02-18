@@ -3,10 +3,19 @@ import * as Yup from "yup";
 import { Grid2, Button } from "@mui/material";
 import TextInput from "./TextInput";
 import { EmployeeInterface } from "../types/employee";
-import { useAddEmployee } from "../hooks/useEmployees";
+import { useEmployees } from "../hooks/useEmployees";
 
-const EmployeeForm: React.FC = () => {
-  const addEmployee = useAddEmployee();
+interface EmployeeFormProps {
+  initialValues?: EmployeeInterface | null;
+  onClose: () => void;
+  onSubmit: (employee: EmployeeInterface) => void;
+}
+
+const EmployeeForm: React.FC<EmployeeFormProps> = ({
+  initialValues,
+  onClose,
+}) => {
+  const { createEmployee, updateEmployee } = useEmployees();
 
   const validationSchema = Yup.object({
     taxNumber: Yup.string()
@@ -27,21 +36,28 @@ const EmployeeForm: React.FC = () => {
 
   return (
     <Formik<EmployeeInterface>
-      initialValues={{
-        id: 0,
-        taxNumber: "",
-        fullName: "",
-        address: "",
-        passportSeries: "",
-        passportNumber: "",
-        passportIssueDate: "",
-        passportIssuedBy: "",
-        personnelNumber: "",
-      }}
+      initialValues={
+        initialValues || {
+          id: 0,
+          taxNumber: "",
+          fullName: "",
+          address: "",
+          passportSeries: "",
+          passportNumber: "",
+          passportIssueDate: "",
+          passportIssuedBy: "",
+          personnelNumber: "",
+        }
+      }
+      enableReinitialize={true}
       validationSchema={validationSchema}
-      onSubmit={(values, { resetForm }) => {
-        addEmployee.mutate(values);
-        resetForm();
+      onSubmit={async (values) => {
+        if (values.id) {
+          await updateEmployee.mutateAsync(values);
+        } else {
+          await createEmployee.mutateAsync(values);
+        }
+        onClose();
       }}
     >
       {({ isSubmitting }) => (
@@ -90,7 +106,7 @@ const EmployeeForm: React.FC = () => {
             disabled={isSubmitting}
             sx={{ mt: 2 }}
           >
-            Додати працівника
+            {initialValues ? "Зберегти зміни" : "Додати"}
           </Button>
         </Form>
       )}
