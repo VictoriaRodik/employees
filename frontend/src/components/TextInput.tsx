@@ -16,6 +16,9 @@ const TextInput: React.FC<TextInputProps> = ({ label, ...props }) => {
       label={label}
       {...field}
       {...props}
+      slotProps={{
+        inputLabel: props.type === "date" ? { shrink: true } : undefined,
+      }}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
     />

@@ -1,15 +1,27 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Grid2, Button } from "@mui/material";
-import TextInput from "./TextInput";
-import { EmployeeInterface } from "../types/employee";
-import { useEmployees } from "../hooks/useEmployees";
+import TextInput from "../TextInput";
+import { EmployeeInterface } from "../../types/employee";
+import { useEmployees } from "../../hooks/useEmployees";
 
 interface EmployeeFormProps {
   initialValues?: EmployeeInterface | null;
   onClose: () => void;
   onSubmit: (employee: EmployeeInterface) => void;
 }
+
+const defaultValues: EmployeeInterface = {
+  id: 0,
+  taxNumber: "",
+  fullName: "",
+  address: "",
+  passportSeries: "",
+  passportNumber: "",
+  passportIssueDate: "2000-01-01",
+  passportIssuedBy: "",
+  personnelNumber: "",
+};
 
 const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialValues,
@@ -36,20 +48,19 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
 
   return (
     <Formik<EmployeeInterface>
-      initialValues={
-        initialValues || {
-          id: 0,
-          taxNumber: "",
-          fullName: "",
-          address: "",
-          passportSeries: "",
-          passportNumber: "",
-          passportIssueDate: "",
-          passportIssuedBy: "",
-          personnelNumber: "",
-        }
-      }
-      enableReinitialize={true}
+    initialValues={{
+      ...defaultValues,
+      ...initialValues,
+      taxNumber: initialValues?.taxNumber ?? "",
+      fullName: initialValues?.fullName ?? "",
+      address: initialValues?.address ?? "",
+      passportSeries: initialValues?.passportSeries ?? "",
+      passportNumber: initialValues?.passportNumber ?? "",
+      passportIssueDate: initialValues?.passportIssueDate ? new Date(initialValues.passportIssueDate).toLocaleDateString("en-CA")
+      : "2000-01-01",
+      passportIssuedBy: initialValues?.passportIssuedBy ?? "",
+      personnelNumber: initialValues?.personnelNumber ?? "",
+    }}
       validationSchema={validationSchema}
       onSubmit={async (values) => {
         if (values.id) {
@@ -88,6 +99,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
             <Grid2 size={{ xs: 6 }}>
               <TextInput
                 name="passportIssueDate"
+                type="date"
                 label="Дата видачі паспорта або ID-картки"
               />
             </Grid2>

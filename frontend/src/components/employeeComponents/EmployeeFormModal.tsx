@@ -1,6 +1,6 @@
-import Modal from "./Modal";
+import Modal from "../Modal";
 import EmployeeForm from "./EmployeeForm";
-import { EmployeeInterface } from "../types/employee";
+import { EmployeeInterface } from "../../types/employee";
 
 interface EmployeeFormModalProps {
   open: boolean;

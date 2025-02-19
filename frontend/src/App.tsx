@@ -1,6 +1,6 @@
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import EmployeeList from "./components/EmployeeList";
+import EmployeeList from "./components/employeeComponents/EmployeeList";
 
 function App() {
 

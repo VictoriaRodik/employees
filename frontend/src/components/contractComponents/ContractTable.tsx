@@ -1,7 +1,7 @@
 import React from "react";
-import GeneralTable from "../components/Table";
-import Actions from "../components/Actions";
-import { EmployeeInterface } from "../types/employee";
+import GeneralTable from "../Table";
+import Actions from "../Actions";
+import { EmployeeInterface } from "../../types/employee";
 
 interface EmployeeTableProps {
   employees: EmployeeInterface[];

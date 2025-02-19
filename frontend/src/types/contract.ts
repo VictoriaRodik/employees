@@ -1,4 +1,4 @@
-export interface EmployeeInterface {
+export interface ContractInterface {
   id: number;
   taxNumber: string;
   fullName: string;
@@ -10,7 +10,8 @@ export interface EmployeeInterface {
   personnelNumber: string;
 }
 
-export interface ApiEmployee {
+export interface ApiContract
+ {
   id: number;
   full_name: string;
   tax_id: string;

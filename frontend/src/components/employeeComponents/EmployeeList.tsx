@@ -1,11 +1,12 @@
 import { useState } from "react";
-import EmployeeTable from "../components/EmployeeTable";
-import Search from "../components/Search";
-import Sort from "../components/Sort";
-import AddEmployeeButton from "../components/AddEmployeeButton";
-import EmployeeFormModal from "../components/EmployeeFormModal";
-import { useEmployees } from "../hooks/useEmployees";
-import { EmployeeInterface } from "../types/employee";
+import EmployeeTable from "./EmployeeTable";
+import Search from "../Search";
+import Sort from "../Sort";
+import AddEmployeeButton from "./AddEmployeeButton";
+import EmployeeFormModal from "./EmployeeFormModal";
+import { useEmployees } from "../../hooks/useEmployees";
+import { EmployeeInterface } from "../../types/employee";
+import { Container } from "@mui/material";
 
 const EmployeeList = () => {
   const {
@@ -60,7 +61,7 @@ const EmployeeList = () => {
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-    <div>
+    <Container maxWidth="md">
       <Search value={search} onChange={(e) => setSearch(e.target.value)} />
       <Sort
         value={sort}
@@ -77,14 +78,13 @@ const EmployeeList = () => {
       />
       <AddEmployeeButton onClick={handleAdd} />
       <EmployeeFormModal
-        key={editingEmployee?.id || "new"}
         open={modalOpen}
-        title={editingEmployee ? `Редагувати` : "Додати"}
+        title={editingEmployee ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
         initialValues={editingEmployee || undefined}
       />
-    </div>
+    </Container>
   );
 };
 
