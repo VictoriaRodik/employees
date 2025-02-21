@@ -1,12 +1,17 @@
 const pool = require("../config/db");
 
 async function getAllContracts() {
-  const [rows] = await pool.query("SELECT contracts.*, employees.* FROM contracts join employees on contracts.employee_id=employees.id");
+  const [rows] = await pool.query(
+    "SELECT contracts.*, employees.tax_id, employees.full_name, employees.address, employees.passport_series, employees.passport_number, employees.passport_issue_date, employees.passport_issued_by FROM contracts join employees on contracts.employee_id=employees.id"
+  );
   return rows;
 }
 
 async function getContractById(id) {
-  const [rows] = await pool.query("SELECT * FROM contracts WHERE id = ?", [id]);
+  const [rows] = await pool.query(
+    "SELECT contracts.*, employees.tax_id, employees.full_name, employees.address, employees.passport_series, employees.passport_number, employees.passport_issue_date, employees.passport_issued_by FROM contracts JOIN employees ON contracts.employee_id = employees.id WHERE contracts.id = ?",
+    [id]
+  );
   return rows[0];
 }
 
@@ -49,15 +54,16 @@ async function updateContract(id, updatedData) {
     contract_content,
     contract_number,
   } = updatedData;
+
   const [result] = await pool.query(
     `UPDATE contracts SET
-            employee_id = ?,
-            contract_date = ?,
-            contract_end_date = ?,
-            contract_amount = ?,
-            contract_content = ?,
-            contract_number =?
-     WHERE id = ?`,
+      employee_id = ?,
+      contract_date = ?,
+      contract_end_date = ?,
+      contract_amount = ?,
+      contract_content = ?,
+      contract_number = ?
+    WHERE id = ?`,
     [
       employee_id,
       contract_date,
@@ -65,9 +71,10 @@ async function updateContract(id, updatedData) {
       contract_amount,
       contract_content,
       contract_number,
-      id
+      id,
     ]
   );
+
   return result.affectedRows;
 }
 

@@ -20,16 +20,27 @@ async function createContract(req, res) {
   }
 }
 
-async function editContract(req, res) {
+async function updateContract(req, res) {
   try {
-    const updatedRows = await Contract.updateContract(req.params.id, req.body);
-    if (updatedRows > 0) {
-      res.json({ message: "Contract updated successfully" });
-    } else {
-      res.status(404).send("Contract not found");
+    const id = parseInt(req.params.id);
+    const updatedData = req.body;
+    
+    const existingContract = await Contract.getContractById(id);
+    if (!existingContract) {
+      return res.status(404).send('Contract not found');
     }
-  } catch (err) {
-    res.status(500).send("Error updating contract");
+
+    const result = await Contract.updateContract(id, updatedData);
+    
+    if (result) {
+      const updated = await Contract.getContractById(id);
+      res.json(updated);
+    } else {
+      res.status(404).send('Contract not found');
+    }
+  } catch (error) {
+    console.error('Error updating contract:', error);
+    res.status(500).send('Error updating contract');
   }
 }
 
@@ -46,4 +57,4 @@ async function removeContract(req, res) {
   }
 }
 
-module.exports = { getContracts, createContract, editContract, removeContract };
+module.exports = { getContracts, createContract, updateContract, removeContract };

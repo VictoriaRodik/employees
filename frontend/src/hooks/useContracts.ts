@@ -11,14 +11,25 @@ export const useContracts = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["contracts"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiContract);
+      try {
+        const response = await axios.get(API_URL);
+        return response.data.map(mapFromApiContract);
+      } catch (error) {
+        console.error("Error fetching contracts:", error);
+        throw error;
+      }
     },
   });
 
   const createContract = useMutation({
     mutationFn: async (contract: ContractInterface) => {
-      await axios.post(API_URL, mapToApiContract(contract));
+      try {
+        const response = await axios.post(API_URL, mapToApiContract(contract));
+        return mapFromApiContract(response.data);
+      } catch (error) {
+        console.error("Error creating contract:", error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
@@ -27,7 +38,16 @@ export const useContracts = () => {
 
   const updateContract = useMutation({
     mutationFn: async (contract: ContractInterface) => {
-      await axios.put(`${API_URL}/${contract.id}`, mapToApiContract(contract));
+      try {
+        const response = await axios.put(
+          `${API_URL}/${contract.id}`, 
+          mapToApiContract(contract)
+        );
+        return mapFromApiContract(response.data);
+      } catch (error) {
+        console.error("Error updating contract:", error, contract);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["contracts"] });

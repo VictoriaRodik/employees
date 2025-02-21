@@ -3,13 +3,13 @@ const router = express.Router();
 const {
   getContracts,
   createContract,
-  editContract,
+  updateContract,
   removeContract,
 } = require("../controllers/contractController");
 
 router.get("/", getContracts);
 router.post("/", createContract);
-router.put("/:id", editContract);
+router.put("/:id", updateContract);
 router.delete("/:id", removeContract);
 
 module.exports = router;
