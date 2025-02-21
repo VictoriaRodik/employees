@@ -1,6 +1,6 @@
 export interface EmployeeInterface {
   id: number;
-  taxNumber: string;
+  taxId: string;
   fullName: string;
   address?: string;
   passportSeries?: string;
@@ -20,5 +20,4 @@ export interface ApiEmployee {
   passport_number: string;
   passport_issue_date: string;
   passport_issued_by: string;
-
 }

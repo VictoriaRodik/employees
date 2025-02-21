@@ -2,23 +2,32 @@ import { TextField } from "@mui/material";
 import { useField } from "formik";
 
 interface TextInputProps {
-  label: string;
   name: string;
+  label: string;
   type?: string;
+  multiline?: boolean;
+  rows?: number;
+  fullWidth?: boolean;
 }
 
-const TextInput: React.FC<TextInputProps> = ({ label, ...props }) => {
-  const [field, meta] = useField(props);
+const TextInput: React.FC<TextInputProps> = ({ 
+  name, 
+  label, 
+  type = "text",
+  multiline = false,
+  rows = 1,
+  fullWidth = true,
+}) => {
+  const [field, meta] = useField(name);
 
   return (
     <TextField
-      fullWidth
-      label={label}
       {...field}
-      {...props}
-      slotProps={{
-        inputLabel: props.type === "date" ? { shrink: true } : undefined,
-      }}
+      type={type}
+      label={label}
+      multiline={multiline}
+      rows={rows}
+      fullWidth={fullWidth}
       error={meta.touched && Boolean(meta.error)}
       helperText={meta.touched && meta.error}
     />

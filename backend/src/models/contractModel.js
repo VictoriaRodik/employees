@@ -1,7 +1,7 @@
 const pool = require("../config/db");
 
 async function getAllContracts() {
-  const [rows] = await pool.query("SELECT * FROM contracts");
+  const [rows] = await pool.query("SELECT contracts.*, employees.* FROM contracts join employees on contracts.employee_id=employees.id");
   return rows;
 }
 
@@ -26,7 +26,7 @@ async function addContract(contractData) {
     contract_end_date,
     contract_amount,
     contract_content,
-    contract_number) 
+    contract_number)
      VALUES (?, ?, ?, ?, ?, ?)`,
     [
       employee_id,
@@ -50,7 +50,7 @@ async function updateContract(id, updatedData) {
     contract_number,
   } = updatedData;
   const [result] = await pool.query(
-    `UPDATE contracts SET 
+    `UPDATE contracts SET
             employee_id = ?,
             contract_date = ?,
             contract_end_date = ?,

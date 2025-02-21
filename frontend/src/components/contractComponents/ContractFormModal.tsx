@@ -1,21 +1,21 @@
 import Modal from "../Modal";
-import EmployeeForm from "./ContractForm";
-import { EmployeeInterface } from "../../types/employee";
+import ContractForm from "./ContractForm";
+import { ContractInterface } from "../../types/contract";
 
-interface EmployeeFormModalProps {
+interface ContractFormModalProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (employee: EmployeeInterface) => void;
+  onSubmit: (contract: ContractInterface) => void;
   title: string;
-  initialValues?: EmployeeInterface;
+  initialValues?: ContractInterface;
 }
 
-const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ open, onClose, title, onSubmit, initialValues }) => {
+const ContractFormModal: React.FC<ContractFormModalProps> = ({ open, onClose, title, onSubmit, initialValues }) => {
   return (
     <Modal open={open} onClose={onClose} title={title}>
-      <EmployeeForm onSubmit={onSubmit} initialValues={initialValues} onClose={onClose} />
+      <ContractForm onSubmit={onSubmit} initialValues={initialValues} onClose={onClose} />
     </Modal>
   );
 };
 
-export default EmployeeFormModal;
+export default ContractFormModal;

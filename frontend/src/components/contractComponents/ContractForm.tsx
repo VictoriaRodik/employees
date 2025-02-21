@@ -1,116 +1,107 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Grid2, Button } from "@mui/material";
+import { Grid2, Button, MenuItem, TextField } from "@mui/material";
 import TextInput from "../TextInput";
-import { EmployeeInterface } from "../../types/employee";
+import { ContractInterface } from "../../types/contract";
 import { useEmployees } from "../../hooks/useEmployees";
-
-interface EmployeeFormProps {
-  initialValues?: EmployeeInterface | null;
+import { contractFormatted } from "../../utils/contractFormatted";
+import { EmployeeInterface } from "../../types/employee";
+interface ContractFormProps {
+  initialValues?: ContractInterface | null;
   onClose: () => void;
-  onSubmit: (employee: EmployeeInterface) => void;
+  onSubmit: (contract: ContractInterface) => void;
 }
 
-const defaultValues: EmployeeInterface = {
+const defaultValues: ContractInterface = {
   id: 0,
-  taxNumber: "",
+  employeeId: "",
+  contractDate: new Date().toLocaleDateString("en-CA"),
+  contractEndDate: new Date().toLocaleDateString("en-CA"),
+  contractAmount: "",
+  contractContent: "",
+  contractNumber: "",
+  taxId: "",
   fullName: "",
-  address: "",
   passportSeries: "",
   passportNumber: "",
-  passportIssueDate: "2000-01-01",
+  passportIssueDate: new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: "",
-  personnelNumber: "",
 };
 
-const EmployeeForm: React.FC<EmployeeFormProps> = ({
+const ContractForm: React.FC<ContractFormProps> = ({
   initialValues,
-  onClose,
+  onSubmit
 }) => {
-  const { createEmployee, updateEmployee } = useEmployees();
+  const { data: employees = [] } = useEmployees();
 
   const validationSchema = Yup.object({
-    taxNumber: Yup.string()
-      .matches(/^\d{10}$/, "Має бути 10 цифр")
+    employeeId: Yup.number().required("Обов'язкове поле"),
+    contractDate: Yup.date().required("Обов'язкове поле"),
+    contractEndDate: Yup.date().required("Обов'язкове поле"),
+    contractAmount: Yup.string()
+      .matches(/^\d+(\.\d{1,2})?$/, "Некоректна сума")
       .required("Обов'язкове поле"),
-    fullName: Yup.string().required("Обов'язкове поле"),
-    passportSeries: Yup.string().matches(
-      /^[А-ЯІЄҐA-Z]{2}$/,
-      "Має бути 2 літери"
-    ),
-    passportNumber: Yup.string()
-      .matches(/^\d+$/, "Має містити лише цифри")
-      .required("Обов'язкове поле"),
-    passportIssueDate: Yup.date().required("Обов'язкове поле"),
-    passportIssuedBy: Yup.string().required("Обов'язкове поле"),
-    personnelNumber: Yup.string().matches(/^\d+$/, "Має містити лише цифри"),
+    contractContent: Yup.string().required("Обов'язкове поле"),
+    contractNumber: Yup.string().required("Обов'язкове поле"),
   });
 
   return (
-    <Formik<EmployeeInterface>
-    initialValues={{
-      ...defaultValues,
-      ...initialValues,
-      taxNumber: initialValues?.taxNumber ?? "",
-      fullName: initialValues?.fullName ?? "",
-      address: initialValues?.address ?? "",
-      passportSeries: initialValues?.passportSeries ?? "",
-      passportNumber: initialValues?.passportNumber ?? "",
-      passportIssueDate: initialValues?.passportIssueDate ? new Date(initialValues.passportIssueDate).toLocaleDateString("en-CA")
-      : "2000-01-01",
-      passportIssuedBy: initialValues?.passportIssuedBy ?? "",
-      personnelNumber: initialValues?.personnelNumber ?? "",
-    }}
-      validationSchema={validationSchema}
-      onSubmit={async (values) => {
-        if (values.id) {
-          await updateEmployee.mutateAsync(values);
-        } else {
-          await createEmployee.mutateAsync(values);
-        }
-        onClose();
+    <Formik<ContractInterface>
+      initialValues={{
+        ...defaultValues,
+        ...(initialValues ? contractFormatted(initialValues) : {}),
       }}
+      validationSchema={validationSchema}
+      onSubmit={onSubmit}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, values, handleChange }) => (
         <Form>
           <Grid2 container spacing={2}>
             <Grid2 size={{ xs: 6 }}>
-              <TextInput name="personnelNumber" label="Табельний номер" />
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput name="taxNumber" label="Податковий номер" />
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput name="fullName" label="ПІБ" />
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput name="address" label="Адреса" />
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput name="passportSeries" label="Серія паспорта" />
-            </Grid2>
-
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput
-                name="passportNumber"
-                label="Номер паспорта або ID-картки"
-              />
+              <TextField
+                select
+                name="employeeId"
+                label="Співробітник"
+                value={values.employeeId}
+                onChange={handleChange}
+                fullWidth
+              >
+                {employees.map((employee: EmployeeInterface) => (
+                  <MenuItem key={employee.id} value={employee.id}>
+                    {employee.fullName} ({employee.personnelNumber})
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextInput
-                name="passportIssueDate"
+                name="contractDate"
                 type="date"
-                label="Дата видачі паспорта або ID-картки"
+                label="Дата контракту"
               />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextInput
-                name="passportIssuedBy"
-                label="Орган видачі паспорта або ID-картки"
+                name="contractEndDate"
+                type="date"
+                label="Дата закінчення контракту"
+              />
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
+              <TextInput name="contractAmount" label="Сума контракту" />
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
+              <TextInput name="contractNumber" label="Номер контракту" />
+            </Grid2>
+            <Grid2 size={{ xs: 6 }}>
+              <TextInput
+                name="contractContent"
+                label="Зміст контракту"
+                multiline
+                rows={3}
               />
             </Grid2>
           </Grid2>
-
           <Button
             type="submit"
             variant="contained"
@@ -126,4 +117,4 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
   );
 };
 
-export default EmployeeForm;
+export default ContractForm;

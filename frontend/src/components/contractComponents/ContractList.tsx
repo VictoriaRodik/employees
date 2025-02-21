@@ -1,59 +1,59 @@
 import { useState } from "react";
-import EmployeeTable from "./ContractTable";
+import ContractTable from "./ContractTable";
 import Search from "../Search";
 import Sort from "../Sort";
-import AddEmployeeButton from "./AddContractButton";
-import EmployeeFormModal from "./ContractFormModal";
-import { useEmployees } from "../../hooks/useEmployees";
-import { EmployeeInterface } from "../../types/employee";
+import Button from "../Button";
+import ContractFormModal from "./ContractFormModal";
+import { useContracts } from "../../hooks/useContracts";
+import { ContractInterface } from "../../types/contract";
 import { Container } from "@mui/material";
+import { contractFormatted } from "../../utils/contractFormatted";
 
-const EmployeeList = () => {
+const ContractList = () => {
   const {
-    data: employees = [],
+    data: contracts = [],
     isLoading,
     error,
-    createEmployee,
-    updateEmployee,
-    deleteEmployee,
-  } = useEmployees();
+    createContract,
+    updateContract,
+    deleteContract,
+  } = useContracts();
 
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("fullName");
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] =
-    useState<EmployeeInterface | null>(null);
+  const [editingContract, setEditingContract] =
+    useState<ContractInterface | null>(null);
 
   const handleAdd = () => {
-    setEditingEmployee(null);
+    setEditingContract(null);
     setModalOpen(true);
   };
 
-  const handleEdit = (employee: EmployeeInterface) => {
-    console.log(employee);
-    setEditingEmployee(employee);
+  const handleEdit = (contract: ContractInterface) => {
+    setEditingContract(contractFormatted(contract));
     setModalOpen(true);
   };
 
   const handleDelete = (id: number) => {
-    deleteEmployee.mutate(id);
+    deleteContract.mutate(id);
   };
 
-  const handleSubmit = (employee: EmployeeInterface) => {
-    if (employee.id) {
-      updateEmployee.mutate(employee);
+  const handleSubmit = async (contract: ContractInterface) => {
+    if (contract.id) {
+     await updateContract.mutate(contract);
     } else {
-      createEmployee.mutate(employee);
+     await createContract.mutate(contract);
     }
     setModalOpen(false);
   };
 
-  const filteredEmployees = employees.filter((e: EmployeeInterface) =>
+  const filteredContracts = contracts.filter((e: ContractInterface) =>
     e.fullName?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sortedEmployees = [...filteredEmployees].sort((a, b) => {
-    const key = sort as keyof EmployeeInterface;
+  const sortedContracts = [...filteredContracts].sort((a, b) => {
+    const key = sort as keyof ContractInterface;
     return String(a[key]).localeCompare(String(b[key]));
   });
 
@@ -68,24 +68,24 @@ const EmployeeList = () => {
         onChange={(e) => setSort(e.target.value)}
         options={[
           { value: "fullName", label: "За ПІБ" },
-          { value: "personnelNumber", label: "За табельним номером" },
+          { value: "contractDate", label: "За датою договору" },
         ]}
       />
-      <EmployeeTable
-        employees={sortedEmployees}
+      <ContractTable
+        contracts={sortedContracts}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-      <AddEmployeeButton onClick={handleAdd} />
-      <EmployeeFormModal
+      <Button onClick={handleAdd}>Додати договір</Button>
+      <ContractFormModal
         open={modalOpen}
-        title={editingEmployee ? `Редагування` : "Введення"}
+        title={editingContract ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmployee || undefined}
+        initialValues={editingContract || undefined}
       />
     </Container>
   );
 };
 
-export default EmployeeList;
+export default ContractList;

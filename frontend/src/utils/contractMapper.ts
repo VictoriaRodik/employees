@@ -1,23 +1,35 @@
-import { EmployeeInterface, ApiEmployee} from "../types/employee";
+import { ContractInterface, ApiContract } from "../types/contract";
 
-export const mapToApiEmployee = (employee: EmployeeInterface) => ({
-  id: employee.id,
-  full_name: employee.fullName,
-  tax_id: employee.taxNumber,
-  personnel_number: employee.personnelNumber,
-  passport_series: employee.passportSeries,
-  passport_number: employee.passportNumber,
-  passport_issue_date: employee.passportIssueDate,
-  passport_issued_by: employee.passportIssuedBy,
+export const mapToApiContract = (contract: ContractInterface) => ({
+  id: contract.id,
+  employee_id: contract.employeeId,
+  contract_date: contract.contractDate,
+  contract_end_date: contract.contractEndDate,
+  contract_amount: contract.contractAmount,
+  contract_content: contract.contractContent,
+  contract_number: contract.contractNumber,
+  full_name: contract.fullName,
+  tax_id: contract.taxId,
+  passport_series: contract.passportSeries,
+  passport_number: contract.passportNumber,
+  passport_issue_date: contract.passportIssueDate,
+  passport_issued_by: contract.passportIssuedBy,
 });
 
-export const mapFromApiEmployee = (data: ApiEmployee): EmployeeInterface => ({
-  id: data.id,
-  fullName: data.full_name,
-  taxNumber: data.tax_id,
-  personnelNumber: data.personnel_number,
-  passportSeries: data.passport_series,
-  passportNumber: data.passport_number,
-  passportIssueDate: data.passport_issue_date,
-  passportIssuedBy: data.passport_issued_by,
+export const mapFromApiContract = (
+  contract: ApiContract
+): ContractInterface => ({
+  id: contract.id,
+  employeeId: contract.employee_id,
+  contractDate: contract.contract_date,
+  contractEndDate: contract.contract_end_date,
+  contractAmount: contract.contract_amount,
+  contractContent: contract.contract_content,
+  contractNumber: contract.contract_number,
+  fullName: contract.full_name,
+  taxId: contract.tax_id,
+  passportSeries: contract.passport_series,
+  passportNumber: contract.passport_number,
+  passportIssueDate: contract.passport_issue_date,
+  passportIssuedBy: contract.passport_issued_by,
 });

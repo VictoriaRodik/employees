@@ -9,11 +9,18 @@ interface EmployeeTableProps {
   onDelete: (id: number) => void;
 }
 
-const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDelete }) => {
+const EmployeeTable: React.FC<EmployeeTableProps> = ({
+  employees,
+  onEdit,
+  onDelete,
+}) => {
   const columns = [
     { key: "fullName" as keyof EmployeeInterface, label: "ПІБ" },
-    { key: "personnelNumber" as keyof EmployeeInterface, label: "Табельний номер" },
-    { key: "taxNumber" as keyof EmployeeInterface, label: "ІПН" },
+    {
+      key: "personnelNumber" as keyof EmployeeInterface,
+      label: "Табельний номер",
+    },
+    { key: "taxId" as keyof EmployeeInterface, label: "ІПН" },
   ];
 
   return (
@@ -21,7 +28,10 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({ employees, onEdit, onDele
       data={employees}
       columns={columns}
       renderActions={(employee) => (
-        <Actions onEdit={() => onEdit(employee)} onDelete={() => onDelete(employee.id)} />
+        <Actions
+          onEdit={() => onEdit(employee)}
+          onDelete={() => onDelete(employee.id)}
+        />
       )}
     />
   );

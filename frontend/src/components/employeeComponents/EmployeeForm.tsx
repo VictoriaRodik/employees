@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { Grid2, Button } from "@mui/material";
 import TextInput from "../TextInput";
 import { EmployeeInterface } from "../../types/employee";
-import { useEmployees } from "../../hooks/useEmployees";
+import { employeeFormatted } from "../../utils/employeeFormatted";
 
 interface EmployeeFormProps {
   initialValues?: EmployeeInterface | null;
@@ -13,24 +13,23 @@ interface EmployeeFormProps {
 
 const defaultValues: EmployeeInterface = {
   id: 0,
-  taxNumber: "",
+  taxId: "",
   fullName: "",
   address: "",
   passportSeries: "",
   passportNumber: "",
-  passportIssueDate: "2000-01-01",
+  passportIssueDate: new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: "",
   personnelNumber: "",
 };
 
 const EmployeeForm: React.FC<EmployeeFormProps> = ({
   initialValues,
-  onClose,
+  onSubmit
 }) => {
-  const { createEmployee, updateEmployee } = useEmployees();
 
   const validationSchema = Yup.object({
-    taxNumber: Yup.string()
+    taxId: Yup.string()
       .matches(/^\d{10}$/, "Має бути 10 цифр")
       .required("Обов'язкове поле"),
     fullName: Yup.string().required("Обов'язкове поле"),
@@ -50,26 +49,10 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
     <Formik<EmployeeInterface>
     initialValues={{
       ...defaultValues,
-      ...initialValues,
-      taxNumber: initialValues?.taxNumber ?? "",
-      fullName: initialValues?.fullName ?? "",
-      address: initialValues?.address ?? "",
-      passportSeries: initialValues?.passportSeries ?? "",
-      passportNumber: initialValues?.passportNumber ?? "",
-      passportIssueDate: initialValues?.passportIssueDate ? new Date(initialValues.passportIssueDate).toLocaleDateString("en-CA")
-      : "2000-01-01",
-      passportIssuedBy: initialValues?.passportIssuedBy ?? "",
-      personnelNumber: initialValues?.personnelNumber ?? "",
+      ...(initialValues ? employeeFormatted(initialValues) : {}),
     }}
       validationSchema={validationSchema}
-      onSubmit={async (values) => {
-        if (values.id) {
-          await updateEmployee.mutateAsync(values);
-        } else {
-          await createEmployee.mutateAsync(values);
-        }
-        onClose();
-      }}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting }) => (
         <Form>
@@ -78,7 +61,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
               <TextInput name="personnelNumber" label="Табельний номер" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
-              <TextInput name="taxNumber" label="Податковий номер" />
+              <TextInput name="taxId" label="Податковий номер" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextInput name="fullName" label="ПІБ" />

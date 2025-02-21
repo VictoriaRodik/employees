@@ -2,11 +2,12 @@ import { useState } from "react";
 import EmployeeTable from "./EmployeeTable";
 import Search from "../Search";
 import Sort from "../Sort";
-import AddEmployeeButton from "./AddEmployeeButton";
+import Button from "../Button";
 import EmployeeFormModal from "./EmployeeFormModal";
 import { useEmployees } from "../../hooks/useEmployees";
 import { EmployeeInterface } from "../../types/employee";
 import { Container } from "@mui/material";
+import { employeeFormatted } from "../../utils/employeeFormatted";
 
 const EmployeeList = () => {
   const {
@@ -30,8 +31,7 @@ const EmployeeList = () => {
   };
 
   const handleEdit = (employee: EmployeeInterface) => {
-    console.log(employee);
-    setEditingEmployee(employee);
+    setEditingEmployee(employeeFormatted(employee));
     setModalOpen(true);
   };
 
@@ -39,11 +39,11 @@ const EmployeeList = () => {
     deleteEmployee.mutate(id);
   };
 
-  const handleSubmit = (employee: EmployeeInterface) => {
+  const handleSubmit = async (employee: EmployeeInterface) => {
     if (employee.id) {
-      updateEmployee.mutate(employee);
+      await updateEmployee.mutate(employee);
     } else {
-      createEmployee.mutate(employee);
+      await createEmployee.mutate(employee);
     }
     setModalOpen(false);
   };
@@ -76,7 +76,7 @@ const EmployeeList = () => {
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-      <AddEmployeeButton onClick={handleAdd} />
+      <Button onClick={handleAdd}>Додати співробітника</Button>
       <EmployeeFormModal
         open={modalOpen}
         title={editingEmployee ? `Редагування` : "Введення"}
