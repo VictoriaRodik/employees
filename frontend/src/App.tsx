@@ -1,15 +1,40 @@
 import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import EmployeeList from "./components/employeeComponents/EmployeeList";
-import ContractList from "./components/contractComponents/ContractList";
+import { Font } from '@react-pdf/renderer';
+import Layout from './components/Layout';
+import EmployeesPage from './pages/EmployeesPage';
+import ContractsPage from './pages/ContractsPage';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+// Register fonts with Cyrillic support
+Font.register({
+  family: 'Roboto',
+  fonts: [
+    {
+      src: '/fonts/Roboto-Regular.ttf',
+      fontWeight: 'normal',
+    },
+    {
+      src: '/fonts/Roboto-Bold.ttf',
+      fontWeight: 'bold',
+    }
+  ]
+});
 
 function App() {
   const queryClient = new QueryClient();
 
   return (
     <QueryClientProvider client={queryClient}>
-      <EmployeeList />
-      <ContractList />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Navigate to="/employees" replace />} />
+          <Route path="employees" element={<EmployeesPage />} />
+          <Route path="contracts" element={<ContractsPage />} />
+          <Route path="*" element={<Navigate to="/employees" replace />} />
+        </Route>
+      </Routes>
+    </BrowserRouter>
     </QueryClientProvider>
   );
 }

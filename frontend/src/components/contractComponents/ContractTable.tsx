@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import GeneralTable from "../Table";
 import Actions from "../Actions";
 import { ContractInterface } from "../../types/contract";
 import { contractFormatted } from "../../utils/contractFormatted";
+import ContractPDFPreview from "../pdf/ContractPDFPreview";
+import { Button } from "@mui/material";
 
 interface ContractTableProps {
   contracts: ContractInterface[];
@@ -16,6 +18,8 @@ const ContractTable: React.FC<ContractTableProps> = ({
   onDelete,
 }) => {
   const formattedContracts = contracts.map(contractFormatted);
+  const [previewContract, setPreviewContract] =
+    useState<ContractInterface | null>(null);
 
   const columns = [
     {
@@ -25,19 +29,34 @@ const ContractTable: React.FC<ContractTableProps> = ({
     { key: "contractDate" as keyof ContractInterface, label: "Дата договору" },
     { key: "contractAmount" as keyof ContractInterface, label: "Сума" },
     { key: "fullName" as keyof ContractInterface, label: "ПІБ" },
+
   ];
 
   return (
-    <GeneralTable
-      data={formattedContracts}
-      columns={columns}
-      renderActions={(contract) => (
-        <Actions
-          onEdit={() => onEdit(contract)}
-          onDelete={() => onDelete(contract.id)}
+    <>
+      <GeneralTable
+        data={formattedContracts}
+        columns={columns}
+        renderActions={(contract) => (
+          <>
+            <Actions
+              onEdit={() => onEdit(contract)}
+              onDelete={() => onDelete(contract.id)}
+            />
+            <Button onClick={() => setPreviewContract(contract)}>PDF</Button>
+          </>
+        )}
+      />
+
+      {/* Preview Modal */}
+      {previewContract && (
+        <ContractPDFPreview
+          contract={previewContract}
+          open={Boolean(previewContract)}
+          onClose={() => setPreviewContract(null)}
         />
       )}
-    />
+    </>
   );
 };
 
