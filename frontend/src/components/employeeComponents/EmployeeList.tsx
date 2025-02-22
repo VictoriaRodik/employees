@@ -61,7 +61,7 @@ const EmployeeList = () => {
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-    <Container maxWidth="md">
+<Container maxWidth="lg" sx={{display: 'flex', flexDirection: 'column', alignItems: 'space-between', justifyContent: 'center', gap:'2rem'}}>
       <Search value={search} onChange={(e) => setSearch(e.target.value)} />
       <Sort
         value={sort}
