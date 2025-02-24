@@ -1,25 +1,13 @@
-import "./App.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Font } from '@react-pdf/renderer';
 import Layout from './components/Layout';
 import EmployeesPage from './pages/EmployeesPage';
 import ContractsPage from './pages/ContractsPage';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
-// Register fonts with Cyrillic support
-Font.register({
-  family: 'Roboto',
-  fonts: [
-    {
-      src: '/fonts/Roboto-Regular.ttf',
-      fontWeight: 'normal',
-    },
-    {
-      src: '/fonts/Roboto-Bold.ttf',
-      fontWeight: 'bold',
-    }
-  ]
-});
+import { registerPDFFonts } from './config/pdfFonts';
+
+
+registerPDFFonts();
 
 function App() {
   const queryClient = new QueryClient();

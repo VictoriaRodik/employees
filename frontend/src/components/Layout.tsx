@@ -1,18 +1,23 @@
-import { AppBar, Toolbar, Typography, Container, Box, Drawer, List, ListItem, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
-import { useTheme } from '../context/ThemeContext';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import { useTheme as useCustomTheme } from '../context/ThemeContext';
 
 const drawerWidth = 240;
 
 const Layout = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
+  const { isDarkMode, toggleTheme } = useCustomTheme();
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{
+      display: 'flex',
+      minHeight: '100vh',
+      bgcolor: 'background.default',
+      color: 'text.primary'
+    }}>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
@@ -29,29 +34,46 @@ const Layout = () => {
         sx={{
           width: drawerWidth,
           flexShrink: 0,
-          [`& .MuiDrawer-paper`]: { width: drawerWidth, boxSizing: 'border-box' },
+          [`& .MuiDrawer-paper`]: {
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            bgcolor: 'background.paper'
+          },
         }}
       >
-        <Toolbar /> 
+        <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItem button component={Link} to="/employees">
+            <ListItemButton 
+              component={Link} 
+              to="/employees"
+              sx={{ color: 'text.primary' }}
+            >
               <ListItemIcon>
-                <PeopleIcon />
+                <PeopleIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Співробітники" />
-            </ListItem>
-            <ListItem button component={Link} to="/contracts">
+            </ListItemButton>
+            <ListItemButton 
+              component={Link} 
+              to="/contracts"
+              sx={{ color: 'text.primary' }}
+            >
               <ListItemIcon>
-                <DescriptionIcon />
+                <DescriptionIcon color="primary" />
               </ListItemIcon>
               <ListItemText primary="Договори" />
-            </ListItem>
+            </ListItemButton>
           </List>
         </Box>
       </Drawer>
 
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{
+        flexGrow: 1,
+        p: 3,
+        bgcolor: 'background.default',
+        minHeight: '100vh'
+      }}>
         <Toolbar />
         <Container maxWidth="lg">
           <Outlet />

@@ -1,51 +1,51 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
 
-// Light theme colors (green-based)
+
 const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#3c3ebd',
-      light: '#4237da',
-      dark: '#1b5e20',
+      main: '#84A59D',
+      light: '#F5CAC3',
+      dark: '#F28482',
     },
     secondary: {
-      main: '#66bb6a',
-      light: '#81c784',
-      dark: '#388e3c',
+      main: '#F6BD60',
+      light: '#F5CAC3',
+      dark: '#F28482',
     },
     background: {
-      default: '#f1f8e9',
+      default: '#F7EDE2',
       paper: '#ffffff',
     },
     text: {
-      primary: '#1b5e20', 
-      secondary: '#2e7d32',
+      primary: '#2f2f30', 
+      secondary: '#666666',
     },
   },
 };
 
-// Dark theme colors (blue and grey based)
+
 const darkTheme: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
-      dark: '#1565c0',
+      main: '#63c8f3',
+      light: '#2A6F97',
+      dark: '#7c0107',
     },
     secondary: {
-      main: '#424242',
-      light: '#616161',
-      dark: '#212121',
+      main: '#c26169',
+      light: '#89C2D9',
+      dark: '#468FAF',
     },
     background: {
-      default: '#121212',
-      paper: '#1e1e1e',
+      default: '#012A4A',
+      paper: '#013A63',
     },
     text: {
       primary: '#ffffff',
-      secondary: '#b0bec5',
+      secondary: '#A9D6E5',
     },
   },
 };
@@ -90,7 +90,7 @@ const commonSettings: ThemeOptions = {
   },
 };
 
-// Create themes with common settings
+
 export const light = createTheme({
   ...commonSettings,
   ...lightTheme,

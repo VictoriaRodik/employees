@@ -1,13 +1,19 @@
 import EmployeeList from '../components/employeeComponents/EmployeeList';
-import { Typography, Box } from '@mui/material';
+import { Typography, Box, Paper } from '@mui/material';
 
 const EmployeesPage = () => {
   return (
     <Box>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h4" gutterBottom color="primary">
         Співробітники
       </Typography>
-      <EmployeeList />
+      <Paper sx={{ 
+        p: 2,
+        bgcolor: 'background.paper',
+        borderRadius: 2
+      }}>
+        <EmployeeList />
+      </Paper>
     </Box>
   );
 };
