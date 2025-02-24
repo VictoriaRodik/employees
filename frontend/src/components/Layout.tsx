@@ -44,8 +44,8 @@ const Layout = () => {
         <Toolbar />
         <Box sx={{ overflow: 'auto' }}>
           <List>
-            <ListItemButton 
-              component={Link} 
+            <ListItemButton
+              component={Link}
               to="/employees"
               sx={{ color: 'text.primary' }}
             >
@@ -54,8 +54,8 @@ const Layout = () => {
               </ListItemIcon>
               <ListItemText primary="Співробітники" />
             </ListItemButton>
-            <ListItemButton 
-              component={Link} 
+            <ListItemButton
+              component={Link}
               to="/contracts"
               sx={{ color: 'text.primary' }}
             >
