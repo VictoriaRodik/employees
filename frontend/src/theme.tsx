@@ -5,22 +5,22 @@ const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#84A59D',
-      light: '#F5CAC3',
-      dark: '#F28482',
+      main: '#2EC4B6',
+      light: '#CBF3F0',
+      dark: '#FF9F1C',
     },
     secondary: {
-      main: '#F6BD60',
-      light: '#F5CAC3',
-      dark: '#F28482',
+      main: '#FF9F1C',
+      light: '#FFBF69',
+      dark: '#2EC4B6',
     },
     background: {
-      default: '#F7EDE2',
-      paper: '#ffffff',
+      default: '#ffffff',
+      paper: '#fff8ee',
     },
     text: {
       primary: '#2f2f30', 
-      secondary: '#666666',
+      secondary: '#696b6b',
     },
   },
 };
@@ -32,10 +32,10 @@ const darkTheme: ThemeOptions = {
     primary: {
       main: '#63c8f3',
       light: '#2A6F97',
-      dark: '#7c0107',
+      dark: '#b6030c',
     },
     secondary: {
-      main: '#c26169',
+      main: '#db0610',
       light: '#89C2D9',
       dark: '#468FAF',
     },

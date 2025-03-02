@@ -1,18 +1,7 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { useState, useEffect, ReactNode } from 'react';
 import { ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 import { light, dark } from '../theme';
-
-type ThemeContextType = {
-  isDarkMode: boolean;
-  toggleTheme: () => void;
-};
-
-const ThemeContext = createContext<ThemeContextType>({
-  isDarkMode: false,
-  toggleTheme: () => {},
-});
-
-export const useTheme = () => useContext(ThemeContext);
+import { ThemeContext } from './ThemeContext';
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -35,4 +24,4 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
       </MuiThemeProvider>
     </ThemeContext.Provider>
   );
-};
+}; 

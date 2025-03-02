@@ -1,15 +1,15 @@
-import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton, useTheme } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { useTheme as useCustomTheme } from '../context/ThemeContext';
+import { useTheme } from '../hooks/useTheme';
 
 const drawerWidth = 240;
 
 const Layout = () => {
-  const { isDarkMode, toggleTheme } = useCustomTheme();
+  const { isDarkMode, toggleTheme } = useTheme();
 
   return (
     <Box sx={{

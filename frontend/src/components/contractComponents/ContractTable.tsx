@@ -13,8 +13,6 @@ interface ContractTableProps {
   contracts: ContractInterface[];
   onEdit: (contract: ContractInterface) => void;
   onDelete: (id: number) => void;
-  onPreviewContract: (contract: ContractInterface) => void;
-  onPreviewCashOrder: (contract: ContractInterface) => void;
 }
 
 const ContractTable: React.FC<ContractTableProps> = ({
