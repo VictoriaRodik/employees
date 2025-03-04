@@ -1,62 +1,59 @@
 import { createTheme, ThemeOptions } from '@mui/material/styles';
 
-
 const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#2EC4B6',
-      light: '#CBF3F0',
-      dark: '#FF9F1C',
+      main: '#0077b6', // Глибокий синій
+      light: '#90e0ef', // Пастельний блакитний
+      dark: '#023e8a', // Темний синій
     },
     secondary: {
-      main: '#FF9F1C',
-      light: '#FFBF69',
-      dark: '#2EC4B6',
+      main: '#ff6b6b', // Яскравий червоний
+      light: '#ff9f9f', // М'який рожевий
+      dark: '#c70039', // Насичений темно-червоний
     },
     background: {
-      default: '#ffffff',
-      paper: '#fff8ee',
+      default: '#f8f9fa', // Світло-сірий
+      paper: '#ffffff', // Білий
     },
     text: {
-      primary: '#2f2f30', 
-      secondary: '#696b6b',
+      primary: '#212529', // Темний сірий
+      secondary: '#495057', // Середній сірий
     },
   },
 };
-
 
 const darkTheme: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#63c8f3',
-      light: '#2A6F97',
-      dark: '#b6030c',
+      main: '#48cae4', // Бірюзовий акцент
+      light: '#90e0ef', // Пастельний блакитний
+      dark: '#0096c7', // Глибокий блакитний
     },
     secondary: {
-      main: '#db0610',
-      light: '#89C2D9',
-      dark: '#468FAF',
+      main: '#ff4d6d', // Яскравий рожево-червоний
+      light: '#ff758f', // Світлий малиновий
+      dark: '#c9184a', // Насичений темний червоний
     },
     background: {
-      default: '#012A4A',
-      paper: '#013A63',
+      default: '#121212', // Дуже темний сірий
+      paper: '#1e1e1e', // Темно-сірий
     },
     text: {
-      primary: '#ffffff',
-      secondary: '#A9D6E5',
+      primary: '#e9ecef', // Світлий текст
+      secondary: '#adb5bd', // Світло-сірий текст
     },
   },
 };
 
-
 const commonSettings: ThemeOptions = {
   typography: {
-    fontFamily: 'Roboto, Arial, sans-serif',
+    fontFamily: ' Roboto, sans-serif',
     h1: {
       fontSize: '2.5rem',
-      fontWeight: 500,
+      fontWeight: 600,
     },
     h2: {
       fontSize: '2rem',
@@ -76,20 +73,19 @@ const commonSettings: ThemeOptions = {
       styleOverrides: {
         root: {
           textTransform: 'none',
-          borderRadius: 8,
+          borderRadius: 10,
         },
       },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: 8,
+          borderRadius: 10,
         },
       },
     },
   },
 };
-
 
 export const light = createTheme({
   ...commonSettings,

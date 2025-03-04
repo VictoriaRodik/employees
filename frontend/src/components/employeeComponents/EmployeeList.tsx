@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import EmployeeTable from "./EmployeeTable";
 import Search from "../Search";
 import Sort from "../Sort";
@@ -8,6 +8,7 @@ import { useEmployees } from "../../hooks/useEmployees";
 import { EmployeeInterface } from "../../types/employee";
 import { Container } from "@mui/material";
 import { employeeFormatted } from "../../utils/employeeFormatted";
+import { SelectChangeEvent } from '@mui/material';
 
 const EmployeeList = () => {
   const {
@@ -25,28 +26,36 @@ const EmployeeList = () => {
   const [editingEmployee, setEditingEmployee] =
     useState<EmployeeInterface | null>(null);
 
-  const handleAdd = () => {
+  const handleAdd = useCallback(() => {
     setEditingEmployee(null);
     setModalOpen(true);
-  };
+  }, []);
 
-  const handleEdit = (employee: EmployeeInterface) => {
+  const handleEdit = useCallback((employee: EmployeeInterface) => {
     setEditingEmployee(employeeFormatted(employee));
     setModalOpen(true);
-  };
+  }, []);
 
-  const handleDelete = (id: number) => {
+  const handleDelete = useCallback((id: number) => {
     deleteEmployee.mutate(id);
-  };
+  }, [deleteEmployee]);
 
-  const handleSubmit = async (employee: EmployeeInterface) => {
+  const handleSubmit = useCallback(async (employee: EmployeeInterface) => {
     if (employee.id) {
       await updateEmployee.mutate(employee);
     } else {
       await createEmployee.mutate(employee);
     }
     setModalOpen(false);
-  };
+  }, [createEmployee, updateEmployee]);
+
+  const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
+    setSearch(e.target.value);
+  }, []);
+
+  const handleSort = useCallback((e: SelectChangeEvent<string>) => {
+    setSort(e.target.value);
+  }, []);
 
   const filteredEmployees = employees.filter((e: EmployeeInterface) =>
     e.fullName?.toLowerCase().includes(search.toLowerCase())
@@ -61,22 +70,32 @@ const EmployeeList = () => {
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-<Container maxWidth="lg" sx={{display: 'flex', flexDirection: 'column', alignItems: 'space-between', justifyContent: 'center', gap:'2rem'}}>
-      <Search value={search} onChange={(e) => setSearch(e.target.value)} />
+    <Container
+      maxWidth="lg"
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "space-between",
+        justifyContent: "center",
+        gap: "2rem",
+      }}
+    >
+      <Search value={search} onChange={handleSearch} />
       <Sort
         value={sort}
-        onChange={(e) => setSort(e.target.value)}
+        onChange={handleSort}
         options={[
           { value: "fullName", label: "За ПІБ" },
           { value: "personnelNumber", label: "За табельним номером" },
         ]}
       />
+      <Button onClick={handleAdd}>Додати співробітника</Button>
       <EmployeeTable
         employees={sortedEmployees}
         onEdit={handleEdit}
         onDelete={handleDelete}
       />
-      <Button onClick={handleAdd}>Додати співробітника</Button>
+
       <EmployeeFormModal
         open={modalOpen}
         title={editingEmployee ? `Редагування` : "Введення"}

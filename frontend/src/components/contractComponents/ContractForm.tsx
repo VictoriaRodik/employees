@@ -56,7 +56,7 @@ const ContractForm: React.FC<ContractFormProps> = ({
     >
       {({ isSubmitting, values, handleChange }) => (
         <Form>
-          <Grid2 container spacing={2}>
+          <Grid2 container spacing={2} sx={{ mt: 2 }}>
             <Grid2 size={{ xs: 6 }}>
               <TextField
                 select

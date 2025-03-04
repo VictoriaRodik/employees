@@ -56,7 +56,7 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
     >
       {({ isSubmitting }) => (
         <Form>
-          <Grid2 container spacing={2}>
+          <Grid2 container spacing={2} sx={{ mt: 2 }}>
             <Grid2 size={{ xs: 6 }}>
               <TextInput name="personnelNumber" label="Табельний номер" />
             </Grid2>
