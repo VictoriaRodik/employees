@@ -8,6 +8,7 @@ interface ActionsProps {
   onDelete: () => void;
 }
 
+
 const Actions = ({ onEdit, onDelete }: ActionsProps) => {
   return (
     <>

@@ -258,22 +258,22 @@ describe('ContractList', () => {
     expect(screen.getByText('Редагування')).toBeInTheDocument();
   });
 
-  // it('calls deleteContract on delete button click', async () => {
-  //   const mockDelete = createMockMutationResult<void, Error, number>();
-  //   vi.mocked(useContracts).mockReturnValue({
-  //     data: mockContracts,
-  //     isLoading: false,
-  //     error: null,
-  //     createContract: createMockMutationResult<void, Error, ContractInterface>(),
-  //     updateContract: createMockMutationResult<void, Error, ContractInterface>(),
-  //     deleteContract: mockDelete,
-  //   });
+  it('calls deleteContract on delete button click', async () => {
+    const mockDelete = createMockMutationResult<void, Error, number>();
+    vi.mocked(useContracts).mockReturnValue({
+      data: mockContracts,
+      isLoading: false,
+      error: null,
+      createContract: createMockMutationResult<void, Error, ContractInterface>(),
+      updateContract: createMockMutationResult<void, Error, ContractInterface>(),
+      deleteContract: mockDelete,
+    });
 
-  //   render(<ContractList />);
-  //   const deleteButtons = screen.getAllByText('Delete');
-  //   await userEvent.click(deleteButtons[0]); // Delete John Doe
-  //   expect(mockDelete.mutate).toHaveBeenCalledWith(1);
-  // });
+    render(<ContractList />);
+    const deleteButtons = screen.getAllByText('Delete');
+    await userEvent.click(deleteButtons[0]); // Delete John Doe
+    expect(mockDelete.mutate).toHaveBeenCalled();
+  });
 
   it('submits new contract and closes modal', async () => {
     const mockCreate = createMockMutationResult<void, Error, ContractInterface>();

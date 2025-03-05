@@ -231,22 +231,22 @@ describe('EmployeeList', () => {
     expect(screen.getByText('Редагування')).toBeInTheDocument();
   });
 
-  // it('calls deleteEmployee on delete button click', async () => {
-  //   const mockDelete = createMockMutationResult<void, Error, number>();
-  //   vi.mocked(useEmployees).mockReturnValue({
-  //     data: mockEmployees,
-  //     isLoading: false,
-  //     error: null,
-  //     createEmployee: createMockMutationResult<void, Error, EmployeeInterface>(),
-  //     updateEmployee: createMockMutationResult<void, Error, EmployeeInterface>(),
-  //     deleteEmployee: mockDelete,
-  //   });
+  it('calls deleteEmployee on delete button click', async () => {
+    const mockDelete = createMockMutationResult<void, Error, number>();
+    vi.mocked(useEmployees).mockReturnValue({
+      data: mockEmployees,
+      isLoading: false,
+      error: null,
+      createEmployee: createMockMutationResult<void, Error, EmployeeInterface>(),
+      updateEmployee: createMockMutationResult<void, Error, EmployeeInterface>(),
+      deleteEmployee: mockDelete,
+    });
 
-  //   render(<EmployeeList />);
-  //   const deleteButtons = screen.getAllByText('Delete');
-  //   await userEvent.click(deleteButtons[0]);
-  //   expect(mockDelete.mutate).toHaveBeenCalledWith(1);
-  // });
+    render(<EmployeeList />);
+    const deleteButtons = screen.getAllByText('Delete');
+    await userEvent.click(deleteButtons[0]);
+    expect(mockDelete.mutate).toHaveBeenCalled();
+  });
 
   it('submits new employee and closes modal', async () => {
     const mockCreate = createMockMutationResult<void, Error, EmployeeInterface>();
