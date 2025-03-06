@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ContractList from '../components/contractComponents/ContractList'; // Adjust path as needed
+import ContractList from '../components/contractComponents/ContractList'; 
 import { useContracts } from '../hooks/useContracts';
 import { ContractInterface } from '../types/contract';
 import { UseMutationResult } from '@tanstack/react-query';
@@ -12,6 +12,14 @@ vi.mock('../hooks/useContracts', () => ({
   useContracts: vi.fn(),
 }));
 
+
+vi.mock("@mui/material", async () => {
+  const actual = await vi.importActual("@mui/material");
+  return {
+    ...actual,
+    CircularProgress: vi.fn(() => <div data-testid="circular-progress"></div>),
+  };
+});
 
 vi.mock('../utils/contractFormatted', () => ({
   contractFormatted: vi.fn((contract: ContractInterface) => contract),
@@ -156,7 +164,7 @@ describe('ContractList', () => {
     });
 
     render(<ContractList />);
-    expect(screen.getByText('Завантаження...')).toBeInTheDocument();
+    expect(screen.getByTestId("circular-progress")).toBeInTheDocument();
   });
 
   it('renders error state', () => {

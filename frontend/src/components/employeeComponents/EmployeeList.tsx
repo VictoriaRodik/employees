@@ -6,7 +6,7 @@ import Button from "../Button";
 import EmployeeFormModal from "./EmployeeFormModal";
 import { useEmployees } from "../../hooks/useEmployees";
 import { EmployeeInterface } from "../../types/employee";
-import { Container } from "@mui/material";
+import { Container, CircularProgress } from "@mui/material";
 import { employeeFormatted } from "../../utils/employeeFormatted";
 import { SelectChangeEvent } from '@mui/material';
 
@@ -66,7 +66,11 @@ const EmployeeList = () => {
     return String(a[key]).localeCompare(String(b[key]));
   });
 
-  if (isLoading) return <p>Завантаження...</p>;
+  if (isLoading) return (
+    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+      <CircularProgress />
+    </Container>
+  );
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (

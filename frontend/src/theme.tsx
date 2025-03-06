@@ -4,22 +4,22 @@ const lightTheme: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
-      main: '#0077b6', // Глибокий синій
-      light: '#90e0ef', // Пастельний блакитний
-      dark: '#023e8a', // Темний синій
+      main: '#0077b6',
+      light: '#90e0ef',
+      dark: '#023e8a',
     },
     secondary: {
-      main: '#ff6b6b', // Яскравий червоний
-      light: '#ff9f9f', // М'який рожевий
-      dark: '#c70039', // Насичений темно-червоний
+      main: '#ff6b6b',
+      light: '#ff9f9f',
+      dark: '#c70039',
     },
     background: {
-      default: '#f8f9fa', // Світло-сірий
-      paper: '#ffffff', // Білий
+      default: '#f8f9fa',
+      paper: '#ffffff',
     },
     text: {
-      primary: '#212529', // Темний сірий
-      secondary: '#495057', // Середній сірий
+      primary: '#212529',
+      secondary: '#495057',
     },
   },
 };
@@ -28,22 +28,22 @@ const darkTheme: ThemeOptions = {
   palette: {
     mode: 'dark',
     primary: {
-      main: '#48cae4', // Бірюзовий акцент
-      light: '#90e0ef', // Пастельний блакитний
-      dark: '#0096c7', // Глибокий блакитний
+      main: '#48cae4',
+      light: '#90e0ef',
+      dark: '#0096c7',
     },
     secondary: {
-      main: '#ff4d6d', // Яскравий рожево-червоний
-      light: '#ff758f', // Світлий малиновий
-      dark: '#c9184a', // Насичений темний червоний
+      main: '#ff4d6d',
+      light: '#ff758f',
+      dark: '#c9184a',
     },
     background: {
-      default: '#121212', // Дуже темний сірий
-      paper: '#1e1e1e', // Темно-сірий
+      default: '#121212',
+      paper: '#1e1e1e',
     },
     text: {
-      primary: '#e9ecef', // Світлий текст
-      secondary: '#adb5bd', // Світло-сірий текст
+      primary: '#e9ecef',
+      secondary: '#adb5bd',
     },
   },
 };

@@ -1,4 +1,4 @@
-import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton, Icon } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
@@ -20,7 +20,8 @@ const Layout = () => {
     }}>
       <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
         <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box component="img" src="/vite.svg" sx={{ height: 32, width: 32 }} alt="logo" />
             Система управління договорами
           </Typography>
           <IconButton onClick={toggleTheme} color="inherit">

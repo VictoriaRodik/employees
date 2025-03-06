@@ -6,7 +6,7 @@ import Button from "../Button";
 import ContractFormModal from "./ContractFormModal";
 import { useContracts } from "../../hooks/useContracts";
 import { ContractInterface } from "../../types/contract";
-import { Container, SelectChangeEvent } from "@mui/material";
+import { Container, SelectChangeEvent, CircularProgress } from "@mui/material";
 import { contractFormatted } from "../../utils/contractFormatted";
 
 const ContractList = () => {
@@ -65,7 +65,11 @@ const ContractList = () => {
     return String(a[key]).localeCompare(String(b[key]));
   });
 
-  if (isLoading) return <p>Завантаження...</p>;
+  if (isLoading) return (
+    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
+      <CircularProgress />
+    </Container>
+  );
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
