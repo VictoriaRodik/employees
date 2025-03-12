@@ -8,7 +8,7 @@ import { useEmployees } from "../../hooks/useEmployees";
 import { EmployeeInterface } from "../../types/employee";
 import { Container, CircularProgress } from "@mui/material";
 import { employeeFormatted } from "../../utils/employeeFormatted";
-import { SelectChangeEvent } from '@mui/material';
+import { SelectChangeEvent } from "@mui/material";
 
 const EmployeeList = () => {
   const {
@@ -25,9 +25,11 @@ const EmployeeList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<EmployeeInterface | null>(null);
+  const [copyingEmployee, setCopyingEmployee] = useState(false);
 
   const handleAdd = useCallback(() => {
     setEditingEmployee(null);
+    setCopyingEmployee(false);
     setModalOpen(true);
   }, []);
 
@@ -36,18 +38,32 @@ const EmployeeList = () => {
     setModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback((id: number) => {
-    deleteEmployee.mutate(id);
-  }, [deleteEmployee]);
+  const handleCopy = useCallback((employee: EmployeeInterface) => {
+    setEditingEmployee(employeeFormatted(employee));
+    setCopyingEmployee(true);
+    setModalOpen(true);
+  }, []);
 
-  const handleSubmit = useCallback(async (employee: EmployeeInterface) => {
-    if (employee.id) {
-      await updateEmployee.mutate(employee);
-    } else {
-      await createEmployee.mutate(employee);
-    }
-    setModalOpen(false);
-  }, [createEmployee, updateEmployee]);
+  const handleDelete = useCallback(
+    (id: number) => {
+      deleteEmployee.mutate(id);
+    },
+    [deleteEmployee]
+  );
+
+  const handleSubmit = useCallback(
+    (employee: EmployeeInterface) => {
+      if (employee.id && !copyingEmployee) {
+        updateEmployee.mutate(employee);
+      } else {
+        createEmployee.mutate(employee);
+      }
+      setModalOpen(false);
+      setEditingEmployee(null);
+      setCopyingEmployee(false);
+    },
+    [createEmployee, updateEmployee, copyingEmployee]
+  );
 
   const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
     setSearch(e.target.value);
@@ -66,11 +82,19 @@ const EmployeeList = () => {
     return String(a[key]).localeCompare(String(b[key]));
   });
 
-  if (isLoading) return (
-    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-      <CircularProgress />
-    </Container>
-  );
+  if (isLoading)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
+      >
+        <CircularProgress />
+      </Container>
+    );
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
@@ -97,12 +121,13 @@ const EmployeeList = () => {
       <EmployeeTable
         employees={sortedEmployees}
         onEdit={handleEdit}
+        onCopy={handleCopy}
         onDelete={handleDelete}
       />
 
       <EmployeeFormModal
         open={modalOpen}
-        title={editingEmployee ? `Редагування` : "Введення"}
+        title={editingEmployee && !copyingEmployee ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
         initialValues={editingEmployee || undefined}

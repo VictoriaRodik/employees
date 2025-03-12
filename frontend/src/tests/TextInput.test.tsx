@@ -1,111 +1,122 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
-import TextInput from '../components/TextInput';
-import { useField } from 'formik';
+import { describe, it, expect, vi } from "vitest";
+import { render, screen, waitFor } from "@testing-library/react";
+import { Formik, Form } from "formik";
+import TextInput from "../components/TextInput";
 
+const renderWithFormik = (
+  ui: React.ReactElement,
+  initialValues = {},
+  initialTouched = {}
+) => {
+  return render(
+    <Formik
+      initialValues={initialValues}
+      initialTouched={initialTouched}
+      onSubmit={vi.fn()}
+    >
+      <Form>{ui}</Form>
+    </Formik>
+  );
+};
 
-vi.mock('@mui/material', async () => {
-  const actual = await vi.importActual('@mui/material');
-  return {
-    ...actual,
-    TextField: vi.fn(({ label, value, onChange, onBlur, type, multiline, rows, fullWidth, error, helperText }) => (
-      <input
-        data-testid="text-field"
-        placeholder={label}
-        value={value || ''}
-        onChange={onChange}
-        onBlur={onBlur}
-        type={type}
-        data-multiline={multiline ? 'true' : 'false'}
-        data-rows={rows}
-        style={{ width: fullWidth ? '100%' : 'auto' }}
-        aria-invalid={error ? 'true' : 'false'}
-        aria-describedby={helperText ? 'helper-text' : undefined}
-      />
-    )),
-  };
-});
+describe("TextInput", () => {
+  it("renders with default props", () => {
+    renderWithFormik(<TextInput name="test" label="Test Label" />, {
+      test: "",
+    });
 
-
-vi.mock('formik', () => ({
-  useField: vi.fn(),
-}));
-
-describe('TextInput', () => {
-  const mockField = {
-    name: 'testField',
-    value: 'testValue',
-    onChange: vi.fn(),
-    onBlur: vi.fn(),
-  };
-  const mockMeta = {
-    touched: false,
-    error: '',
-    value: undefined,
-    initialTouched: false,
-    initialValue: undefined,
-    initialError: '',
-  };
-
-  beforeEach(() => {
-    vi.clearAllMocks();
-    vi.mocked(useField).mockReturnValue([
-      mockField, 
-      mockMeta,
-      { setValue: vi.fn(), setTouched: vi.fn(), setError: vi.fn() }
-    ]);
-  });
-
-  it('renders TextField with default props', () => {
-    render(<TextInput name="testField" label="Test Label" />);
-    const input = screen.getByTestId('text-field');
+    const input = screen.getByLabelText("Test Label");
     expect(input).toBeInTheDocument();
-    expect(input).toHaveAttribute('placeholder', 'Test Label');
-    expect(input).toHaveValue('testValue');
-    expect(input).toHaveAttribute('type', 'text');
-    expect(input).toHaveAttribute('data-multiline', 'false');
-    expect(input).toHaveAttribute('data-rows', '1');
-    expect(input).toHaveStyle('width: 100%');
-    expect(input).toHaveAttribute('aria-invalid', 'false');
-    expect(input).not.toHaveAttribute('aria-describedby');
+    expect(input).toHaveAttribute("type", "text");
+    expect(input).not.toHaveAttribute("multiline");
+    expect(input).toHaveAttribute("name", "test");
+    expect(input).toHaveStyle("width: 100%");
   });
 
-  it('renders with custom props', () => {
-    render(
-      <TextInput
-        name="testField"
-        label="Custom Label"
-        type="password"
-        multiline={true}
-        rows={4}
-        fullWidth={false}
-      />
+  it("renders with custom type", () => {
+    renderWithFormik(
+      <TextInput name="password" label="Password" type="password" />,
+      { password: "" }
     );
-    const input = screen.getByTestId('text-field');
-    expect(input).toHaveAttribute('placeholder', 'Custom Label');
-    expect(input).toHaveAttribute('type', 'password');
-    expect(input).toHaveAttribute('data-multiline', 'true');
-    expect(input).toHaveAttribute('data-rows', '4');
-    expect(input).toHaveStyle('width: auto');
+
+    const input = screen.getByLabelText("Password");
+    expect(input).toBeInTheDocument();
+    expect(input).toHaveAttribute("type", "password");
   });
 
+  it("renders as multiline with rows", () => {
+    renderWithFormik(
+      <TextInput name="description" label="Description" multiline rows={4} />,
+      { description: "" }
+    );
 
-  it('does not show error when field is not touched', () => {
-    vi.mocked(useField).mockReturnValue([
-      mockField,
-      { 
-        touched: false, 
-        error: 'This field is required',
-        value: undefined,
-        initialTouched: false,
-        initialValue: undefined,
-        initialError: ''
-      },
-      { setValue: vi.fn(), setTouched: vi.fn(), setError: vi.fn() }
-    ]);
-    render(<TextInput name="testField" label="Test Label" />);
-    const input = screen.getByTestId('text-field');
-    expect(input).toHaveAttribute('aria-invalid', 'false');
-    expect(input).not.toHaveAttribute('aria-describedby');
+    const textarea = screen.getByLabelText("Description");
+    expect(textarea).toBeInTheDocument();
+    expect(textarea.tagName).toBe("TEXTAREA");
+    expect(textarea).toHaveAttribute("rows", "4");
+  });
+
+  it('displays error and helper text when touched and invalid', async () => {
+    const initialValues = { email: 'invalid' };
+    const initialTouched = { email: true };
+    const validate = (values: { email: string }) => {
+      const errors: { email?: string } = {};
+      if (!values.email.includes('@')) errors.email = 'Invalid email';
+      return errors;
+    };
+
+    render(
+      <Formik
+        initialValues={initialValues}
+        initialTouched={initialTouched}
+        validate={validate}
+        validateOnMount={true}
+        onSubmit={vi.fn()}
+      >
+        <Form>
+          <TextInput name="email" label="Email" />
+        </Form>
+      </Formik>
+    );
+
+    const input = screen.getByLabelText('Email');
+    await waitFor(() => {
+      expect(input).toHaveAttribute('aria-invalid', 'true');
+      expect(screen.getByText('Invalid email')).toBeInTheDocument();
+    });
+  });
+
+  it("does not show error when not touched", () => {
+    const initialValues = { email: "invalid" };
+    const validate = (values: { email: string }) => {
+      const errors: { email?: string } = {};
+      if (!values.email.includes("@")) errors.email = "Invalid email";
+      return errors;
+    };
+
+    render(
+      <Formik
+        initialValues={initialValues}
+        validate={validate}
+        onSubmit={vi.fn()}
+      >
+        <Form>
+          <TextInput name="email" label="Email" />
+        </Form>
+      </Formik>
+    );
+
+    const input = screen.getByLabelText("Email");
+    expect(input).not.toHaveAttribute("aria-invalid", "true");
+    expect(screen.queryByText("Invalid email")).not.toBeInTheDocument();
+  });
+
+  it("updates value through Formik", () => {
+    renderWithFormik(<TextInput name="username" label="Username" />, {
+      username: "john",
+    });
+
+    const input = screen.getByLabelText("Username") as HTMLInputElement;
+    expect(input.value).toBe("john");
   });
 });

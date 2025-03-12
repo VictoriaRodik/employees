@@ -6,12 +6,14 @@ import { EmployeeInterface } from "../../types/employee";
 interface EmployeeTableProps {
   employees: EmployeeInterface[];
   onEdit: (employee: EmployeeInterface) => void;
+  onCopy: (employee: EmployeeInterface) => void;
   onDelete: (id: number) => void;
 }
 
 const EmployeeTable: React.FC<EmployeeTableProps> = ({
   employees,
   onEdit,
+  onCopy,
   onDelete,
 }) => {
   const columns = [
@@ -30,7 +32,11 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       renderActions={(employee) => (
         <Actions
           onEdit={() => onEdit(employee)}
+          onCopy={() => onCopy(employee)}
           onDelete={() => onDelete(employee.id)}
+          editTitle="Edit"
+          copyTitle="Copy"
+          deleteTitle="Delete"
         />
       )}
     />

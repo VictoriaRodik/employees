@@ -8,6 +8,8 @@ import { useContracts } from "../../hooks/useContracts";
 import { ContractInterface } from "../../types/contract";
 import { Container, SelectChangeEvent, CircularProgress } from "@mui/material";
 import { contractFormatted } from "../../utils/contractFormatted";
+import ContractPDFPreview from "../pdf/ContractPDFPreview";
+import CashOrderPDFPreview from "../pdf/CashOrderPDFPreview";
 
 const ContractList = () => {
   const {
@@ -24,9 +26,15 @@ const ContractList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingContract, setEditingContract] =
     useState<ContractInterface | null>(null);
+  const [copyingContract, setCopyingContract] = useState(false);
+  const [previewContract, setPreviewContract] =
+    useState<ContractInterface | null>(null);
+  const [previewCashOrder, setPreviewCashOrder] =
+    useState<ContractInterface | null>(null);
 
   const handleAdd = useCallback(() => {
     setEditingContract(null);
+    setCopyingContract(false);
     setModalOpen(true);
   }, []);
 
@@ -35,18 +43,30 @@ const ContractList = () => {
     setModalOpen(true);
   }, []);
 
-  const handleDelete = useCallback((id: number) => {
-    deleteContract.mutate(id);
-  }, [deleteContract]);
+  const handleCopy = useCallback((contract: ContractInterface) => {
+    setEditingContract(contractFormatted(contract));
+    setCopyingContract(true);
+    setModalOpen(true);
+  }, []);
 
-  const handleSubmit = useCallback(async (contract: ContractInterface) => {
-    if (contract.id) {
-      await updateContract.mutate(contract);
-    } else {
-      await createContract.mutate(contract);
-    }
-    setModalOpen(false);
-  }, [createContract, updateContract]);
+  const handleDelete = useCallback(
+    (id: number) => {
+      deleteContract.mutate(id);
+    },
+    [deleteContract]
+  );
+
+  const handleSubmit = useCallback(
+    (contract: ContractInterface) => {
+      if (contract.id && !copyingContract) {
+        updateContract.mutate(contract);
+      } else {
+        createContract.mutate(contract);
+      }
+      setModalOpen(false);
+    },
+    [createContract, updateContract, copyingContract]
+  );
 
   const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
     setSearch(e.target.value);
@@ -54,6 +74,14 @@ const ContractList = () => {
 
   const handleSort = useCallback((e: SelectChangeEvent<string>) => {
     setSort(e.target.value);
+  }, []);
+
+  const handlePreviewContract = useCallback((contract: ContractInterface) => {
+    setPreviewContract(contract);
+  }, []);
+
+  const handlePreviewCashOrder = useCallback((contract: ContractInterface) => {
+    setPreviewCashOrder(contract);
   }, []);
 
   const filteredContracts = contracts.filter((e: ContractInterface) =>
@@ -65,11 +93,19 @@ const ContractList = () => {
     return String(a[key]).localeCompare(String(b[key]));
   });
 
-  if (isLoading) return (
-    <Container sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '50vh' }}>
-      <CircularProgress />
-    </Container>
-  );
+  if (isLoading)
+    return (
+      <Container
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
+      >
+        <CircularProgress />
+      </Container>
+    );
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
@@ -96,9 +132,11 @@ const ContractList = () => {
       <ContractTable
         contracts={sortedContracts}
         onEdit={handleEdit}
+        onCopy={handleCopy}
         onDelete={handleDelete}
+        onPreviewContract={handlePreviewContract}
+        onPreviewCashOrder={handlePreviewCashOrder}
       />
-
       <ContractFormModal
         open={modalOpen}
         title={editingContract ? `Редагування` : "Введення"}
@@ -106,6 +144,20 @@ const ContractList = () => {
         onSubmit={handleSubmit}
         initialValues={editingContract || undefined}
       />
+      {previewContract && (
+        <ContractPDFPreview
+          contract={previewContract}
+          open={Boolean(previewContract)}
+          onClose={() => setPreviewContract(null)}
+        />
+      )}
+      {previewCashOrder && (
+        <CashOrderPDFPreview
+          contract={previewCashOrder}
+          open={Boolean(previewCashOrder)}
+          onClose={() => setPreviewCashOrder(null)}
+        />
+      )}
     </Container>
   );
 };

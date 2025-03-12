@@ -214,8 +214,8 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
             <Text>КЗ "Рівненська обласна філармонія" РОР</Text>
             <Text>ЄДРПОУ: 02225683</Text>
             <Text>Адреса: м. Рівне, вул. Драгоманова,20</Text>
-            <Text>р/р: UA</Text>
-            <Text>Банк: КБ "Укрсиббанк"</Text>
+            <Text>р/р: UA513510050000026009332050900</Text>
+            <Text>Банк: АТ "Укрсиббанк"</Text>
             <Text> </Text>
             {contract.address ? <Text> </Text> : <Text></Text>}
             <Text style={styles.signatureSign}>Елеонора СТЕЦЕНКО</Text>
@@ -316,8 +316,8 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
           <Text>КЗ "Рівненська обласна філармонія" РОР</Text>
           <Text>ЄДРПОУ: 02225683</Text>
           <Text>Адреса: м. Рівне, вул. Драгоманова,20</Text>
-          <Text>р/р: UA</Text>
-          <Text>Банк: КБ "Укрсиббанк"</Text>
+          <Text>р/р: UA513510050000026009332050900</Text>
+          <Text>Банк: АТ "Укрсиббанк"</Text>
           <Text> </Text>
           {contract.address ? <Text> </Text> : <Text></Text>}
           <Text style={styles.signatureSign}>Елеонора СТЕЦЕНКО</Text>
