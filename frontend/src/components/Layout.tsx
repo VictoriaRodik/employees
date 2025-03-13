@@ -1,4 +1,4 @@
-import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton, Icon } from '@mui/material';
+import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButton, ListItemIcon, ListItemText, IconButton } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
