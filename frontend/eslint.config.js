@@ -23,15 +23,6 @@ export default tseslint.config(
         'warn',
         { allowConstantExport: true },
       ],
-      '@typescript-eslint/no-explicit-any': 'off',
     },
-    overrides: [
-      {
-        files: ['**/*.test.ts', '**/*.test.tsx'],
-        rules: {
-          '@typescript-eslint/no-explicit-any': 'off'
-        }
-      }
-    ]
   },
 )
