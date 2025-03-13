@@ -4,12 +4,48 @@ import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '../hooks/useTheme';
+import { useState } from 'react';
 
 const drawerWidth = 240;
 
 const Layout = () => {
   const { isDarkMode, toggleTheme } = useTheme();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const drawerContent = (
+    <Box sx={{ overflow: 'auto' }}>
+      <List>
+        <ListItemButton
+          component={Link}
+          to="/employees"
+          sx={{ color: 'text.primary' }}
+          onClick={() => setMobileOpen(false)}
+        >
+          <ListItemIcon>
+            <PeopleIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Співробітники" />
+        </ListItemButton>
+        <ListItemButton
+          component={Link}
+          to="/contracts"
+          sx={{ color: 'text.primary' }}
+          onClick={() => setMobileOpen(false)}
+        >
+          <ListItemIcon>
+            <DescriptionIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Договори" />
+        </ListItemButton>
+      </List>
+    </Box>
+  );
 
   return (
     <Box sx={{
@@ -18,9 +54,25 @@ const Layout = () => {
       bgcolor: 'background.default',
       color: 'text.primary'
     }}>
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" sx={{ 
+        zIndex: (theme) => theme.zIndex.drawer + 1 
+      }}>
         <Toolbar>
-          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            edge="start"
+            onClick={handleDrawerToggle}
+            sx={{ mr: 2, display: { sm: 'none' } }}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography variant="h6" noWrap component="div" sx={{ 
+            flexGrow: 1, 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: 1 
+          }}>
             <Box component="img" src="/vite.svg" sx={{ height: 32, width: 32 }} alt="logo" />
             Система управління договорами
           </Typography>
@@ -30,9 +82,11 @@ const Layout = () => {
         </Toolbar>
       </AppBar>
 
+
       <Drawer
         variant="permanent"
         sx={{
+          display: { xs: 'none', sm: 'block' },
           width: drawerWidth,
           flexShrink: 0,
           [`& .MuiDrawer-paper`]: {
@@ -43,30 +97,27 @@ const Layout = () => {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: 'auto' }}>
-          <List>
-            <ListItemButton
-              component={Link}
-              to="/employees"
-              sx={{ color: 'text.primary' }}
-            >
-              <ListItemIcon>
-                <PeopleIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Співробітники" />
-            </ListItemButton>
-            <ListItemButton
-              component={Link}
-              to="/contracts"
-              sx={{ color: 'text.primary' }}
-            >
-              <ListItemIcon>
-                <DescriptionIcon color="primary" />
-              </ListItemIcon>
-              <ListItemText primary="Договори" />
-            </ListItemButton>
-          </List>
-        </Box>
+        {drawerContent}
+      </Drawer>
+
+
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={handleDrawerToggle}
+        ModalProps={{
+          keepMounted: true,
+        }}
+        sx={{
+          display: { xs: 'block', sm: 'none' }, 
+          '& .MuiDrawer-paper': {
+            width: drawerWidth,
+            bgcolor: 'background.paper'
+          },
+        }}
+      >
+        <Toolbar />
+        {drawerContent}
       </Drawer>
 
       <Box component="main" sx={{

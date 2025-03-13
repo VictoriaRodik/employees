@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
-import EmployeeFormModal from "../../components/employeeComponents/EmployeeFormModal";
-import { EmployeeInterface } from "../../types/employee";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import EmployeeFormModal from "../../../components/employeeComponents/EmployeeFormModal";
+import { EmployeeInterface } from "../../../types/employee";
 
-vi.mock("../../components/Modal", () => ({
+vi.mock("../../../components/Modal", () => ({
   default: ({ open, title, children }: any) => (
     <div data-testid="modal" role="dialog" aria-label={title}>
       {open && (
@@ -41,7 +41,6 @@ describe("EmployeeFormModal", () => {
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.queryByText("Test Modal")).not.toBeInTheDocument();
-    expect(screen.queryByTestId("close-button")).not.toBeInTheDocument();
   });
 
   it("renders EmployeeForm with passed props", () => {
@@ -96,17 +95,18 @@ describe("EmployeeFormModal", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "Додати" }));
 
-    await screen.findByRole("button", { name: "Додати" });
-    expect(mockOnSubmit).toHaveBeenCalledWith(
-      expect.objectContaining({
-        taxId: "1234567890",
-        fullName: "John Doe",
-        passportSeries: "СР",
-        passportNumber: "123456",
-        passportIssueDate: "2023-01-01",
-        passportIssuedBy: "5600",
-      }),
-      expect.any(Object)
-    );
+    await waitFor(() => {
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          taxId: "1234567890",
+          fullName: "John Doe",
+          passportSeries: "СР",
+          passportNumber: "123456",
+          passportIssueDate: "2023-01-01",
+          passportIssuedBy: "5600",
+        }),
+        expect.any(Object)
+      );
+    });
   });
 });

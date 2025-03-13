@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, waitFor, fireEvent } from "@testing-library/react";
-import EmployeeForm from "../../components/employeeComponents/EmployeeForm";
-import { EmployeeInterface } from "../../types/employee";
+import EmployeeForm from "../../../components/employeeComponents/EmployeeForm";
+import { EmployeeInterface } from "../../../types/employee";
 
 describe("EmployeeForm", () => {
   const mockOnSubmit = vi.fn();

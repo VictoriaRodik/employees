@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import Table from "../components/Table";
+import Table from "../../components/Table";
 
 vi.mock("@mui/material", async () => {
   const actual = await vi.importActual("@mui/material");

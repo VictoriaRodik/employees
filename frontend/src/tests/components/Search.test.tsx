@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
-import Search from "../components/Search";
+import Search from "../../components/Search";
 
 vi.mock("@mui/material", async () => {
   const actual = await vi.importActual("@mui/material");

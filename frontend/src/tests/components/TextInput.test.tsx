@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import { Formik, Form } from "formik";
-import TextInput from "../components/TextInput";
+import TextInput from "../../components/TextInput";
 
 const renderWithFormik = (
   ui: React.ReactElement,

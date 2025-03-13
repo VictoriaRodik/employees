@@ -1,10 +1,10 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import EmployeeTable from '../../components/employeeComponents/EmployeeTable';
-import { EmployeeInterface } from '../../types/employee';
+import EmployeeTable from '../../../components/employeeComponents/EmployeeTable';
+import { EmployeeInterface } from '../../../types/employee';
 
 
-vi.mock('../../components/Table', () => ({
+vi.mock('../../../components/Table', () => ({
   default: ({ data, columns, renderActions }: any) => (
     <table data-testid="general-table">
       <thead>
@@ -72,13 +72,13 @@ describe('EmployeeTable', () => {
     const table = screen.getByTestId('general-table');
     expect(table).toBeInTheDocument();
 
-    // Check column headers
+
     expect(screen.getByText('ПІБ')).toBeInTheDocument();
     expect(screen.getByText('Табельний номер')).toBeInTheDocument();
     expect(screen.getByText('ІПН')).toBeInTheDocument();
     expect(screen.getByText('Actions')).toBeInTheDocument();
 
-    // Check data rows
+
     expect(screen.getByText('John Doe')).toBeInTheDocument();
     expect(screen.getByText('001')).toBeInTheDocument();
     expect(screen.getByText('1234567890')).toBeInTheDocument();

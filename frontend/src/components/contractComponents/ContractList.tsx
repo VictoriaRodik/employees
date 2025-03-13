@@ -139,7 +139,7 @@ const ContractList = () => {
       />
       <ContractFormModal
         open={modalOpen}
-        title={editingContract ? `Редагування` : "Введення"}
+        title={editingContract && !copyingContract ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
         initialValues={editingContract || undefined}

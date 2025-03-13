@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from "@testing-library/react";
 import { describe, vi, it, expect, beforeEach } from "vitest";
-import PrintActions from "../components/PrintActions";
+import PrintActions from "../../components/PrintActions";
 
 vi.mock("@mui/material", async () => {
   const actual = await vi.importActual("@mui/material");

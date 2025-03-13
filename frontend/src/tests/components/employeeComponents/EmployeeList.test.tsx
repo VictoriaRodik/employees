@@ -1,8 +1,8 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import EmployeeList from '../../components/employeeComponents/EmployeeList';
-import { useEmployees } from '../../hooks/useEmployees';
-import { EmployeeInterface } from '../../types/employee';
+import EmployeeList from '../../../components/employeeComponents/EmployeeList';
+import { useEmployees } from '../../../hooks/useEmployees';
+import { EmployeeInterface } from '../../../types/employee';
 
 interface SearchProps {
   value: string;
@@ -35,11 +35,11 @@ interface EmployeeFormModalProps {
   initialValues?: EmployeeInterface;
 }
 
-vi.mock('../../hooks/useEmployees', () => ({
+vi.mock('../../../hooks/useEmployees', () => ({
   useEmployees: vi.fn(),
 }));
 
-vi.mock('../../components/Search', () => ({
+vi.mock('../../../components/Search', () => ({
   default: ({ value, onChange }: SearchProps) => (
     <input
       data-testid="search-input"
@@ -49,7 +49,7 @@ vi.mock('../../components/Search', () => ({
   ),
 }));
 
-vi.mock('../../components/Sort', () => ({
+vi.mock('../../../components/Sort', () => ({
   default: ({ value, onChange, options }: SortProps) => (
     <select data-testid="sort-select" value={value} onChange={onChange}>
       {options.map((opt: any) => (
@@ -61,7 +61,7 @@ vi.mock('../../components/Sort', () => ({
   ),
 }));
 
-vi.mock('../../components/Button', () => ({
+vi.mock('../../../components/Button', () => ({
   default: ({ onClick, children }: ButtonProps) => (
     <button data-testid="add-button" onClick={onClick}>
       {children}
@@ -69,7 +69,7 @@ vi.mock('../../components/Button', () => ({
   ),
 }));
 
-vi.mock('../../components/employeeComponents/EmployeeTable', () => ({
+vi.mock('../../../components/employeeComponents/EmployeeTable', () => ({
   default: ({ employees, onEdit, onCopy, onDelete }: EmployeeTableProps) => (
     <div data-testid="employee-table">
       {employees.map((emp: EmployeeInterface) => (
@@ -84,7 +84,7 @@ vi.mock('../../components/employeeComponents/EmployeeTable', () => ({
   ),
 }));
 
-vi.mock('../../components/employeeComponents/EmployeeFormModal', () => ({
+vi.mock('../../../components/employeeComponents/EmployeeFormModal', () => ({
   default: ({ open, title, onClose, onSubmit, initialValues }: EmployeeFormModalProps) => (
     open ? (
       <div data-testid="modal">

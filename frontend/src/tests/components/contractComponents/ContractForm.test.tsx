@@ -1,16 +1,16 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import ContractForm from '../../components/contractComponents/ContractForm';
-import { useEmployees } from '../../hooks/useEmployees';
-import { ContractInterface } from '../../types/contract';
-import { EmployeeInterface } from '../../types/employee';
+import ContractForm from '../../../components/contractComponents/ContractForm';
+import { useEmployees } from '../../../hooks/useEmployees';
+import { ContractInterface } from '../../../types/contract';
+import { EmployeeInterface } from '../../../types/employee';
 
-vi.mock('../../hooks/useEmployees', () => ({
+vi.mock('../../../hooks/useEmployees', () => ({
   useEmployees: vi.fn(),
 }));
 
-vi.mock('../../utils/contractFormatted', () => ({
+vi.mock('../../../utils/contractFormatted', () => ({
   contractFormatted: (contract: ContractInterface) => ({
     ...contract,
     contractDate: new Date(contract.contractDate).toLocaleDateString('en-CA'),
@@ -106,7 +106,7 @@ describe('ContractForm', () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          employeeId: 1, // Changed to number
+          employeeId: 1,
           contractDate: '2023-01-01',
           contractEndDate: '2023-12-31',
           contractAmount: '1000.50',

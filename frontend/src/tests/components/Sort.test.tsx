@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Sort from '../components/Sort'; // Adjust path as needed
+import Sort from '../../components/Sort'; // Adjust path as needed
 import { SelectChangeEvent } from '@mui/material';
 
 
