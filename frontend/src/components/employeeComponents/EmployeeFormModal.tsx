@@ -7,7 +7,7 @@ interface EmployeeFormModalProps {
   onClose: () => void;
   onSubmit: (employee: EmployeeInterface) => void;
   title: string;
-  initialValues?: EmployeeInterface;
+  initialValues?: EmployeeInterface | null;
 }
 
 const EmployeeFormModal: React.FC<EmployeeFormModalProps> = ({ open, onClose, title, onSubmit, initialValues }) => {

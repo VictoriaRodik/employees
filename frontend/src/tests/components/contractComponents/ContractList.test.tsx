@@ -21,16 +21,14 @@ interface ContractFormModalProps {
   initialValues?: ContractInterface;
 }
 
-
 interface SearchProps {
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-
 interface SortProps {
   value: string;
-  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void; 
+  onChange: (e: React.ChangeEvent<HTMLSelectElement>) => void;
   options: { value: string; label: string }[];
 }
 
@@ -71,26 +69,51 @@ vi.mock("../../../components/contractComponents/ContractTable", () => ({
   ),
 }));
 
-vi.mock("../../../components/contractComponents/ContractFormModal", () => ({
-  default: ({ open, title, onSubmit, initialValues }: ContractFormModalProps) =>
-    open ? (
-      <div data-testid="contract-form-modal">
-        <h2>{title}</h2>
-        <button
-          onClick={() =>
-            onSubmit({ ...initialValues, id: initialValues?.id || 999 })
-          }
-        >
-          Submit
-        </button>
-      </div>
-    ) : null,
-}));
+vi.mock("../../../components/contractComponents/ContractFormModal", () => {
+  const defaultValues: ContractInterface = {
+    id: 0,
+    fullName: "",
+    contractDate: new Date().toLocaleDateString("en-CA"),
+    employeeId: "",
+    contractEndDate: "",
+    contractAmount: "",
+    contractContent: "",
+    contractNumber: "",
+    taxId: "",
+    passportNumber: "",
+    passportIssueDate: "",
+    passportIssuedBy: "",
+  };
 
-vi.mock('react-pdf', () => ({
-  Document: ({ children }: any) => <div data-testid="mock-pdf-document">{children}</div>,
+  return {
+    default: ({
+      open,
+      title,
+      onSubmit,
+      initialValues,
+    }: ContractFormModalProps) => {
+      const mergedContract: ContractInterface = {
+        ...defaultValues,
+        ...(initialValues ? { ...initialValues } : {}),
+        id: initialValues?.id || 999,
+      };
+
+      return open ? (
+        <div data-testid="contract-form-modal">
+          <h2>{title}</h2>
+          <button onClick={() => onSubmit(mergedContract)}>Submit</button>
+        </div>
+      ) : null;
+    },
+  };
+});
+
+vi.mock("react-pdf", () => ({
+  Document: ({ children }: any) => (
+    <div data-testid="mock-pdf-document">{children}</div>
+  ),
   Page: () => <div data-testid="mock-pdf-page">Mock Page</div>,
-  pdfjs: { GlobalWorkerOptions: { workerSrc: '' } },
+  pdfjs: { GlobalWorkerOptions: { workerSrc: "" } },
 }));
 
 vi.mock("../../../components/Search", () => ({
@@ -211,7 +234,7 @@ describe("ContractList", () => {
     });
     await waitFor(() => {
       const contractElements = screen.getAllByText(/John Doe|Jane Smith/);
-      expect(contractElements[0]).toHaveTextContent("John Doe"); 
+      expect(contractElements[0]).toHaveTextContent("John Doe");
     });
   });
 
@@ -258,5 +281,4 @@ describe("ContractList", () => {
       );
     });
   });
-
 });

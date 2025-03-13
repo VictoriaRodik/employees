@@ -130,7 +130,7 @@ const EmployeeList = () => {
         title={editingEmployee && !copyingEmployee ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmployee || undefined}
+        initialValues={editingEmployee}
       />
     </Container>
   );

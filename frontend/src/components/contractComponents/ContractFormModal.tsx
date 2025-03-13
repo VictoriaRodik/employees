@@ -7,7 +7,7 @@ interface ContractFormModalProps {
   onClose: () => void;
   onSubmit: (contract: ContractInterface) => void;
   title: string;
-  initialValues?: ContractInterface;
+  initialValues?: ContractInterface | null;
 }
 
 const ContractFormModal: React.FC<ContractFormModalProps> = ({ open, onClose, title, onSubmit, initialValues }) => {

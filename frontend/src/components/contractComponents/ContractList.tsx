@@ -142,7 +142,7 @@ const ContractList = () => {
         title={editingContract && !copyingContract ? `Редагування` : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingContract || undefined}
+        initialValues={editingContract}
       />
       {previewContract && (
         <ContractPDFPreview
