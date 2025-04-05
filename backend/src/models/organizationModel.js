@@ -1,4 +1,3 @@
-// src/models/organizationModel.js
 const pool = require("../config/db");
 
 async function getAllOrganizations() {
@@ -18,9 +17,9 @@ async function addOrganization(data) {
     edrpou_code,
     address,
     phone,
-    account_number,
-    bank,
-    founding_document,
+    bank_account,
+    bank_name,
+    foundation_doc,
     director_position,
     director_full_name,
   } = data;
@@ -28,7 +27,7 @@ async function addOrganization(data) {
   const [result] = await pool.query(
     `INSERT INTO organizations (
       name, short_name, edrpou_code, address, phone,
-      account_number, bank, founding_document, director_position, director_full_name
+      bank_account, bank_name, foundation_doc, director_position, director_full_name
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       name,
@@ -36,9 +35,9 @@ async function addOrganization(data) {
       edrpou_code,
       address,
       phone,
-      account_number,
-      bank,
-      founding_document,
+      bank_account,
+      bank_name,
+      foundation_doc,
       director_position,
       director_full_name,
     ]
@@ -54,9 +53,9 @@ async function updateOrganization(id, data) {
     edrpou_code,
     address,
     phone,
-    account_number,
-    bank,
-    founding_document,
+    bank_account,
+    bank_name,
+    foundation_doc,
     director_position,
     director_full_name,
   } = data;
@@ -64,7 +63,7 @@ async function updateOrganization(id, data) {
   const [result] = await pool.query(
     `UPDATE organizations SET
       name = ?, short_name = ?, edrpou_code = ?, address = ?, phone = ?,
-      account_number = ?, bank = ?, founding_document = ?, director_position = ?, director_full_name = ?
+      bank_account = ?, bank_name = ?, foundation_doc = ?, director_position = ?, director_full_name = ?
      WHERE id = ?`,
     [
       name,
@@ -72,9 +71,9 @@ async function updateOrganization(id, data) {
       edrpou_code,
       address,
       phone,
-      account_number,
-      bank,
-      founding_document,
+      bank_account,
+      bank_name,
+      foundation_doc,
       director_position,
       director_full_name,
       id,
