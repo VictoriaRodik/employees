@@ -5,7 +5,7 @@ const OrganizationsPage = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom color="primary">
-        Організації
+        Картка організації
       </Typography>
       <Paper sx={{ 
         p: 2,

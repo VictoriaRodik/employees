@@ -6,6 +6,8 @@ import { ContractInterface } from "../../types/contract";
 import { useEmployees } from "../../hooks/useEmployees";
 import { contractFormatted } from "../../utils/contractFormatted";
 import { EmployeeInterface } from "../../types/employee";
+import { OrganizationInterface } from "../../types/organization";
+import { useOrganizations } from "../../hooks/useOrganizations";
 interface ContractFormProps {
   initialValues?: ContractInterface | null;
   onClose: () => void;
@@ -26,6 +28,17 @@ const defaultValues: ContractInterface = {
   passportNumber: "",
   passportIssueDate: new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: "",
+  organizationId: "1",
+  name: "",
+  shortName: "",
+  edrpouCode: "",
+  legalAddress: "",
+  phone: "",
+  bankAccount: "",
+  bankName: "",
+  foundationDoc: "",
+  directorPosition: "",
+  directorFullName: "",
 };
 
 const ContractForm: React.FC<ContractFormProps> = ({
@@ -33,9 +46,11 @@ const ContractForm: React.FC<ContractFormProps> = ({
   onSubmit
 }) => {
   const { data: employees = [] } = useEmployees();
+  const { data: organizations = [] } = useOrganizations();
 
   const validationSchema = Yup.object({
     employeeId: Yup.number().required("Обов'язкове поле"),
+    organizationId: Yup.number().required("Обов'язкове поле"),
     contractDate: Yup.date().required("Обов'язкове поле"),
     contractEndDate: Yup.date().required("Обов'язкове поле"),
     contractAmount: Yup.string()
@@ -57,6 +72,22 @@ const ContractForm: React.FC<ContractFormProps> = ({
       {({ isSubmitting, values, handleChange }) => (
         <Form>
           <Grid2 container spacing={2} sx={{ mt: 2 }}>
+          <Grid2 size={{ xs: 6 }}>
+              <TextField
+                select
+                name="organizationId"
+                label="Замовник"
+                value={values.organizationId}
+                onChange={handleChange}
+                fullWidth
+              >
+                {organizations.map((org: OrganizationInterface) => (
+                  <MenuItem key={org.id} value={org.id}>
+                    {org.shortName} ({org.edrpouCode})
+                  </MenuItem>
+                ))}
+              </TextField>
+            </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextField
                 select

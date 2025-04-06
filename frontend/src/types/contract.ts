@@ -13,6 +13,17 @@ export interface ContractInterface {
   passportNumber: string;
   passportIssueDate: string;
   passportIssuedBy: string;
+  organizationId: string;
+  name: string;
+  shortName: string;
+  edrpouCode: string;
+  legalAddress: string;
+  phone: string;
+  bankAccount: string;
+  bankName: string;
+  foundationDoc: string;
+  directorPosition: string;
+  directorFullName: string;
 }
 
 export interface ApiContract {
@@ -31,4 +42,15 @@ export interface ApiContract {
   passport_number: string;
   passport_issue_date: string;
   passport_issued_by: string;
+  organization_id: string;
+  name: string;
+  short_name: string;
+  edrpou_code: string;
+  legal_address: string;
+  phone: string;
+  bank_account: string;
+  bank_name: string;
+  foundation_doc: string;
+  director_position: string;
+  director_full_name: string;
 }

@@ -23,4 +23,15 @@ export const contractFormatted = (
     ? new Date(contract.passportIssueDate).toLocaleDateString("en-CA")
     : new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: contract?.passportIssuedBy ?? "",
+  organizationId: contract?.organizationId ?? "",
+  name: contract?.name ?? "",
+  shortName: contract?.shortName ?? "",
+  edrpouCode: contract?.edrpouCode ?? "",
+  legalAddress: contract?.legalAddress ?? "",
+  phone: contract?.phone ?? "",
+  bankAccount: contract?.bankAccount ?? "",
+  bankName: contract?.bankName ?? "",
+  foundationDoc: contract?.foundationDoc ?? "",
+  directorPosition: contract?.directorPosition ?? "",
+  directorFullName: contract?.directorFullName ?? "",
 });

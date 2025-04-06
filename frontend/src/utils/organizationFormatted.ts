@@ -7,7 +7,7 @@ export const organizationFormatted = (
   name: org?.name ?? "",
   shortName: org?.shortName ?? "",
   edrpouCode: org?.edrpouCode ?? "",
-  address: org?.address ?? "",
+  legalAddress: org?.legalAddress ?? "",
   phone: org?.phone ?? "",
   bankAccount: org?.bankAccount ?? "",
   bankName: org?.bankName ?? "",

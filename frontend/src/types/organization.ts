@@ -3,7 +3,7 @@ export interface OrganizationInterface {
   name: string;
   shortName: string;
   edrpouCode: string;
-  address: string;
+  legalAddress: string;
   phone: string;
   bankAccount: string;
   bankName: string;
@@ -17,7 +17,7 @@ export interface ApiOrganization {
   name: string;
   short_name: string;
   edrpou_code: string;
-  address: string;
+  legal_address: string;
   phone: string;
   bank_account: string;
   bank_name: string;

@@ -15,7 +15,7 @@ async function addOrganization(data) {
     name,
     short_name,
     edrpou_code,
-    address,
+    legal_address,
     phone,
     bank_account,
     bank_name,
@@ -26,14 +26,14 @@ async function addOrganization(data) {
 
   const [result] = await pool.query(
     `INSERT INTO organizations (
-      name, short_name, edrpou_code, address, phone,
+      name, short_name, edrpou_code, legal_address, phone,
       bank_account, bank_name, foundation_doc, director_position, director_full_name
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       name,
       short_name,
       edrpou_code,
-      address,
+      legal_address,
       phone,
       bank_account,
       bank_name,
@@ -51,7 +51,7 @@ async function updateOrganization(id, data) {
     name,
     short_name,
     edrpou_code,
-    address,
+    legal_address,
     phone,
     bank_account,
     bank_name,
@@ -62,14 +62,14 @@ async function updateOrganization(id, data) {
 
   const [result] = await pool.query(
     `UPDATE organizations SET
-      name = ?, short_name = ?, edrpou_code = ?, address = ?, phone = ?,
+      name = ?, short_name = ?, edrpou_code = ?, legal_address = ?, phone = ?,
       bank_account = ?, bank_name = ?, foundation_doc = ?, director_position = ?, director_full_name = ?
      WHERE id = ?`,
     [
       name,
       short_name,
       edrpou_code,
-      address,
+      legal_address,
       phone,
       bank_account,
       bank_name,

@@ -16,7 +16,7 @@ const defaultValues: OrganizationInterface = {
   name: "",
   shortName: "",
   edrpouCode: "",
-  address: "",
+  legalAddress: "",
   phone: "",
   bankAccount: "",
   bankName: "",
@@ -35,7 +35,7 @@ const OrganizationForm: React.FC<OrganizationFormProps> = ({
     edrpouCode: Yup.string()
       .matches(/^\d{8}$/, "Має бути 8 цифр")
       .required("Обов'язкове поле"),
-    address: Yup.string().required("Обов'язкове поле"),
+    legalAddress: Yup.string().required("Обов'язкове поле"),
     phone: Yup.string(),
     bankAccount: Yup.string(),
     bankName: Yup.string(),
@@ -66,7 +66,7 @@ const OrganizationForm: React.FC<OrganizationFormProps> = ({
               <TextInput name="edrpouCode" label="ЄДРПОУ" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
-              <TextInput name="address" label="Адреса" />
+              <TextInput name="legalAddress" label="Адреса" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextInput name="phone" label="Телефон" />
