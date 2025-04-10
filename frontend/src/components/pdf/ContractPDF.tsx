@@ -1,6 +1,7 @@
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 import { ContractInterface } from "../../types/contract";
 import { moneyToWords } from "../../utils/numberToWords";
+import { fullNameToShortName } from "../../utils/fullNameToShortName";
 
 const styles = StyleSheet.create({
   page: {
@@ -88,13 +89,10 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
 
       <View style={styles.section}>
         <Text style={styles.paragraph}>
-          Комунальний заклад "Рівненська обласна філармонія" Рівненської
-          обласної ради, в особі директора{" "}
-          <Text style={styles.decoratedText}>
-            Стеценко Елеонори Анатоліївни
-          </Text>
-          , що діє на підставі Статуту (надалі - Замовник), з однієї сторони, та
-          громадянин(ка){" "}
+          {contract.name}, в особі {contract.directorPosition}{" "}
+          <Text style={styles.decoratedText}>{contract.directorFullName}</Text>,
+          що діє на підставі {contract.foundationDoc} (надалі - Замовник), з
+          однієї сторони, та громадянин(ка){" "}
           <Text style={styles.decoratedText}>{contract.fullName}</Text>, (надалі
           - Виконавець), з другої сторони, разом іменовані Сторони, уклали цей
           договір (надалі - Договір) про наступне:
@@ -211,14 +209,15 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
         <View style={styles.signatures}>
           <View style={styles.signatureBlock}>
             <Text>ЗАМОВНИК:</Text>
-            <Text>КЗ "Рівненська обласна філармонія" РОР</Text>
-            <Text>ЄДРПОУ: 02225683</Text>
-            <Text>Адреса: м. Рівне, вул. Драгоманова,20</Text>
-            <Text>р/р: UA513510050000026009332050900</Text>
-            <Text>Банк: АТ "Укрсиббанк"</Text>
-            <Text> </Text>
+            <Text>{contract.shortName}</Text>
+            <Text>ЄДРПОУ: {contract.edrpouCode}</Text>
+            <Text>Адреса: {contract.legalAddress}</Text>
+            <Text>р/р: {contract.bankAccount}</Text>
+            <Text>Банк: {contract.bankName}</Text>
             {contract.address ? <Text> </Text> : <Text></Text>}
-            <Text style={styles.signatureSign}>Елеонора СТЕЦЕНКО</Text>
+            <Text style={styles.signatureSign}>
+              {fullNameToShortName(contract.directorFullName)}
+            </Text>
             <View style={styles.signatureLine} />
             <Text style={styles.signatureText}>підпис / М.П.</Text>
           </View>
@@ -269,12 +268,10 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
       <View style={styles.section}>
         <Text style={styles.paragraph}>
           {" "}
-          Замовник Комунальний заклад "Рівненська обласна філармонія"
-          Рівненської обласної ради, в особі директора{" "}
-          <Text style={styles.decoratedText}>
-            Стеценко Елеонори Анатоліївни
-          </Text>
-          , що діє на підставі Статуту, з однієї сторони, та Виконавець{" "}
+          Замовник {contract.name}, в особі {contract.directorPosition}{" "}
+          <Text style={styles.decoratedText}>{contract.directorFullName}</Text>,
+          що діє на підставі {contract.foundationDoc}, з однієї сторони, та
+          Виконавець{" "}
           <Text style={styles.decoratedText}>{contract.fullName}</Text>, з
           другої сторони, уклали цей акт приймання-передачі послуг про наступне:
         </Text>
@@ -313,14 +310,15 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
       <View style={styles.signatures}>
         <View style={styles.signatureBlock}>
           <Text>ЗАМОВНИК:</Text>
-          <Text>КЗ "Рівненська обласна філармонія" РОР</Text>
-          <Text>ЄДРПОУ: 02225683</Text>
-          <Text>Адреса: м. Рівне, вул. Драгоманова,20</Text>
-          <Text>р/р: UA513510050000026009332050900</Text>
-          <Text>Банк: АТ "Укрсиббанк"</Text>
-          <Text> </Text>
+          <Text>{contract.shortName}</Text>
+          <Text>ЄДРПОУ: {contract.edrpouCode}</Text>
+          <Text>Адреса: {contract.legalAddress}</Text>
+          <Text>р/р: {contract.bankAccount}</Text>
+          <Text>Банк: {contract.bankName}</Text>
           {contract.address ? <Text> </Text> : <Text></Text>}
-          <Text style={styles.signatureSign}>Елеонора СТЕЦЕНКО</Text>
+          <Text style={styles.signatureSign}>
+            {fullNameToShortName(contract.directorFullName)}
+          </Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureText}>підпис / М.П.</Text>
         </View>
