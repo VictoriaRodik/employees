@@ -24,14 +24,14 @@ async function addEmployee(employeeData) {
   const [result] = await pool.query(
     `INSERT INTO employees (tax_id, full_name, address, passport_series, passport_number, passport_issue_date, passport_issued_by, personnel_number) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     [
-      tax_id || null,
-      full_name || null,
-      address || null,
-      passport_series || null,
-      passport_number || null,
-      passport_issue_date || null,
-      passport_issued_by || null,
-      personnel_number || null,
+      tax_id,
+      full_name,
+      address,
+      passport_series,
+      passport_number,
+      passport_issue_date,
+      passport_issued_by,
+      personnel_number,
     ]
   );
   return result.insertId;

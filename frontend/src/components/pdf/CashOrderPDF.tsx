@@ -86,8 +86,8 @@ const CashOrderPDF: React.FC<CashOrderPDFProps> = ({
     <Page size="A4" style={styles.page}>
       <View style={styles.documentHeader}>
         <View style={styles.organizationHeader}>
-          <Text>КЗ "Рівненська обласна філармонія" РОР</Text>
-          <Text>ЄДРПОУ 02225683</Text>
+          <Text>{contract.shortName}</Text>
+          <Text>ЄДРПОУ {contract.edrpouCode}</Text>
         </View>
         <View>
           <Text>Типова форма № КО-2</Text>
@@ -98,7 +98,7 @@ const CashOrderPDF: React.FC<CashOrderPDFProps> = ({
 
       <View style={styles.documentTitle}>
         <Text>ВИДАТКОВИЙ КАСОВИЙ ОРДЕР №{orderNumber}</Text>
-        <Text>від _______________ 2025 року</Text>
+        <Text>від _______________ 20__ року</Text>
       </View>
 
       <View style={styles.table}>
@@ -204,7 +204,7 @@ const CashOrderPDF: React.FC<CashOrderPDFProps> = ({
       </View>
 
       <View>
-        <Text>__________________________ 2025 року</Text>
+        <Text>__________________________ 20__ року</Text>
       </View>
 
       <View style={styles.signatures}>

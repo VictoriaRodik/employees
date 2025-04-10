@@ -2,6 +2,7 @@ import { Box, AppBar, Toolbar, Typography, Container, Drawer, List, ListItemButt
 import { Link, Outlet } from 'react-router-dom';
 import PeopleIcon from '@mui/icons-material/People';
 import DescriptionIcon from '@mui/icons-material/Description';
+import BusinessIcon from '@mui/icons-material/Business';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -42,6 +43,17 @@ const Layout = () => {
             <DescriptionIcon color="primary" />
           </ListItemIcon>
           <ListItemText primary="Договори" />
+        </ListItemButton>
+        <ListItemButton
+          component={Link}
+          to="/organizations"
+          sx={{ color: 'text.primary' }}
+          onClick={() => setMobileOpen(false)}
+        >
+          <ListItemIcon>
+            <BusinessIcon color="primary" />
+          </ListItemIcon>
+          <ListItemText primary="Організації" />
         </ListItemButton>
       </List>
     </Box>

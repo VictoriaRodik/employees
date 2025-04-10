@@ -2,11 +2,17 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import ContractFormModal from "../../../components/contractComponents/ContractFormModal";
 import { useEmployees } from "../../../hooks/useEmployees";
+import { useOrganizations } from "../../../hooks/useOrganizations";
 import { ContractInterface } from "../../../types/contract";
 import { EmployeeInterface } from "../../../types/employee";
+import { OrganizationInterface } from "../../../types/organization";
 
 vi.mock("../../../hooks/useEmployees", () => ({
   useEmployees: vi.fn(),
+}));
+
+vi.mock("../../../hooks/useOrganizations", () => ({
+  useOrganizations: vi.fn(),
 }));
 
 vi.mock("../../../components/Modal", () => ({
@@ -47,6 +53,22 @@ describe("ContractFormModal", () => {
       passportIssuedBy: "5600",
     },
   ];
+
+  const mockOrganizations: OrganizationInterface[] = [
+    {
+      id: 10,
+      name: "Test company",
+      shortName: "Company",
+      edrpouCode: "32228978",
+      legalAddress: "Some street",
+      phone: "0362",
+      bankAccount: "UA112222220000000000000000000",
+      bankName: "Big Bank",
+      foundationDoc: "Document",
+      directorPosition: "director",
+      directorFullName: "John Doe",
+    },
+  ]; 
   const mockOnClose = vi.fn();
   const mockOnSubmit = vi.fn();
 
@@ -60,6 +82,7 @@ describe("ContractFormModal", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     (useEmployees as any).mockReturnValue({ data: mockEmployees });
+    (useOrganizations as any).mockReturnValue({ data: mockOrganizations });
   });
 
   it("renders Modal with correct props when open", () => {
@@ -68,7 +91,7 @@ describe("ContractFormModal", () => {
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
-    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(screen.getAllByRole("combobox")).toHaveLength(2);
   });
 
   it("does not render Modal content when closed", () => {
@@ -95,13 +118,24 @@ describe("ContractFormModal", () => {
       passportNumber: "123456",
       passportIssueDate: "2023-01-01",
       passportIssuedBy: "5600",
+      organizationId: "10",
+      name: "Test company",
+      shortName: "Company",
+      edrpouCode: "32228978",
+      legalAddress: "Some street",
+      phone: "0362",
+      bankAccount: "UA112222220000000000000000000",
+      bankName: "Big Bank",
+      foundationDoc: "Document",
+      directorPosition: "director",
+      directorFullName: "John Doe",
     };
 
     render(
       <ContractFormModal {...defaultProps} initialValues={initialValues} />
     );
 
-    const selectElement = screen.getByRole("combobox");
+    const selectElement = screen.getAllByRole("combobox")[1];
     fireEvent.mouseDown(selectElement);
     const options = screen.getAllByRole("option");
 
@@ -120,10 +154,15 @@ describe("ContractFormModal", () => {
   it("passes onSubmit to ContractForm and calls it with valid data", async () => {
     render(<ContractFormModal {...defaultProps} />);
 
-    const selectElement = screen.getByRole("combobox");
-    fireEvent.mouseDown(selectElement);
-    const option = screen.getAllByRole("option")[0];
-    fireEvent.click(option);
+    const selectOrg = screen.getAllByRole("combobox")[0];
+    fireEvent.mouseDown(selectOrg);
+    const optionOrg = screen.getAllByRole("option")[0];
+    fireEvent.click(optionOrg);
+
+    const selectEmployee = screen.getAllByRole("combobox")[1];
+    fireEvent.mouseDown(selectEmployee);
+    const optionEmployee = screen.getAllByRole("option")[0];
+    fireEvent.click(optionEmployee);
 
     fireEvent.change(screen.getByLabelText("Дата контракту"), {
       target: { value: "2025-01-01" },
@@ -154,6 +193,7 @@ describe("ContractFormModal", () => {
           contractContent: "test",
           contractNumber: "01-01",
           employeeId: 1,
+          organizationId: 10,
         }),
         expect.any(Object)
       );

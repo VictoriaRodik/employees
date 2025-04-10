@@ -24,3 +24,6 @@ app.use('/employees', employeeRoutes);
 
 const contractRoutes = require('./src/routes/contractRoutes');
 app.use('/contracts', contractRoutes);
+
+const organizationRoutes = require('./src/routes/organizationRoutes');
+app.use('/organizations', organizationRoutes);

@@ -2,14 +2,63 @@ const pool = require("../config/db");
 
 async function getAllContracts() {
   const [rows] = await pool.query(
-    "SELECT contracts.*, employees.tax_id, employees.full_name, employees.address, employees.passport_series, employees.passport_number, employees.passport_issue_date, employees.passport_issued_by FROM contracts join employees on contracts.employee_id=employees.id"
+    `SELECT  
+    contracts.*,
+    employees.tax_id,
+    employees.full_name,
+    employees.address,
+    employees.passport_series,
+    employees.passport_number,
+    employees.passport_issue_date,
+    employees.passport_issued_by,
+    organizations.name,
+    organizations.short_name,
+    organizations.edrpou_code,
+    organizations.legal_address,
+    organizations.phone,
+    organizations.bank_account,
+    organizations.bank_name,
+    organizations.foundation_doc,
+    organizations.director_position,
+    organizations.director_full_name
+    FROM
+    contracts
+        JOIN
+    employees ON contracts.employee_id = employees.id
+        JOIN
+    organizations ON contracts.organization_id = organizations.id`
   );
   return rows;
 }
 
 async function getContractById(id) {
   const [rows] = await pool.query(
-    "SELECT contracts.*, employees.tax_id, employees.full_name, employees.address, employees.passport_series, employees.passport_number, employees.passport_issue_date, employees.passport_issued_by FROM contracts JOIN employees ON contracts.employee_id = employees.id WHERE contracts.id = ?",
+    `SELECT 
+    contracts.*,
+    employees.tax_id,
+    employees.full_name,
+    employees.address,
+    employees.passport_series,
+    employees.passport_number,
+    employees.passport_issue_date,
+    employees.passport_issued_by,
+    organizations.name,
+    organizations.short_name,
+    organizations.edrpou_code,
+    organizations.legal_address,
+    organizations.phone,
+    organizations.bank_account,
+    organizations.bank_name,
+    organizations.foundation_doc,
+    organizations.director_position,
+    organizations.director_full_name
+    FROM
+    contracts
+        JOIN
+    employees ON contracts.employee_id = employees.id
+        JOIN
+    organizations ON contracts.organization_id = organizations.id 
+    WHERE contracts.id = ?`,
     [id]
   );
   return rows[0];
@@ -18,6 +67,7 @@ async function getContractById(id) {
 async function addContract(contractData) {
   const {
     employee_id,
+    organization_id,
     contract_date,
     contract_end_date,
     contract_amount,
@@ -27,14 +77,16 @@ async function addContract(contractData) {
   const [result] = await pool.query(
     `INSERT INTO contracts (
     employee_id,
+    organization_id,
     contract_date,
     contract_end_date,
     contract_amount,
     contract_content,
     contract_number)
-     VALUES (?, ?, ?, ?, ?, ?)`,
+     VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       employee_id,
+      organization_id || 1,
       contract_date,
       contract_end_date,
       contract_amount,
@@ -48,6 +100,7 @@ async function addContract(contractData) {
 async function updateContract(id, updatedData) {
   const {
     employee_id,
+    organization_id,
     contract_date,
     contract_end_date,
     contract_amount,
@@ -58,6 +111,7 @@ async function updateContract(id, updatedData) {
   const [result] = await pool.query(
     `UPDATE contracts SET
       employee_id = ?,
+      organization_id = ?,
       contract_date = ?,
       contract_end_date = ?,
       contract_amount = ?,
@@ -66,6 +120,7 @@ async function updateContract(id, updatedData) {
     WHERE id = ?`,
     [
       employee_id,
+      organization_id || 1,
       contract_date,
       contract_end_date,
       contract_amount,

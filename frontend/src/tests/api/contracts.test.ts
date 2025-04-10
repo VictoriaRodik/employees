@@ -33,6 +33,17 @@ describe("Contract API Functions", () => {
     passportNumber: "123456",
     passportIssueDate: "2023-01-01",
     passportIssuedBy: "5600",
+    organizationId: "10",
+    name: "Test company",
+    shortName: "Company",
+    edrpouCode: "32228978",
+    legalAddress: "Some street",
+    phone: "0362",
+    bankAccount: "UA112222220000000000000000000",
+    bankName: "Big Bank",
+    foundationDoc: "Document",
+    directorPosition: "director",
+    directorFullName: "John Doe",
   };
 
   beforeEach(() => {

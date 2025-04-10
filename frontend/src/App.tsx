@@ -5,6 +5,7 @@ import ContractsPage from './pages/ContractsPage';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeProvider';
 import { registerPDFFonts } from './config/pdfFonts';
+import OrganizationsPage from "./pages/OrganizationsPage";
 
 
 registerPDFFonts();
@@ -21,6 +22,7 @@ function App() {
               <Route index element={<Navigate to="/employees" replace />} />
               <Route path="employees" element={<EmployeesPage />} />
               <Route path="contracts" element={<ContractsPage />} />
+              <Route path="organizations" element={<OrganizationsPage />} />
               <Route path="*" element={<Navigate to="/employees" replace />} />
             </Route>
           </Routes>
