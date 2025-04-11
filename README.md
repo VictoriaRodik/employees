@@ -3,20 +3,20 @@ A web application for creating, saving, and printing ЦПХ (civil law) contract
 
 🔗 https://print-for-employees.onrender.com
 
-⚙️ Features:
+#⚙️ Features:
 📄 Generation of contracts
 💵 Printing of cash expenditure orders
 🧑‍💼 Storage of employee and organization information
 🔍 Search and sort employees
 ✏️ Create, edit, copy, and delete records
 
-🛠️ Tech Stack
+#🛠️ Tech Stack
 Frontend: React, React Query, Material UI
 Backend: Node.js (Express)
 Database: MySQL
 Deployment: Render (backend + frontend) / Aiven (DB)
 
-📦 Local Setup
+#📦 Local Setup
 To run the project locally, you need Node.js and MySQL installed.
 
 1. Clone the repository:
@@ -41,24 +41,24 @@ VITE_API_URL=http://localhost:5000
 
 4. Run the application:
 
-# In one terminal, run the backend
+In one terminal, run the backend
 cd backend
 npm run dev
 
-# In another terminal, run the frontend
+In another terminal, run the frontend
 cd frontend
 npm run dev
 The frontend will be available at http://localhost:5173 and the backend at http://localhost:5000.
 
-📁 Folder Structure
+#📁 Folder Structure
 your-repo-name/
 ├── frontend/        # React frontend
 ├── backend/        # Express backend
 └── README.md
 
-✨ Future Plans:
+#✨ Future Plans:
 - Add user authentication and roles
 - Generate HR orders (hiring, dismissal, leave, bonuses, etc.)
 
-📬 Feedback & Contributions
+#📬 Feedback & Contributions
 Feel free to fork the project, submit pull requests, or suggest improvements through issues.
