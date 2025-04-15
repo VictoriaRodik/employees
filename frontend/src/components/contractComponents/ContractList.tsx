@@ -5,6 +5,7 @@ import Sort from "../Sort";
 import Button from "../Button";
 import ContractFormModal from "./ContractFormModal";
 import { useContracts } from "../../hooks/useContracts";
+import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { ContractInterface } from "../../types/contract";
 import { Container, SelectChangeEvent, CircularProgress } from "@mui/material";
 import { contractFormatted } from "../../utils/contractFormatted";
@@ -21,8 +22,6 @@ const ContractList = () => {
     deleteContract,
   } = useContracts();
 
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("fullName");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingContract, setEditingContract] =
     useState<ContractInterface | null>(null);
@@ -31,6 +30,10 @@ const ContractList = () => {
     useState<ContractInterface | null>(null);
   const [previewCashOrder, setPreviewCashOrder] =
     useState<ContractInterface | null>(null);
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
+
+  const search = searchParams.get("search") || "";
+  const sort = searchParams.get("sort") || "contractDate";
 
   const handleAdd = useCallback(() => {
     setEditingContract(null);
@@ -68,13 +71,19 @@ const ContractList = () => {
     [createContract, updateContract, copyingContract]
   );
 
-  const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
-    setSearch(e.target.value);
-  }, []);
+  const handleSearch = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ search: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
-  const handleSort = useCallback((e: SelectChangeEvent<string>) => {
-    setSort(e.target.value);
-  }, []);
+  const handleSort = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ sort: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
   const handlePreviewContract = useCallback((contract: ContractInterface) => {
     setPreviewContract(contract);
@@ -124,8 +133,8 @@ const ContractList = () => {
         value={sort}
         onChange={handleSort}
         options={[
-          { value: "fullName", label: "За ПІБ" },
           { value: "contractDate", label: "За датою договору" },
+          { value: "fullName", label: "За ПІБ" },
         ]}
       />
       <Button onClick={handleAdd}>Додати договір</Button>

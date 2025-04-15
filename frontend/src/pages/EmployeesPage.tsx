@@ -1,5 +1,5 @@
-import EmployeeList from '../components/employeeComponents/EmployeeList';
-import { Typography, Box, Paper } from '@mui/material';
+import EmployeeList from "../components/employeeComponents/EmployeeList";
+import { Typography, Box, Paper } from "@mui/material";
 
 const EmployeesPage = () => {
   return (
@@ -7,11 +7,13 @@ const EmployeesPage = () => {
       <Typography variant="h4" gutterBottom color="primary">
         Співробітники
       </Typography>
-      <Paper sx={{ 
-        p: 2,
-        bgcolor: 'background.paper',
-        borderRadius: 2
-      }}>
+      <Paper
+        sx={{
+          p: 2,
+          bgcolor: "background.paper",
+          borderRadius: 2,
+        }}
+      >
         <EmployeeList />
       </Paper>
     </Box>
