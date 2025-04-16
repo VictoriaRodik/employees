@@ -124,7 +124,7 @@ const OrganizationList = () => {
         onChange={handleSort}
         options={[
           { value: "name", label: "За назвою" },
-          { value: "shortName", label: "За скороченою назвою" },
+          { value: "edrpouCode", label: "За ЄДРПОУ" },
         ]}
       />
       <Button onClick={handleAdd}>Додати організацію</Button>
