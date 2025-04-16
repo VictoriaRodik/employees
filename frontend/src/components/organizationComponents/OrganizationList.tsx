@@ -5,6 +5,7 @@ import Sort from "../Sort";
 import Button from "../Button";
 import OrganizationFormModal from "./OrganizationFormModal";
 import { useOrganizations } from "../../hooks/useOrganizations";
+import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { OrganizationInterface } from "../../types/organization";
 import { Container, CircularProgress } from "@mui/material";
 import { organizationFormatted } from "../../utils/organizationFormatted";
@@ -20,12 +21,14 @@ const OrganizationList = () => {
     deleteOrganization,
   } = useOrganizations();
 
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("name");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOrganization, setEditingOrganization] =
     useState<OrganizationInterface | null>(null);
   const [copyingOrganization, setCopyingOrganization] = useState(false);
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
+
+  const search = searchParams.get("search") || "";
+  const sort = searchParams.get("sort") || "name";
 
   const handleAdd = useCallback(() => {
     setEditingOrganization(null);
@@ -65,16 +68,23 @@ const OrganizationList = () => {
     [createOrganization, updateOrganization, copyingOrganization]
   );
 
-  const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
-    setSearch(e.target.value);
-  }, []);
+  const handleSearch = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ search: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
-  const handleSort = useCallback((e: SelectChangeEvent<string>) => {
-    setSort(e.target.value);
-  }, []);
+  const handleSort = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ sort: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
-  const filteredOrganizations = organizations.filter((e: OrganizationInterface) =>
-    e.name?.toLowerCase().includes(search.toLowerCase())
+  const filteredOrganizations = organizations.filter(
+    (e: OrganizationInterface) =>
+      e.name?.toLowerCase().includes(search.toLowerCase())
   );
 
   const sortedOrganizations = [...filteredOrganizations].sort((a, b) => {
@@ -114,7 +124,7 @@ const OrganizationList = () => {
         onChange={handleSort}
         options={[
           { value: "name", label: "За назвою" },
-          { value: "shortName", label: "За скороченою назвою" },
+          { value: "edrpouCode", label: "За ЄДРПОУ" },
         ]}
       />
       <Button onClick={handleAdd}>Додати організацію</Button>
@@ -127,7 +137,11 @@ const OrganizationList = () => {
 
       <OrganizationFormModal
         open={modalOpen}
-        title={editingOrganization && !copyingOrganization ? `Редагування` : "Введення"}
+        title={
+          editingOrganization && !copyingOrganization
+            ? `Редагування`
+            : "Введення"
+        }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
         initialValues={editingOrganization}

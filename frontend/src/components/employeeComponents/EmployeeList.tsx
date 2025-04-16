@@ -5,6 +5,7 @@ import Sort from "../Sort";
 import Button from "../Button";
 import EmployeeFormModal from "./EmployeeFormModal";
 import { useEmployees } from "../../hooks/useEmployees";
+import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { EmployeeInterface } from "../../types/employee";
 import { Container, CircularProgress } from "@mui/material";
 import { employeeFormatted } from "../../utils/employeeFormatted";
@@ -20,12 +21,14 @@ const EmployeeList = () => {
     deleteEmployee,
   } = useEmployees();
 
-  const [search, setSearch] = useState("");
-  const [sort, setSort] = useState("fullName");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEmployee, setEditingEmployee] =
     useState<EmployeeInterface | null>(null);
   const [copyingEmployee, setCopyingEmployee] = useState(false);
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
+
+  const search = searchParams.get("search") || "";
+  const sort = searchParams.get("sort") || "fullName";
 
   const handleAdd = useCallback(() => {
     setEditingEmployee(null);
@@ -65,13 +68,19 @@ const EmployeeList = () => {
     [createEmployee, updateEmployee, copyingEmployee]
   );
 
-  const handleSearch = useCallback((e: SelectChangeEvent<string>) => {
-    setSearch(e.target.value);
-  }, []);
+  const handleSearch = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ search: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
-  const handleSort = useCallback((e: SelectChangeEvent<string>) => {
-    setSort(e.target.value);
-  }, []);
+  const handleSort = useCallback(
+    (e: SelectChangeEvent<string>) => {
+      setUrlSearchParams({ sort: e.target.value });
+    },
+    [setUrlSearchParams]
+  );
 
   const filteredEmployees = employees.filter((e: EmployeeInterface) =>
     e.fullName?.toLowerCase().includes(search.toLowerCase())
@@ -79,7 +88,14 @@ const EmployeeList = () => {
 
   const sortedEmployees = [...filteredEmployees].sort((a, b) => {
     const key = sort as keyof EmployeeInterface;
-    return String(a[key]).localeCompare(String(b[key]));
+    const aValue = a[key];
+    const bValue = b[key];
+
+    if (key === "personnelNumber") {
+      return Number(aValue) - Number(bValue);
+    }
+
+    return String(aValue).localeCompare(String(bValue));
   });
 
   if (isLoading)
