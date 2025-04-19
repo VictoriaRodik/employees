@@ -187,13 +187,13 @@ const CashOrderPDF: React.FC<CashOrderPDFProps> = ({
       <View style={styles.signatures}>
         <View style={styles.signatureBlock}>
           <Text>Керівник</Text>
-          <Text style={styles.signatureTextRight}>Стеценко Е. А.</Text>
+          <Text style={styles.signatureTextRight}> </Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureText}>(підпис)</Text>
         </View>
         <View style={styles.signatureBlock}>
           <Text>Головний бухгалтер</Text>
-          <Text style={styles.signatureTextRight}>Клепач Є. В.</Text>
+          <Text style={styles.signatureTextRight}> </Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureText}>(підпис)</Text>
         </View>
@@ -230,7 +230,7 @@ const CashOrderPDF: React.FC<CashOrderPDFProps> = ({
       <View style={styles.signatures}>
         <View style={styles.signatureBlock}>
           <Text>Видав касир</Text>
-          <Text style={styles.signatureTextRight}>Парійчук В. В.</Text>
+          <Text style={styles.signatureTextRight}> </Text>
           <View style={styles.signatureLine} />
           <Text style={styles.signatureText}>(підпис)</Text>
         </View>
