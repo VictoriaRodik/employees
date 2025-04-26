@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+import pool from "../config/db.js";
 
 async function getAllOrganizations() {
   const [rows] = await pool.query("SELECT * FROM organizations");
@@ -6,7 +6,9 @@ async function getAllOrganizations() {
 }
 
 async function getOrganizationById(id) {
-  const [rows] = await pool.query("SELECT * FROM organizations WHERE id = ?", [id]);
+  const [rows] = await pool.query("SELECT * FROM organizations WHERE id = ?", [
+    id,
+  ]);
   return rows[0];
 }
 
@@ -84,11 +86,13 @@ async function updateOrganization(id, data) {
 }
 
 async function deleteOrganization(id) {
-  const [result] = await pool.query("DELETE FROM organizations WHERE id = ?", [id]);
+  const [result] = await pool.query("DELETE FROM organizations WHERE id = ?", [
+    id,
+  ]);
   return result.affectedRows;
 }
 
-module.exports = {
+export default {
   getAllOrganizations,
   getOrganizationById,
   addOrganization,

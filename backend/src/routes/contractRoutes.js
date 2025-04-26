@@ -1,15 +1,15 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getContracts,
-  createContract,
-  updateContract,
-  removeContract,
-} = require("../controllers/contractController");
+import { Router } from "express";
+import contractController from "../controllers/contractController.js";
+import authenticateToken from "../middlewares/authenticateToken.js";
 
-router.get("/", getContracts);
-router.post("/", createContract);
-router.put("/:id", updateContract);
-router.delete("/:id", removeContract);
+const { getContracts, createContract, updateContract, removeContract } =
+  contractController;
 
-module.exports = router;
+const router = Router();
+
+router.get("/", authenticateToken, getContracts);
+router.post("/", authenticateToken, createContract);
+router.put("/:id", authenticateToken, updateContract);
+router.delete("/:id", authenticateToken, removeContract);
+
+export default router;

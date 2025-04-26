@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 import { OrganizationInterface } from "../types/organization";
 import { mapFromApiOrganization, mapToApiOrganization } from "../utils/organizationMapper";
 

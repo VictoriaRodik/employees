@@ -1,15 +1,16 @@
-const express = require("express");
-const router = express.Router();
-const {
-  getEmployees,
-  createEmployee,
-  editEmployee,
-  removeEmployee,
-} = require("../controllers/employeeController");
+import { Router } from "express";
+import employeeController from "../controllers/employeeController.js";
 
-router.get("/", getEmployees);
-router.post("/", createEmployee);
-router.put("/:id", editEmployee);
-router.delete("/:id", removeEmployee);
+import authenticateToken from "../middlewares/authenticateToken.js";
 
-module.exports = router;
+const { getEmployees, createEmployee, editEmployee, removeEmployee } =
+  employeeController;
+
+const router = Router();
+
+router.get("/", authenticateToken, getEmployees);
+router.post("/", authenticateToken, createEmployee);
+router.put("/:id", authenticateToken, editEmployee);
+router.delete("/:id", authenticateToken, removeEmployee);
+
+export default router;
