@@ -93,9 +93,9 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
           <Text style={styles.decoratedText}>{contract.directorFullName}</Text>,
           що діє на підставі {contract.foundationDoc} (надалі - Замовник), з
           однієї сторони, та громадянин(ка){" "}
-          <Text style={styles.decoratedText}>{contract.fullName}</Text>, (надалі
-          - Виконавець), з другої сторони, разом іменовані Сторони, уклали цей
-          договір (надалі - Договір) про наступне:
+          <Text style={styles.decoratedText}>{contract.fullName}</Text>, надалі
+          - Виконавець, з другої сторони, разом іменовані Сторони, уклали цей
+          договір,надалі - Договір, про наступне:
         </Text>
       </View>
 

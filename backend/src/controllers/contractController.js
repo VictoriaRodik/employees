@@ -1,8 +1,16 @@
-const Contract = require("../models/contractModel");
+import contractModel from "../models/contractModel.js";
+
+const {
+  getAllContracts,
+  addContract,
+  getContractById,
+  updateContract: updateContractModel,
+  deleteContract,
+} = contractModel;
 
 async function getContracts(req, res) {
   try {
-    const contracts = await Contract.getAllContracts();
+    const contracts = await getAllContracts();
     res.json(contracts);
   } catch (err) {
     res.status(500).send("Error retrieving contracts");
@@ -11,7 +19,7 @@ async function getContracts(req, res) {
 
 async function createContract(req, res) {
   try {
-    const newContractId = await Contract.addContract(req.body);
+    const newContractId = await addContract(req.body);
     res
       .status(201)
       .json({ id: newContractId, message: "Contract added successfully" });
@@ -24,29 +32,29 @@ async function updateContract(req, res) {
   try {
     const id = parseInt(req.params.id);
     const updatedData = req.body;
-    
-    const existingContract = await Contract.getContractById(id);
+
+    const existingContract = await getContractById(id);
     if (!existingContract) {
-      return res.status(404).send('Contract not found');
+      return res.status(404).send("Contract not found");
     }
 
-    const result = await Contract.updateContract(id, updatedData);
-    
+    const result = await updateContractModel(id, updatedData);
+
     if (result) {
-      const updated = await Contract.getContractById(id);
+      const updated = await getContractById(id);
       res.json(updated);
     } else {
-      res.status(404).send('Contract not found');
+      res.status(404).send("Contract not found");
     }
   } catch (error) {
-    console.error('Error updating contract:', error);
-    res.status(500).send('Error updating contract');
+    console.error("Error updating contract:", error);
+    res.status(500).send("Error updating contract");
   }
 }
 
 async function removeContract(req, res) {
   try {
-    const deletedRows = await Contract.deleteContract(req.params.id);
+    const deletedRows = await deleteContract(req.params.id);
     if (deletedRows > 0) {
       res.json({ message: "Contract deleted successfully" });
     } else {
@@ -57,4 +65,4 @@ async function removeContract(req, res) {
   }
 }
 
-module.exports = { getContracts, createContract, updateContract, removeContract };
+export default { getContracts, createContract, updateContract, removeContract };

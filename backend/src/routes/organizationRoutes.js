@@ -1,15 +1,20 @@
-const express = require("express");
-const router = express.Router();
+import { Router } from "express";
+import organizationController from "../controllers/organizationController.js";
+
+import authenticateToken from "../middlewares/authenticateToken.js";
+
 const {
   getOrganizations,
   createOrganization,
   editOrganization,
   removeOrganization,
-} = require("../controllers/organizationController");
+} = organizationController;
 
-router.get("/", getOrganizations);
-router.post("/", createOrganization);
-router.put("/:id", editOrganization);
-router.delete("/:id", removeOrganization);
+const router = Router();
 
-module.exports = router;
+router.get("/", authenticateToken, getOrganizations);
+router.post("/", authenticateToken, createOrganization);
+router.put("/:id", authenticateToken, editOrganization);
+router.delete("/:id", authenticateToken, removeOrganization);
+
+export default router;

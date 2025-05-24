@@ -1,8 +1,11 @@
-const Employee = require("../models/employeeModel");
+import employeeModel from "../models/employeeModel.js";
+
+const { getAllEmployees, addEmployee, updateEmployee, deleteEmployee } =
+  employeeModel;
 
 async function getEmployees(req, res) {
   try {
-    const employees = await Employee.getAllEmployees();
+    const employees = await getAllEmployees();
     res.json(employees);
   } catch (err) {
     res.status(500).send("Error retrieving employees");
@@ -11,7 +14,7 @@ async function getEmployees(req, res) {
 
 async function createEmployee(req, res) {
   try {
-    const newEmployeeId = await Employee.addEmployee(req.body);
+    const newEmployeeId = await addEmployee(req.body);
     res
       .status(201)
       .json({ id: newEmployeeId, message: "Employee added successfully" });
@@ -22,7 +25,7 @@ async function createEmployee(req, res) {
 
 async function editEmployee(req, res) {
   try {
-    const updatedRows = await Employee.updateEmployee(req.params.id, req.body);
+    const updatedRows = await updateEmployee(req.params.id, req.body);
     if (updatedRows > 0) {
       res.json({ message: "Employee updated successfully" });
     } else {
@@ -35,7 +38,7 @@ async function editEmployee(req, res) {
 
 async function removeEmployee(req, res) {
   try {
-    const deletedRows = await Employee.deleteEmployee(req.params.id);
+    const deletedRows = await deleteEmployee(req.params.id);
     if (deletedRows > 0) {
       res.json({ message: "Employee deleted successfully" });
     } else {
@@ -46,4 +49,4 @@ async function removeEmployee(req, res) {
   }
 }
 
-module.exports = { getEmployees, createEmployee, editEmployee, removeEmployee };
+export default { getEmployees, createEmployee, editEmployee, removeEmployee };

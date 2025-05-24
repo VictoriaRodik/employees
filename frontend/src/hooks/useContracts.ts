@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 import { ContractInterface } from "../types/contract";
 import { mapFromApiContract, mapToApiContract } from "../utils/contractMapper";
 
@@ -40,7 +40,7 @@ export const useContracts = () => {
     mutationFn: async (contract: ContractInterface) => {
       try {
         const response = await axios.put(
-          `${API_URL}/${contract.id}`, 
+          `${API_URL}/${contract.id}`,
           mapToApiContract(contract)
         );
         return mapFromApiContract(response.data);

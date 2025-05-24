@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+import pool from "../config/db.js";
 
 async function getAllContracts() {
   const [rows] = await pool.query(
@@ -21,12 +21,9 @@ async function getAllContracts() {
     organizations.foundation_doc,
     organizations.director_position,
     organizations.director_full_name
-    FROM
-    contracts
-        JOIN
-    employees ON contracts.employee_id = employees.id
-        JOIN
-    organizations ON contracts.organization_id = organizations.id`
+    FROM contracts
+    JOIN employees ON contracts.employee_id = employees.id
+    JOIN organizations ON contracts.organization_id = organizations.id`
   );
   return rows;
 }
@@ -52,12 +49,9 @@ async function getContractById(id) {
     organizations.foundation_doc,
     organizations.director_position,
     organizations.director_full_name
-    FROM
-    contracts
-        JOIN
-    employees ON contracts.employee_id = employees.id
-        JOIN
-    organizations ON contracts.organization_id = organizations.id 
+    FROM contracts
+    JOIN employees ON contracts.employee_id = employees.id
+    JOIN organizations ON contracts.organization_id = organizations.id 
     WHERE contracts.id = ?`,
     [id]
   );
@@ -74,16 +68,17 @@ async function addContract(contractData) {
     contract_content,
     contract_number,
   } = contractData;
+
   const [result] = await pool.query(
     `INSERT INTO contracts (
-    employee_id,
-    organization_id,
-    contract_date,
-    contract_end_date,
-    contract_amount,
-    contract_content,
-    contract_number)
-     VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      employee_id,
+      organization_id,
+      contract_date,
+      contract_end_date,
+      contract_amount,
+      contract_content,
+      contract_number
+    ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
     [
       employee_id,
       organization_id || 1,
@@ -138,7 +133,7 @@ async function deleteContract(id) {
   return result.affectedRows;
 }
 
-module.exports = {
+export default {
   getAllContracts,
   getContractById,
   addContract,
