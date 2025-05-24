@@ -106,7 +106,7 @@ vi.mock("../../hooks/useTokenExpiration", () => ({
 }));
 
 describe("Layout", () => {
-  const mockNavigate = vi.fn();
+
   beforeEach(() => {
     vi.clearAllMocks();
     vi.mocked(useTheme).mockReturnValue({
