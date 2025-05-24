@@ -8,12 +8,14 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import MenuIcon from '@mui/icons-material/Menu';
 import { useTheme } from '../hooks/useTheme';
 import { useState } from 'react';
+import useTokenExpiration from '../hooks/useTokenExpiration';
 
 const drawerWidth = 240;
 
 const Layout = () => {
   const { isDarkMode, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  useTokenExpiration();
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);

@@ -10,9 +10,9 @@ import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
 
 registerPDFFonts();
+const queryClient = new QueryClient();
 
 function App() {
-  const queryClient = new QueryClient();
 
   return (
     <ThemeProvider>
