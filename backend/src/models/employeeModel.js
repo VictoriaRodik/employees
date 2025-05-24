@@ -1,14 +1,15 @@
 import pool from "../config/db.js";
 
 async function getAllEmployees() {
-  const [rows] = await pool.query("SELECT * FROM employees");
+  const [rows] = await pool.query(
+    "SELECT * FROM employees ORDER BY full_name ASC"
+  );
+  if (rows.length === 0) return [];
   return rows;
 }
 
 async function getEmployeeById(id) {
-  const [rows] = await pool.query(
-    "SELECT * FROM employees WHERE id = ?", [id]
-  );
+  const [rows] = await pool.query("SELECT * FROM employees WHERE id = ?", [id]);
   return rows[0];
 }
 
@@ -80,9 +81,7 @@ async function updateEmployee(id, updatedData) {
 }
 
 async function deleteEmployee(id) {
-  const [result] = await pool.query(
-    "DELETE FROM employees WHERE id = ?", [id]
-  );
+  const [result] = await pool.query("DELETE FROM employees WHERE id = ?", [id]);
   return result.affectedRows;
 }
 
