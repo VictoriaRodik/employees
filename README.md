@@ -32,6 +32,7 @@ npm install
 cd ../frontend
 npm install
 3. Set up your .env files:
+
 Refer to .env.example for the required environment variables.
 
 4. Run the application:
@@ -46,6 +47,7 @@ npm run dev
 The frontend will be available at http://localhost:5173 and the backend at http://localhost:5000.
 
 #📁 Folder Structure
+
 employees/
 ├── backend/                # Express backend
 │   ├── controllers/        # Route controllers
@@ -59,6 +61,7 @@ employees/
 ├── .env.example            # Example environment variables
 ├── package.json            # Project metadata and scripts
 └── README.md               # Project documentation
+
 
 #✨ Future Plans:
 - Generate HR orders (hiring, dismissal, leave, bonuses, etc.)
