@@ -3,6 +3,9 @@ A web application for creating, saving, and printing ЦПХ (civil law) contract
 
 🔗 https://print-for-employees.onrender.com
 
+user: test
+password: test
+
 #⚙️ Features:
 📄 Generation of contracts
 💵 Printing of cash expenditure orders
@@ -29,15 +32,8 @@ npm install
 cd ../frontend
 npm install
 3. Set up your .env files:
-backend/.env:
-DB_HOST=your-database-host
-DB_USER=your-database-user
-DB_PASSWORD=your-database-password
-DB_NAME=your-database-name
-PORT=5000
 
-frontend/.env:
-VITE_API_URL=http://localhost:5000
+Refer to .env.example for the required environment variables.
 
 4. Run the application:
 
@@ -51,13 +47,23 @@ npm run dev
 The frontend will be available at http://localhost:5173 and the backend at http://localhost:5000.
 
 #📁 Folder Structure
-your-repo-name/
-├── frontend/        # React frontend
-├── backend/        # Express backend
-└── README.md
+
+employees/
+├── backend/                # Express backend
+│   ├── controllers/        # Route controllers
+│   ├── models/             # Database models
+│   ├── routes/             # API routes
+│   └── app.js              # Express app setup
+├── frontend/               # React frontend
+│   ├── components/         # Reusable components
+│   ├── pages/              # Page components
+│   └── App.js              # Main React component
+├── .env.example            # Example environment variables
+├── package.json            # Project metadata and scripts
+└── README.md               # Project documentation
+
 
 #✨ Future Plans:
-- Add user authentication and roles
 - Generate HR orders (hiring, dismissal, leave, bonuses, etc.)
 
 #📬 Feedback & Contributions
