@@ -12,199 +12,181 @@ vi.mock("@mui/material", async () => {
         {children}
       </div>
     )),
-    AppBar: vi.fn(({ children }) => (
-      <div data-testid="app-bar">{children}</div>
-    )),
-    Toolbar: vi.fn(({ children }) => (
-      <div data-testid="toolbar">{children}</div>
-    )),
-    Typography: vi.fn(({ children }) => (
-      <span data-testid="typography">{children}</span>
-    )),
-    Container: vi.fn(({ children }) => (
-      <div data-testid="container">{children}</div>
-    )),
-    Drawer: vi.fn(({ children, sx, variant, open }) => (
-      <div
-        style={sx}
-        data-testid={
-          variant === "permanent" ? "permanent-drawer" : "temporary-drawer"
-        }
-        data-open={open}
+    useMediaQuery: () => true,
+    useTheme: () => ({
+      palette: {
+        mode: "light",
+      },
+      breakpoints: {
+        up: (key: string) => key === "sm",
+      },
+    }),
+  };
+});
+
+vi.mock("../../components/Header", () => ({
+  default: vi.fn(({ onMenuClick, isDarkMode, toggleTheme, showMenuButton }) => (
+    <div data-testid="app-bar">
+      <button
+        data-testid="menu-button"
+        onClick={onMenuClick}
+        style={{ display: showMenuButton ? "block" : "none" }}
       >
-        {children}
-      </div>
-    )),
-    List: vi.fn(({ children }) => <ul data-testid="list">{children}</ul>),
-    ListItemButton: vi.fn(({ children, to, onClick }) => (
-      <li data-testid={`list-item-${to}`} onClick={onClick}>
-        {children}
-      </li>
-    )),
-    ListItemIcon: vi.fn(({ children }) => (
-      <span data-testid="list-item-icon">{children}</span>
-    )),
-    ListItemText: vi.fn(({ primary }) => (
-      <span data-testid="list-item-text">{primary}</span>
-    )),
-    IconButton: vi.fn(({ children, onClick }) => (
-      <button data-testid="icon-button" onClick={onClick}>
-        {children}
+        Menu
       </button>
-    )),
-  };
-});
-
-vi.mock("@mui/icons-material/People", () => ({
-  default: () => <span data-testid="people-icon" />,
+      <span data-testid="typography">Система управління договорами</span>
+      <button data-testid="theme-toggle" onClick={toggleTheme}>
+        {isDarkMode ? "Light Mode" : "Dark Mode"}
+      </button>
+    </div>
+  )),
 }));
 
-vi.mock("@mui/icons-material/Description", () => ({
-  default: () => <span data-testid="description-icon" />,
+vi.mock("../../components/NavigationDrawer", () => ({
+  default: vi.fn(({ mobileOpen, onDrawerToggle, drawerWidth }) => (
+    <div
+      data-testid={mobileOpen ? "temporary-drawer" : "permanent-drawer"}
+      style={{ width: drawerWidth, display: mobileOpen ? "block" : "none" }}
+      onClick={onDrawerToggle}
+    >
+      <ul data-testid="list">
+        <li data-testid="list-item-/employees">Співробітники</li>
+        <li data-testid="list-item-/contracts">Договори</li>
+      </ul>
+    </div>
+  )),
 }));
 
-vi.mock("@mui/icons-material/Brightness4", () => ({
-  default: () => <span data-testid="brightness4-icon" />,
+vi.mock("../../components/MainContent", () => ({
+  default: vi.fn(() => (
+    <div data-testid="container">
+      <div data-testid="outlet">Main Content</div>
+    </div>
+  )),
 }));
-
-vi.mock("@mui/icons-material/Brightness7", () => ({
-  default: () => <span data-testid="brightness7-icon" />,
-}));
-
-vi.mock("@mui/icons-material/Menu", () => ({
-  default: () => <span data-testid="menu-icon" />,
-}));
-
-vi.mock("react-router-dom", async () => {
-  const actual = await vi.importActual("react-router-dom");
-  return {
-    ...actual,
-    Link: vi.fn(({ children, to }) => (
-      <a href={to} data-testid={`link-${to}`}>
-        {children}
-      </a>
-    )),
-    Outlet: vi.fn(() => <div data-testid="outlet" />),
-  };
-});
-
-vi.mock("../../hooks/useTheme", () => ({
-  useTheme: vi.fn(),
-}));
-
-const localStorageMock = {
-  getItem: vi.fn(),
-  removeItem: vi.fn(),
-  setItem: vi.fn(),
-};
-Object.defineProperty(window, "localStorage", {
-  value: localStorageMock,
-});
 
 vi.mock("../../hooks/useTokenExpiration", () => ({
   default: vi.fn(),
 }));
 
-describe("Layout", () => {
+const mockToggleTheme = vi.fn();
+vi.mock("../../hooks/useTheme", () => ({
+  useTheme: vi.fn(),
+}));
 
+describe("Layout", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+
     vi.mocked(useTheme).mockReturnValue({
       isDarkMode: false,
-      toggleTheme: vi.fn(),
+      toggleTheme: mockToggleTheme,
     });
   });
 
-  it("renders the layout structure with AppBar, Drawers, and main content", () => {
+  it("renders the layout structure with Header, Navigation, and MainContent", () => {
     render(<Layout />);
-    expect(screen.getAllByTestId("box")[0]).toBeInTheDocument();
     expect(screen.getByTestId("app-bar")).toBeInTheDocument();
     expect(screen.getByTestId("permanent-drawer")).toBeInTheDocument();
-    expect(screen.getByTestId("temporary-drawer")).toBeInTheDocument();
-    expect(screen.getByTestId("container")).toBeInTheDocument();
+    expect(screen.getByTestId("list")).toBeInTheDocument();
     expect(screen.getByTestId("outlet")).toBeInTheDocument();
   });
 
-  it("renders AppBar with title, menu button, and theme toggle", () => {
+  it("renders Header with correct title and menu button", () => {
     render(<Layout />);
     expect(screen.getByTestId("typography")).toHaveTextContent(
       "Система управління договорами"
     );
-    expect(screen.getAllByTestId("icon-button")[0]).toBeInTheDocument();
-    expect(screen.getAllByTestId("icon-button")[1]).toBeInTheDocument();
-    expect(screen.getByTestId("menu-icon")).toBeInTheDocument();
-    expect(screen.getByTestId("brightness4-icon")).toBeInTheDocument();
+    const menuButton = screen.getByTestId("menu-button");
+    expect(menuButton).toBeInTheDocument();
   });
 
-  it("renders both Drawers with navigation links", () => {
+  it("toggles the drawer when menu button is clicked", () => {
     render(<Layout />);
-    const lists = screen.getAllByTestId("list");
-    expect(lists).toHaveLength(2); // One in each drawer
-    expect(screen.getAllByTestId("list-item-/employees")).toHaveLength(2);
-    expect(screen.getAllByTestId("list-item-/contracts")).toHaveLength(2);
-    expect(screen.getAllByText("Співробітники")).toHaveLength(2);
-    expect(screen.getAllByText("Договори")).toHaveLength(2);
-    expect(screen.getAllByTestId("people-icon")).toHaveLength(2);
-    expect(screen.getAllByTestId("description-icon")).toHaveLength(2);
-  });
-
-  it("toggles theme when theme button is clicked", () => {
-    const toggleTheme = vi.fn();
-    vi.mocked(useTheme).mockReturnValue({
-      isDarkMode: false,
-      toggleTheme,
+    const menuButton = screen.getByTestId("menu-button");
+    expect(screen.getByTestId("permanent-drawer")).toBeInTheDocument();
+    expect(screen.getByTestId("permanent-drawer")).toHaveStyle({
+      display: "none",
     });
-    render(<Layout />);
-    const themeButton = screen.getAllByTestId("icon-button")[1];
-    fireEvent.click(themeButton);
-    expect(toggleTheme).toHaveBeenCalledTimes(1);
+    expect(screen.queryByTestId("temporary-drawer")).not.toBeInTheDocument();
+
+    fireEvent.click(menuButton);
+    expect(screen.getByTestId("temporary-drawer")).toBeInTheDocument();
+    expect(screen.getByTestId("temporary-drawer")).toHaveStyle({
+      display: "block",
+    });
+
+    fireEvent.click(screen.getByTestId("temporary-drawer"));
+    expect(screen.queryByTestId("temporary-drawer")).not.toBeInTheDocument();
+    expect(screen.getByTestId("permanent-drawer")).toBeInTheDocument();
   });
 
-  it("shows Brightness7Icon when in dark mode", () => {
+  it("calls toggleTheme when theme toggle button is clicked", () => {
+    render(<Layout />);
+    const themeToggleButton = screen.getByTestId("theme-toggle");
+    expect(themeToggleButton).toHaveTextContent("Dark Mode");
+    fireEvent.click(themeToggleButton);
+    expect(mockToggleTheme).toHaveBeenCalled();
+  });
+
+  it("renders NavigationDrawer with correct list items", () => {
+    render(<Layout />);
+    expect(screen.getByTestId("list-item-/employees")).toBeInTheDocument();
+    expect(screen.getByTestId("list-item-/contracts")).toBeInTheDocument();
+  });
+
+  it("renders MainContent with outlet", () => {
+    render(<Layout />);
+    expect(screen.getByTestId("container")).toBeInTheDocument();
+    expect(screen.getByTestId("outlet")).toHaveTextContent("Main Content");
+  });
+
+  it("applies correct styles to Box component", () => {
+    render(<Layout />);
+    const box = screen.getByTestId("box");
+    expect(box).toHaveStyle({
+      display: "flex",
+      minHeight: "100vh",
+      backgroundColor: "background.default",
+      color: "text.primary",
+    });
+  });
+
+  it("renders with dark mode styles when isDarkMode is true", () => {
     vi.mocked(useTheme).mockReturnValue({
       isDarkMode: true,
-      toggleTheme: vi.fn(),
+      toggleTheme: mockToggleTheme,
     });
     render(<Layout />);
-    expect(screen.getByTestId("brightness7-icon")).toBeInTheDocument();
-    expect(screen.queryByTestId("brightness4-icon")).not.toBeInTheDocument();
+    const box = screen.getByTestId("box");
+    expect(box).toHaveStyle({
+      backgroundColor: "background.default",
+      color: "text.primary",
+    });
+    expect(screen.getByTestId("theme-toggle")).toHaveTextContent("Light Mode");
   });
 
-  it("toggles mobile drawer when menu button is clicked", () => {
+  it("renders with light mode styles when isDarkMode is false", () => {
+    vi.mocked(useTheme).mockReturnValue({
+      isDarkMode: false,
+      toggleTheme: mockToggleTheme,
+    });
     render(<Layout />);
-    const menuButton = screen.getAllByTestId("icon-button")[0];
-    const temporaryDrawer = screen.getByTestId("temporary-drawer");
-
-    expect(temporaryDrawer).toHaveAttribute("data-open", "false");
-    fireEvent.click(menuButton);
-    expect(temporaryDrawer).toHaveAttribute("data-open", "true");
-    fireEvent.click(menuButton);
-    expect(temporaryDrawer).toHaveAttribute("data-open", "false");
+    const box = screen.getByTestId("box");
+    expect(box).toHaveStyle({
+      backgroundColor: "background.default",
+      color: "text.primary",
+    });
+    expect(screen.getByTestId("theme-toggle")).toHaveTextContent("Dark Mode");
   });
 
-  it("closes mobile drawer when navigation item is clicked", () => {
+  it("renders with correct drawer width", () => {
     render(<Layout />);
-    const menuButton = screen.getAllByTestId("icon-button")[0];
-    const temporaryDrawer = screen.getByTestId("temporary-drawer");
-    const mobileNavItem = screen.getAllByTestId("list-item-/employees")[1];
+    const drawer = screen.getByTestId("permanent-drawer");
+    expect(drawer).toHaveStyle({ width: "240px" });
 
-    fireEvent.click(menuButton); // Open drawer
-    expect(temporaryDrawer).toHaveAttribute("data-open", "true");
-    fireEvent.click(mobileNavItem);
-    expect(temporaryDrawer).toHaveAttribute("data-open", "false");
-  });
-
-  it("applies correct styles to permanent drawer", () => {
-    render(<Layout />);
-    const permanentDrawer = screen.getByTestId("permanent-drawer");
-    expect(permanentDrawer).toHaveStyle("width: 240px");
-    expect(permanentDrawer).toHaveStyle("flex-shrink: 0");
-  });
-
-  it("applies correct styles to main content area", () => {
-    render(<Layout />);
-    const mainBox = screen.getAllByTestId("box")[4];
-    expect(mainBox).toHaveStyle("flex-grow: 1");
-    expect(mainBox).toHaveStyle("min-height: 100vh");
+    fireEvent.click(screen.getByTestId("menu-button"));
+    const tempDrawer = screen.getByTestId("temporary-drawer");
+    expect(tempDrawer).toHaveStyle({ width: "240px" });
   });
 });
