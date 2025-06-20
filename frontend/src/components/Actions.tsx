@@ -1,7 +1,13 @@
-import { IconButton } from "@mui/material";
-import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
-import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
-import ContentCopyOutlinedIcon from "@mui/icons-material/ContentCopyOutlined";
+import {
+  IconButton,
+  useMediaQuery,
+  Dialog,
+  DialogActions,
+  useTheme as useMuiTheme,
+} from "@mui/material";
+import { useState } from "react";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import ActionButtons from "./ActionButtons";
 
 interface ActionsProps {
   onEdit: () => void;
@@ -16,21 +22,41 @@ const Actions = ({
   onEdit,
   onCopy,
   onDelete,
-  editTitle = "Edit",
-  copyTitle = "Copy",
-  deleteTitle = "Remove",
+  editTitle,
+  copyTitle,
+  deleteTitle,
 }: ActionsProps) => {
+  const muiTheme = useMuiTheme();
+  const isSmUp = useMediaQuery(muiTheme.breakpoints.up("sm"));
+  const [open, setOpen] = useState(false);
+
+  const onDialogOpen = () => setOpen(true);
+  const onDialogClose = () => setOpen(false);
+
+  const buttons = (
+    <ActionButtons
+      onEdit={onEdit}
+      onCopy={onCopy}
+      onDelete={onDelete}
+      editTitle={editTitle}
+      copyTitle={copyTitle}
+      deleteTitle={deleteTitle}
+    />
+  );
+
+  if (isSmUp) return <>{buttons}</>;
+
   return (
     <>
-      <IconButton title={editTitle} onClick={onEdit} color="primary">
-        <EditOutlinedIcon />
+      <IconButton onClick={onDialogOpen}>
+        <MoreHorizIcon />
       </IconButton>
-      <IconButton title={copyTitle} onClick={onCopy} color="primary">
-        <ContentCopyOutlinedIcon />
-      </IconButton>
-      <IconButton title={deleteTitle} onClick={onDelete} color="secondary">
-        <DeleteOutlinedIcon />
-      </IconButton>
+
+      <Dialog open={open} onClose={onDialogClose} maxWidth="xs">
+        <DialogActions sx={{ justifyContent: "space-between" }}>
+          {buttons}
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

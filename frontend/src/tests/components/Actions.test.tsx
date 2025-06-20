@@ -11,19 +11,30 @@ vi.mock("@mui/material", async () => {
         {children}
       </button>
     )),
+    Dialog: vi.fn(({ open, onClose, children }) => (
+      <div
+        data-testid="dialog"
+        style={{ display: open ? "block" : "none" }}
+        onClick={onClose}
+      >
+        {children}
+      </div>
+    )),
   };
 });
 
-vi.mock("@mui/icons-material/EditOutlined", () => ({
+vi.mock("@mui/icons-material/MoreHorizIcon", () => ({
   default: () => <span data-testid="edit-icon" />,
 }));
 
-vi.mock("@mui/icons-material/ContentCopyOutlined", () => ({
-  default: () => <span data-testid="copy-icon" />,
-}));
-
-vi.mock("@mui/icons-material/DeleteOutlined", () => ({
-  default: () => <span data-testid="delete-icon" />,
+vi.mock("../../components/ActionButtons", () => ({
+  default: vi.fn(() => (
+    <div data-testid="action-buttons">
+      <span data-testid="edit-icon">Edit</span>
+      <span data-testid="copy-icon">Copy</span>
+      <span data-testid="delete-icon">Delete</span>
+    </div>
+  )),
 }));
 
 describe("Actions", () => {
@@ -36,30 +47,12 @@ describe("Actions", () => {
     expect(screen.getByTestId("edit-icon")).toBeInTheDocument();
     expect(screen.getByTestId("copy-icon")).toBeInTheDocument();
     expect(screen.getByTestId("delete-icon")).toBeInTheDocument();
-    expect(screen.getAllByTestId("icon-button").length).toBe(3);
+    expect(screen.getAllByTestId("icon-button").length).toBe(1);
   });
-
-  it("should call the onEdit function when the Edit button is clicked", () => {
-    const onEdit = vi.fn();
-    render(<Actions onEdit={onEdit} onCopy={() => {}} onDelete={() => {}} />);
-    const editButton = screen.getAllByTestId("icon-button")[0];
-    fireEvent.click(editButton);
-    expect(onEdit).toHaveBeenCalledTimes(1);
-  });
-
-  it("should call the onCopy function when the Copy button is clicked", () => {
-    const onCopy = vi.fn();
-    render(<Actions onEdit={() => {}} onCopy={onCopy} onDelete={() => {}} />);
-    const copyButton = screen.getAllByTestId("icon-button")[1];
-    fireEvent.click(copyButton);
-    expect(onCopy).toHaveBeenCalledTimes(1);
-  });
-
-  it("should call the onDelete function when the Delete button is clicked", () => {
-    const onDelete = vi.fn();
-    render(<Actions onEdit={() => {}} onCopy={() => {}} onDelete={onDelete} />);
-    const deleteButton = screen.getAllByTestId("icon-button")[2];
-    fireEvent.click(deleteButton);
-    expect(onDelete).toHaveBeenCalledTimes(1);
+  it("should open the dialog when the MoreHorizIcon button is clicked", () => {
+    render(<Actions onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} />);
+    const moreButton = screen.getByTestId("icon-button");
+    fireEvent.click(moreButton);
+    expect(screen.getByTestId("dialog")).toBeInTheDocument();
   });
 });

@@ -9,7 +9,7 @@ vi.mock("@mui/material", async () => {
     TableContainer: vi.fn(({ children }) => (
       <div data-testid="table-container">{children}</div>
     )),
-    Paper: vi.fn(), // No need to render anything specific, just mock it
+    Paper: vi.fn(),
     Table: vi.fn(({ children }) => (
       <table data-testid="table">{children}</table>
     )),
@@ -27,6 +27,10 @@ vi.mock("@mui/material", async () => {
     )),
   };
 });
+
+vi.mock("../../components/Actions", () => ({  
+  default: vi.fn(({ children }) => <div data-testid="actions">{children}</div>),
+}));
 
 interface TestData {
   id: number;
