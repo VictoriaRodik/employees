@@ -72,12 +72,15 @@ describe("Contract API Functions", () => {
       (axios.get as any).mockRejectedValue(error);
 
       await expect(fetchContracts()).rejects.toThrow("Network error");
-      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith(
+        "Error fetching contracts:",
+        error
+      );
     });
   });
 
   describe("addContract", () => {
-    it("should add an contract successfully", async () => {
+    it("should add a contract successfully", async () => {
       const newContract = { ...mockContract, id: 0 };
       const createdContract = { ...newContract, id: 2 };
       (axios.post as any).mockResolvedValue({ data: createdContract });
@@ -100,14 +103,14 @@ describe("Contract API Functions", () => {
 
       await expect(addContract(mockContract)).rejects.toThrow("Bad request");
       expect(console.error).toHaveBeenCalledWith(
-        "Error adding contract:",
+        "Error adding to contracts:",
         error
       );
     });
   });
 
   describe("updateContract", () => {
-    it("should update an contract successfully", async () => {
+    it("should update a contract successfully", async () => {
       const updatedContract = { ...mockContract, fullName: "John Updated" };
       (axios.put as any).mockResolvedValue({ data: updatedContract });
 
@@ -126,12 +129,15 @@ describe("Contract API Functions", () => {
       (axios.put as any).mockRejectedValue(error);
 
       await expect(updateContract(mockContract)).rejects.toThrow("Not found");
-      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith(
+        "Error updating contracts:",
+        error
+      );
     });
   });
 
   describe("deleteContract", () => {
-    it("should delete an contract successfully", async () => {
+    it("should delete a contract successfully", async () => {
       (axios.delete as any).mockResolvedValue({});
 
       await deleteContract(mockContract.id);
@@ -148,7 +154,10 @@ describe("Contract API Functions", () => {
       await expect(deleteContract(mockContract.id)).rejects.toThrow(
         "Forbidden"
       );
-      expect(console.error).toHaveBeenCalled();
+      expect(console.error).toHaveBeenCalledWith(
+        "Error deleting from contracts:",
+        error
+      );
     });
   });
 });

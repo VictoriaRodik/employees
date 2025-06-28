@@ -1,16 +1,14 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { Container, CircularProgress } from "@mui/material";
 import ContractTable from "./ContractTable";
-import Search from "../Search";
-import Sort from "../Sort";
-import Button from "../Button";
 import ContractFormModal from "./ContractFormModal";
+import ContractPDFPreview from "../pdf/ContractPDFPreview";
+import CashOrderPDFPreview from "../pdf/CashOrderPDFPreview";
 import { useContracts } from "../../hooks/useContracts";
 import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { ContractInterface } from "../../types/contract";
-import { Container, SelectChangeEvent, CircularProgress } from "@mui/material";
 import { contractFormatted } from "../../utils/contractFormatted";
-import ContractPDFPreview from "../pdf/ContractPDFPreview";
-import CashOrderPDFPreview from "../pdf/CashOrderPDFPreview";
+import List from "../List";
 
 const ContractList = () => {
   const {
@@ -23,83 +21,64 @@ const ContractList = () => {
   } = useContracts();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingContract, setEditingContract] =
-    useState<ContractInterface | null>(null);
+  const [editingContract, setEditingContract] = useState<ContractInterface | null>(null);
   const [copyingContract, setCopyingContract] = useState(false);
-  const [previewContract, setPreviewContract] =
-    useState<ContractInterface | null>(null);
-  const [previewCashOrder, setPreviewCashOrder] =
-    useState<ContractInterface | null>(null);
-  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
+  const [previewContract, setPreviewContract] = useState<ContractInterface | null>(null);
+  const [previewCashOrder, setPreviewCashOrder] = useState<ContractInterface | null>(null);
 
+  const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = searchParams.get("sort") || "contractDate";
+  const sort = (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
 
-  const handleAdd = useCallback(() => {
+  const handleAdd = () => {
     setEditingContract(null);
     setCopyingContract(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleEdit = useCallback((contract: ContractInterface) => {
+  const handleEdit = (contract: ContractInterface) => {
     setEditingContract(contractFormatted(contract));
+    setCopyingContract(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleCopy = useCallback((contract: ContractInterface) => {
+  const handleCopy = (contract: ContractInterface) => {
     setEditingContract(contractFormatted(contract));
     setCopyingContract(true);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleDelete = useCallback(
-    (id: number) => {
-      deleteContract.mutate(id);
-    },
-    [deleteContract]
-  );
+  const handleDelete = (id: number) => {
+    deleteContract.mutate(id);
+  };
 
-  const handleSubmit = useCallback(
-    (contract: ContractInterface) => {
-      if (contract.id && !copyingContract) {
-        updateContract.mutate(contract);
-      } else {
-        createContract.mutate(contract);
-      }
-      setModalOpen(false);
-    },
-    [createContract, updateContract, copyingContract]
-  );
+  const handleSubmit = (contract: ContractInterface) => {
+    if (contract.id && !copyingContract) {
+      updateContract.mutate(contract);
+    } else {
+      createContract.mutate(contract);
+    }
+    setModalOpen(false);
+    setEditingContract(null);
+    setCopyingContract(false);
+  };
 
-  const handleSearch = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ search: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const handleSort = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ sort: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const handlePreviewContract = useCallback((contract: ContractInterface) => {
+  const handlePreviewContract = (contract: ContractInterface) => {
     setPreviewContract(contract);
-  }, []);
+  };
 
-  const handlePreviewCashOrder = useCallback((contract: ContractInterface) => {
+  const handlePreviewCashOrder = (contract: ContractInterface) => {
     setPreviewCashOrder(contract);
-  }, []);
+  };
 
-  const filteredContracts = contracts.filter((e: ContractInterface) =>
-    e.fullName?.toLowerCase().includes(search.toLowerCase())
+  const filtered = contracts.filter((c: { fullName: string; }) =>
+    c.fullName?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sortedContracts = [...filteredContracts].sort((a, b) => {
-    const key = sort as keyof ContractInterface;
-    return String(a[key]).localeCompare(String(b[key]));
+  const sorted = [...filtered].sort((a, b) => {
+    const aVal = a[sort];
+    const bVal = b[sort];
+    return String(aVal).localeCompare(String(bVal));
   });
 
   if (isLoading)
@@ -115,37 +94,28 @@ const ContractList = () => {
         <CircularProgress />
       </Container>
     );
+
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "space-between",
-        justifyContent: "center",
-        gap: "2rem",
-      }}
+    <List
+      label="договір"
+      onAdd={handleAdd}
+      searchKey="fullName"
+      sortOptions={[
+        { value: "contractDate", label: "За датою договору" },
+        { value: "fullName", label: "За ПІБ" },
+      ]}
     >
-      <Search value={search} onChange={handleSearch} />
-      <Sort
-        value={sort}
-        onChange={handleSort}
-        options={[
-          { value: "contractDate", label: "За датою договору" },
-          { value: "fullName", label: "За ПІБ" },
-        ]}
-      />
-      <Button onClick={handleAdd}>Додати договір</Button>
       <ContractTable
-        contracts={sortedContracts}
+        contracts={sorted}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}
         onPreviewContract={handlePreviewContract}
         onPreviewCashOrder={handlePreviewCashOrder}
       />
+
       <ContractFormModal
         open={modalOpen}
         title={editingContract && !copyingContract ? `Редагування` : "Введення"}
@@ -153,6 +123,7 @@ const ContractList = () => {
         onSubmit={handleSubmit}
         initialValues={editingContract}
       />
+
       {previewContract && (
         <ContractPDFPreview
           contract={previewContract}
@@ -160,6 +131,7 @@ const ContractList = () => {
           onClose={() => setPreviewContract(null)}
         />
       )}
+
       {previewCashOrder && (
         <CashOrderPDFPreview
           contract={previewCashOrder}
@@ -167,7 +139,7 @@ const ContractList = () => {
           onClose={() => setPreviewCashOrder(null)}
         />
       )}
-    </Container>
+    </List>
   );
 };
 

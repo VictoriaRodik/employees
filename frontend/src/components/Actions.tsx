@@ -52,7 +52,7 @@ const Actions = ({
         <MoreHorizIcon />
       </IconButton>
 
-      <Dialog open={open} onClose={onDialogClose} maxWidth="xs">
+      <Dialog open={open} onClose={onDialogClose} maxWidth="xs" sx={{justifySelf: "flex-end"}}>
         <DialogActions sx={{ justifyContent: "space-between" }}>
           {buttons}
         </DialogActions>

@@ -26,13 +26,30 @@ vi.mock("@mui/icons-material/DeleteOutlined", () => ({
   default: () => <span data-testid="delete-icon" />,
 }));
 
+vi.mock("../../components/ConfirmDialog", () => ({
+  default: ({ open, onConfirm, onClose, description }: any) =>
+    open ? (
+      <div data-testid="confirm-dialog">
+        <p>{description}</p>
+        <button onClick={onConfirm} data-testid="confirm-yes">
+          Так
+        </button>
+        <button onClick={onClose} data-testid="confirm-no">
+          Ні
+        </button>
+      </div>
+    ) : null,
+}));
+
 describe("ActionButtons", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it("should render the ActionButtons component with edit, copy and delete icons", () => {
-    render(<ActionButtons onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} />);
+    render(
+      <ActionButtons onEdit={() => {}} onCopy={() => {}} onDelete={() => {}} />
+    );
     expect(screen.getByTestId("edit-icon")).toBeInTheDocument();
     expect(screen.getByTestId("copy-icon")).toBeInTheDocument();
     expect(screen.getByTestId("delete-icon")).toBeInTheDocument();
@@ -41,7 +58,9 @@ describe("ActionButtons", () => {
 
   it("should call the onEdit function when the Edit button is clicked", () => {
     const onEdit = vi.fn();
-    render(<ActionButtons onEdit={onEdit} onCopy={() => {}} onDelete={() => {}} />);
+    render(
+      <ActionButtons onEdit={onEdit} onCopy={() => {}} onDelete={() => {}} />
+    );
     const editButton = screen.getAllByTestId("icon-button")[0];
     fireEvent.click(editButton);
     expect(onEdit).toHaveBeenCalledTimes(1);
@@ -49,17 +68,31 @@ describe("ActionButtons", () => {
 
   it("should call the onCopy function when the Copy button is clicked", () => {
     const onCopy = vi.fn();
-    render(<ActionButtons onEdit={() => {}} onCopy={onCopy} onDelete={() => {}} />);
+    render(
+      <ActionButtons onEdit={() => {}} onCopy={onCopy} onDelete={() => {}} />
+    );
     const copyButton = screen.getAllByTestId("icon-button")[1];
     fireEvent.click(copyButton);
     expect(onCopy).toHaveBeenCalledTimes(1);
   });
 
-  it("should call the onDelete function when the Delete button is clicked", () => {
+  it("should call onDelete when confirmed in dialog", () => {
     const onDelete = vi.fn();
-    render(<ActionButtons onEdit={() => {}} onCopy={() => {}} onDelete={onDelete} />);
-    const deleteButton = screen.getAllByTestId("icon-button")[2];
-    fireEvent.click(deleteButton);
+    render(
+      <ActionButtons onEdit={() => {}} onCopy={() => {}} onDelete={onDelete} />
+    );
+    fireEvent.click(screen.getAllByTestId("icon-button")[2]);
+    fireEvent.click(screen.getByTestId("confirm-yes"));
     expect(onDelete).toHaveBeenCalledTimes(1);
+  });
+
+  it("should not call onDelete when cancel is clicked", () => {
+    const onDelete = vi.fn();
+    render(
+      <ActionButtons onEdit={() => {}} onCopy={() => {}} onDelete={onDelete} />
+    );
+    fireEvent.click(screen.getAllByTestId("icon-button")[2]);
+    fireEvent.click(screen.getByTestId("confirm-no"));
+    expect(onDelete).not.toHaveBeenCalled();
   });
 });
