@@ -1,6 +1,13 @@
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
-import { Box, Button, Typography, TextField, Alert } from "@mui/material";
+import {
+  Box,
+  Button,
+  Typography,
+  TextField,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
 import { useState } from "react";
 import axios from "../api/axiosInstance";
 
@@ -64,15 +71,15 @@ const LoginForm = () => {
 
             {error && <Alert severity="error">{error}</Alert>}
 
-            <Button
-              fullWidth
-              variant="contained"
-              type="submit"
-              disabled={isSubmitting}
-              sx={{ mt: 2 }}
-            >
-              Увійти
-            </Button>
+            <Box mt={2} textAlign="center">
+              {isSubmitting ? (
+                <CircularProgress />
+              ) : (
+                <Button fullWidth variant="contained" type="submit">
+                  Увійти
+                </Button>
+              )}
+            </Box>
           </Form>
         )}
       </Formik>

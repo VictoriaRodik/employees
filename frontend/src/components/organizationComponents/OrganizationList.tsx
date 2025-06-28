@@ -1,15 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { Container, CircularProgress } from "@mui/material";
 import OrganizationTable from "./OrganizationTable";
-import Search from "../Search";
-import Sort from "../Sort";
-import Button from "../Button";
 import OrganizationFormModal from "./OrganizationFormModal";
 import { useOrganizations } from "../../hooks/useOrganizations";
 import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { OrganizationInterface } from "../../types/organization";
-import { Container, CircularProgress } from "@mui/material";
 import { organizationFormatted } from "../../utils/organizationFormatted";
-import { SelectChangeEvent } from "@mui/material";
+import List from "../List";
 
 const OrganizationList = () => {
   const {
@@ -25,71 +22,53 @@ const OrganizationList = () => {
   const [editingOrganization, setEditingOrganization] =
     useState<OrganizationInterface | null>(null);
   const [copyingOrganization, setCopyingOrganization] = useState(false);
-  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
 
+  const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = searchParams.get("sort") || "name";
+  const sort =
+    (searchParams.get("sort") as keyof OrganizationInterface) || "name";
 
-  const handleAdd = useCallback(() => {
+  const handleAdd = () => {
     setEditingOrganization(null);
     setCopyingOrganization(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleEdit = useCallback((organization: OrganizationInterface) => {
+  const handleEdit = (organization: OrganizationInterface) => {
     setEditingOrganization(organizationFormatted(organization));
+    setCopyingOrganization(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleCopy = useCallback((organization: OrganizationInterface) => {
+  const handleCopy = (organization: OrganizationInterface) => {
     setEditingOrganization(organizationFormatted(organization));
     setCopyingOrganization(true);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleDelete = useCallback(
-    (id: number) => {
-      deleteOrganization.mutate(id);
-    },
-    [deleteOrganization]
+  const handleDelete = (id: number) => {
+    deleteOrganization.mutate(id);
+  };
+
+  const handleSubmit = (organization: OrganizationInterface) => {
+    if (organization.id && !copyingOrganization) {
+      updateOrganization.mutate(organization);
+    } else {
+      createOrganization.mutate(organization);
+    }
+    setModalOpen(false);
+    setEditingOrganization(null);
+    setCopyingOrganization(false);
+  };
+
+  const filtered = organizations.filter((e: { name: string }) =>
+    e.name?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const handleSubmit = useCallback(
-    (organization: OrganizationInterface) => {
-      if (organization.id && !copyingOrganization) {
-        updateOrganization.mutate(organization);
-      } else {
-        createOrganization.mutate(organization);
-      }
-      setModalOpen(false);
-      setEditingOrganization(null);
-      setCopyingOrganization(false);
-    },
-    [createOrganization, updateOrganization, copyingOrganization]
-  );
-
-  const handleSearch = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ search: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const handleSort = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ sort: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const filteredOrganizations = organizations.filter(
-    (e: OrganizationInterface) =>
-      e.name?.toLowerCase().includes(search.toLowerCase())
-  );
-
-  const sortedOrganizations = [...filteredOrganizations].sort((a, b) => {
-    const key = sort as keyof OrganizationInterface;
-    return String(a[key]).localeCompare(String(b[key]));
+  const sorted = [...filtered].sort((a, b) => {
+    const aVal = a[sort];
+    const bVal = b[sort];
+    return String(aVal).localeCompare(String(bVal));
   });
 
   if (isLoading)
@@ -105,31 +84,21 @@ const OrganizationList = () => {
         <CircularProgress />
       </Container>
     );
+
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "space-between",
-        justifyContent: "center",
-        gap: "2rem",
-      }}
+    <List
+      label="організацію"
+      onAdd={handleAdd}
+      searchKey="name"
+      sortOptions={[
+        { value: "name", label: "За назвою" },
+        { value: "edrpouCode", label: "За ЄДРПОУ" },
+      ]}
     >
-      <Search value={search} onChange={handleSearch} />
-      <Sort
-        value={sort}
-        onChange={handleSort}
-        options={[
-          { value: "name", label: "За назвою" },
-          { value: "edrpouCode", label: "За ЄДРПОУ" },
-        ]}
-      />
-      <Button onClick={handleAdd}>Додати організацію</Button>
       <OrganizationTable
-        organizations={sortedOrganizations}
+        organizations={sorted}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}
@@ -146,7 +115,7 @@ const OrganizationList = () => {
         onSubmit={handleSubmit}
         initialValues={editingOrganization}
       />
-    </Container>
+    </List>
   );
 };
 

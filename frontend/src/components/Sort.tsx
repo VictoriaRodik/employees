@@ -1,14 +1,23 @@
 import { MenuItem, Select, SelectChangeEvent } from "@mui/material";
 
-interface SortProps {
-  value: string;
-  options: { value: string; label: string }[];
-  onChange: (e: SelectChangeEvent<string>) => void;
+interface SortProps<T extends string = string> {
+  value: T;
+  options: { value: T; label: string }[];
+  onChange: (e: SelectChangeEvent<T>) => void;
+  placeholder?: string;
 }
 
-const Sort = ({ value, options, onChange }: SortProps) => {
+const Sort = <T extends string>({
+  value,
+  options,
+  onChange,
+  placeholder = "Сортувати",
+}: SortProps<T>) => {
   return (
     <Select value={value} onChange={onChange} displayEmpty>
+      <MenuItem value="" disabled>
+        {placeholder}
+      </MenuItem>
       {options.map((opt) => (
         <MenuItem key={opt.value} value={opt.value}>
           {opt.label}

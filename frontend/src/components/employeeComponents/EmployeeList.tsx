@@ -1,15 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
+import { Container, CircularProgress } from "@mui/material";
 import EmployeeTable from "./EmployeeTable";
-import Search from "../Search";
-import Sort from "../Sort";
-import Button from "../Button";
 import EmployeeFormModal from "./EmployeeFormModal";
 import { useEmployees } from "../../hooks/useEmployees";
 import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { EmployeeInterface } from "../../types/employee";
-import { Container, CircularProgress } from "@mui/material";
 import { employeeFormatted } from "../../utils/employeeFormatted";
-import { SelectChangeEvent } from "@mui/material";
+import List from "../List";
 
 const EmployeeList = () => {
   const {
@@ -22,76 +19,55 @@ const EmployeeList = () => {
   } = useEmployees();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingEmployee, setEditingEmployee] =
-    useState<EmployeeInterface | null>(null);
+  const [editingEmployee, setEditingEmployee] = useState<EmployeeInterface | null>(null);
   const [copyingEmployee, setCopyingEmployee] = useState(false);
-  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
 
+  const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = searchParams.get("sort") || "fullName";
+  const sort = (searchParams.get("sort") as keyof EmployeeInterface) || "fullName";
 
-  const handleAdd = useCallback(() => {
+  const handleAdd = () => {
     setEditingEmployee(null);
     setCopyingEmployee(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleEdit = useCallback((employee: EmployeeInterface) => {
+  const handleEdit = (employee: EmployeeInterface) => {
     setEditingEmployee(employeeFormatted(employee));
+    setCopyingEmployee(false);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleCopy = useCallback((employee: EmployeeInterface) => {
+  const handleCopy = (employee: EmployeeInterface) => {
     setEditingEmployee(employeeFormatted(employee));
     setCopyingEmployee(true);
     setModalOpen(true);
-  }, []);
+  };
 
-  const handleDelete = useCallback(
-    (id: number) => {
-      deleteEmployee.mutate(id);
-    },
-    [deleteEmployee]
-  );
+  const handleDelete = (id: number) => {
+    deleteEmployee.mutate(id);
+  };
 
-  const handleSubmit = useCallback(
-    (employee: EmployeeInterface) => {
-      if (employee.id && !copyingEmployee) {
-        updateEmployee.mutate(employee);
-      } else {
-        createEmployee.mutate(employee);
-      }
-      setModalOpen(false);
-      setEditingEmployee(null);
-      setCopyingEmployee(false);
-    },
-    [createEmployee, updateEmployee, copyingEmployee]
-  );
+  const handleSubmit = (employee: EmployeeInterface) => {
+    if (employee.id && !copyingEmployee) {
+      updateEmployee.mutate(employee);
+    } else {
+      createEmployee.mutate(employee);
+    }
+    setModalOpen(false);
+    setEditingEmployee(null);
+    setCopyingEmployee(false);
+  };
 
-  const handleSearch = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ search: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const handleSort = useCallback(
-    (e: SelectChangeEvent<string>) => {
-      setUrlSearchParams({ sort: e.target.value });
-    },
-    [setUrlSearchParams]
-  );
-
-  const filteredEmployees = employees.filter((e: EmployeeInterface) =>
+  const filtered = employees.filter((e: { fullName: string; }) =>
     e.fullName?.toLowerCase().includes(search.toLowerCase())
   );
 
-  const sortedEmployees = [...filteredEmployees].sort((a, b) => {
-    const key = sort as keyof EmployeeInterface;
-    const aValue = a[key];
-    const bValue = b[key];
+  const sorted = [...filtered].sort((a, b) => {
+    const aValue = a[sort];
+    const bValue = b[sort];
 
-    if (key === "personnelNumber") {
+    if (sort === "personnelNumber") {
       return Number(aValue) - Number(bValue);
     }
 
@@ -101,41 +77,26 @@ const EmployeeList = () => {
   if (isLoading)
     return (
       <Container
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "50vh",
-        }}
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}
       >
         <CircularProgress />
       </Container>
     );
+
   if (error) return <p>Помилка при завантаженні</p>;
 
   return (
-    <Container
-      maxWidth="lg"
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "space-between",
-        justifyContent: "center",
-        gap: "2rem",
-      }}
+    <List
+      label="співробітника"
+      onAdd={handleAdd}
+      searchKey="fullName"
+      sortOptions={[
+        { value: "fullName", label: "За ПІБ" },
+        { value: "personnelNumber", label: "За табельним номером" },
+      ]}
     >
-      <Search value={search} onChange={handleSearch} />
-      <Sort
-        value={sort}
-        onChange={handleSort}
-        options={[
-          { value: "fullName", label: "За ПІБ" },
-          { value: "personnelNumber", label: "За табельним номером" },
-        ]}
-      />
-      <Button onClick={handleAdd}>Додати співробітника</Button>
       <EmployeeTable
-        employees={sortedEmployees}
+        employees={sorted}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}
@@ -148,7 +109,7 @@ const EmployeeList = () => {
         onSubmit={handleSubmit}
         initialValues={editingEmployee}
       />
-    </Container>
+    </List>
   );
 };
 

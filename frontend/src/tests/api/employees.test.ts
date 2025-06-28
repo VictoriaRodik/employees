@@ -84,7 +84,7 @@ describe("Employee API Functions", () => {
 
       await expect(addEmployee(mockEmployee)).rejects.toThrow("Bad request");
       expect(console.error).toHaveBeenCalledWith(
-        "Error adding employee:",
+        "Error adding to employees:",
         error
       );
     });

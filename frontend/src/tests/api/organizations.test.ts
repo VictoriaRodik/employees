@@ -86,7 +86,7 @@ describe("Organization API Functions", () => {
 
       await expect(addOrganization(mockOrganization)).rejects.toThrow("Bad request");
       expect(console.error).toHaveBeenCalledWith(
-        "Error adding organization:",
+        "Error adding to organizations:",
         error
       );
     });
