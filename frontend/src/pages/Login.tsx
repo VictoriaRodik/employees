@@ -69,7 +69,7 @@ const LoginForm = () => {
               helperText={touched.password && errors.password}
             />
 
-            {error && <Alert severity="error">{error}</Alert>}
+            {error && <Alert variant="outlined" severity="error">{error}</Alert>}
 
             <Box mt={2} textAlign="center">
               {isSubmitting ? (
