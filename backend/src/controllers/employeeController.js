@@ -1,52 +1,46 @@
-import employeeModel from "../models/employeeModel.js";
+import * as employeeService from "../services/employeeService.js";
 
-const { getAllEmployees, addEmployee, updateEmployee, deleteEmployee } =
-  employeeModel;
+const getEmployees = async (req, res) => {
+  const employees = await employeeService.getAllEmployees();
+  res.json(employees);
+};
 
-async function getEmployees(req, res) {
-  try {
-    const employees = await getAllEmployees();
-    res.json(employees);
-  } catch (err) {
-    res.status(500).send("Error retrieving employees");
+const getEmployee = async (req, res) => {
+  const employee = await employeeService.getEmployeeById(req.params.id);
+  if (employee) {
+    res.json(employee);
+  } else {
+    res.status(404).json({ message: "Employee not found" });
   }
-}
+};
 
-async function createEmployee(req, res) {
-  try {
-    const newEmployeeId = await addEmployee(req.body);
-    res
-      .status(201)
-      .json({ id: newEmployeeId, message: "Employee added successfully" });
-  } catch (err) {
-    res.status(500).send("Error adding employee");
+const createEmployee = async (req, res) => {
+  const newEmployee = await employeeService.createEmployee(req.body);
+  res.status(201).json(newEmployee);
+};
+
+const updateEmployee = async (req, res) => {
+  const success = await employeeService.updateEmployee(req.params.id, req.body);
+  if (success) {
+    res.json({ message: "Employee updated" });
+  } else {
+    res.status(404).json({ message: "Employee not found" });
   }
-}
+};
 
-async function editEmployee(req, res) {
-  try {
-    const updatedRows = await updateEmployee(req.params.id, req.body);
-    if (updatedRows > 0) {
-      res.json({ message: "Employee updated successfully" });
-    } else {
-      res.status(404).send("Employee not found");
-    }
-  } catch (err) {
-    res.status(500).send("Error updating employee");
+const deleteEmployee = async (req, res) => {
+  const success = await employeeService.deleteEmployee(req.params.id);
+  if (success) {
+    res.json({ message: "Employee deleted" });
+  } else {
+    res.status(404).json({ message: "Employee not found" });
   }
-}
+};
 
-async function removeEmployee(req, res) {
-  try {
-    const deletedRows = await deleteEmployee(req.params.id);
-    if (deletedRows > 0) {
-      res.json({ message: "Employee deleted successfully" });
-    } else {
-      res.status(404).send("Employee not found");
-    }
-  } catch (err) {
-    res.status(500).send("Error deleting employee");
-  }
-}
-
-export default { getEmployees, createEmployee, editEmployee, removeEmployee };
+export default {
+  getEmployees,
+  getEmployee,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+};

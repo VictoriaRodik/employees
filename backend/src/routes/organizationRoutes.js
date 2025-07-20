@@ -6,15 +6,15 @@ import authenticateToken from "../middlewares/authenticateToken.js";
 const {
   getOrganizations,
   createOrganization,
-  editOrganization,
-  removeOrganization,
+  updateOrganization,
+  deleteOrganization,
 } = organizationController;
 
 const router = Router();
 
 router.get("/", authenticateToken, getOrganizations);
 router.post("/", authenticateToken, createOrganization);
-router.put("/:id", authenticateToken, editOrganization);
-router.delete("/:id", authenticateToken, removeOrganization);
+router.put("/:id", authenticateToken, updateOrganization);
+router.delete("/:id", authenticateToken, deleteOrganization);
 
 export default router;

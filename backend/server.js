@@ -10,10 +10,16 @@ const app = express();
 app.use(json());
 app.use(cors());
 
-app.use("/auth", authRoutes);
-app.use("/employees", employeeRoutes);
-app.use("/contracts", contractRoutes);
-app.use("/organizations", organizationRoutes);
+const routes = {
+  auth: authRoutes,
+  employees: employeeRoutes,
+  contracts: contractRoutes,
+  organizations: organizationRoutes,
+};
+
+Object.entries(routes).forEach(([path, router]) => {
+  app.use(`/${path}`, router);
+});
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

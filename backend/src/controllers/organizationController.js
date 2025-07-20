@@ -1,62 +1,53 @@
-import organizationModel from "../models/organizationModel.js";
+import * as organizationService from "../services/organizationService.js";
 
-const {
-  getAllOrganizations,
-  addOrganization,
-  updateOrganization,
-  deleteOrganization,
-} = organizationModel;
+const getOrganizations = async (req, res) => {
+  const organizations = await organizationService.getAllOrganizations();
+  res.json(organizations);
+};
 
-async function getOrganizations(req, res) {
-  try {
-    const organizations = await getAllOrganizations();
-    res.json(organizations);
-  } catch (err) {
-    res.status(500).send("Error retrieving organizations");
+const getOrganization = async (req, res) => {
+  const organization = await organizationService.getOrganizationById(
+    req.params.id
+  );
+  if (organization) {
+    res.json(organization);
+  } else {
+    res.status(404).json({ message: "Organization not found" });
   }
-}
+};
 
-async function createOrganization(req, res) {
-  try {
-    const newOrganizationId = await addOrganization(req.body);
-    res.status(201).json({
-      id: newOrganizationId,
-      message: "Organization added successfully",
-    });
-  } catch (err) {
-    res.status(500).send("Error adding organization");
-  }
-}
+const createOrganization = async (req, res) => {
+  const newOrganization = await organizationService.createOrganization(
+    req.body
+  );
+  res.status(201).json(newOrganization);
+};
 
-async function editOrganization(req, res) {
-  try {
-    const updatedRows = await updateOrganization(req.params.id, req.body);
-    if (updatedRows > 0) {
-      res.json({ message: "Organization updated successfully" });
-    } else {
-      res.status(404).send("Organization not found");
-    }
-  } catch (err) {
-    res.status(500).send("Error updating organization");
+const updateOrganization = async (req, res) => {
+  const success = await organizationService.updateOrganization(
+    req.params.id,
+    req.body
+  );
+  if (success) {
+    res.json({ message: "Organization updated" });
+  } else {
+    res.status(404).json({ message: "Organization not found" });
   }
-}
+};
 
-async function removeOrganization(req, res) {
-  try {
-    const deletedRows = await deleteOrganization(req.params.id);
-    if (deletedRows > 0) {
-      res.json({ message: "Organization deleted successfully" });
-    } else {
-      res.status(404).send("Organization not found");
-    }
-  } catch (err) {
-    res.status(500).send("Error deleting organization");
+const deleteOrganization = async (req, res) => {
+  const success = await organizationService.deleteOrganization(req.params.id);
+  if (success) {
+    res.json({ message: "Organization deleted" });
+  } else {
+    res.status(404).json({ message: "Organization not found" });
   }
-}
+};
 
 export default {
   getOrganizations,
+  getOrganization,
   createOrganization,
-  editOrganization,
-  removeOrganization,
+  updateOrganization,
+  deleteOrganization,
 };
