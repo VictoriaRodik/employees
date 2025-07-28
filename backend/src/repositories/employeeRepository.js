@@ -1,8 +1,8 @@
 import { BaseRepository } from "./baseRepository.js";
 
 export class EmployeeRepository extends BaseRepository {
-  constructor(pool) {
-    super("employees", pool);
+  constructor() {
+    super("employees");
   }
   async create(data) {
     const {

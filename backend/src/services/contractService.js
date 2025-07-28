@@ -1,7 +1,6 @@
 import { ContractRepository } from '../repositories/contractRepository.js';
-import pool from '../config/db.js';
 
-const contractRepository = new ContractRepository(pool);
+const contractRepository = new ContractRepository();
 
 export const getAllContracts = async () => {
   return await contractRepository.getAll();

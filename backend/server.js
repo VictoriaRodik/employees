@@ -1,10 +1,21 @@
 import express, { json } from "express";
 import cors from "cors";
-import pool from "./src/config/db.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import employeeRoutes from "./src/routes/employeeRoutes.js";
 import contractRoutes from "./src/routes/contractRoutes.js";
 import organizationRoutes from "./src/routes/organizationRoutes.js";
+import departmentRoutes from "./src/routes/departmentRoutes.js";
+import employmentConditionRoutes from "./src/routes/employmentConditionRoutes.js";
+import employmentTypeRoutes from "./src/routes/employmentTypeRoutes.js";
+import fieldDefinitionRoutes from "./src/routes/fieldDefinitionRoutes.js";
+import gradeSalaryRoutes from "./src/routes/gradeSalaryRoutes.js";
+import orderRoutes from "./src/routes/orderRoutes.js";
+import orderItemRoutes from "./src/routes/orderItemRoutes.js";
+import orderTypeRoutes from "./src/routes/orderTypeRoutes.js";
+import positionRoutes from "./src/routes/positionRoutes.js";
+import qualificationGradeRoutes from "./src/routes/qualificationGradeRoutes.js";
+import referenceSourceRoutes from "./src/routes/referenceSourceRoutes.js";
+import workScheduleRoutes from "./src/routes/workScheduleRoutes.js";
 
 const app = express();
 app.use(json());
@@ -12,9 +23,21 @@ app.use(cors());
 
 const routes = {
   auth: authRoutes,
-  employees: employeeRoutes,
   contracts: contractRoutes,
+  departments: departmentRoutes,
+  employees: employeeRoutes,
+  employmentConditions: employmentConditionRoutes,
+  employmentTypes: employmentTypeRoutes,
+  fieldDefinitions: fieldDefinitionRoutes,
+  gradeSalaries: gradeSalaryRoutes,
+  orders: orderRoutes,
+  orderItems: orderItemRoutes,
+  orderTypes: orderTypeRoutes,
   organizations: organizationRoutes,
+  positions: positionRoutes,
+  qualificationGrades: qualificationGradeRoutes,
+  referenceSources: referenceSourceRoutes,
+  workSchedules: workScheduleRoutes,
 };
 
 Object.entries(routes).forEach(([path, router]) => {

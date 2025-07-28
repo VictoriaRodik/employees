@@ -1,8 +1,8 @@
 import { BaseRepository } from "./baseRepository.js";
 
 export class OrganizationRepository extends BaseRepository {
-  constructor(pool) {
-    super("organizations", pool);
+  constructor() {
+    super("organizations");
   }
   async create(data) {
     const {

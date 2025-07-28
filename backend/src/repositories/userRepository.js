@@ -1,5 +1,6 @@
+import pool from "../config/db.js";
 export class UserRepository {
-  constructor(pool) {
+  constructor() {
     this.pool = pool;
   }
 

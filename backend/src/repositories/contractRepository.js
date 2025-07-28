@@ -1,8 +1,8 @@
 import { BaseRepository } from "./baseRepository.js";
 
 export class ContractRepository extends BaseRepository {
-  constructor(pool) {
-    super("contracts", pool);
+  constructor() {
+    super("contracts");
   }
   async getAll() {
     const [rows] = await this.pool.query(

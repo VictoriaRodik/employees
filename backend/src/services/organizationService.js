@@ -1,7 +1,7 @@
 import { OrganizationRepository } from '../repositories/organizationRepository.js';
-import pool from '../config/db.js';
 
-const organizationRepository = new OrganizationRepository(pool);
+
+const organizationRepository = new OrganizationRepository();
 
 export const getAllOrganizations = async () => {
   return await organizationRepository.getAll();
