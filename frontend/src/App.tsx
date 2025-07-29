@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { registerPDFFonts } from "./config/pdfFonts";
 import OrganizationsPage from "./pages/OrganizationsPage";
+import DepartmentsPage from "./pages/DepartmentsPage";
 import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
 
@@ -13,14 +14,13 @@ registerPDFFonts();
 const queryClient = new QueryClient();
 
 function App() {
-
   return (
     <ThemeProvider>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <Routes>
-            <Route path="/login" element={<Login />} />
             <Route path="/" element={<Layout />}>
+              <Route path="/login" element={<Login />} />
               <Route index element={<Navigate to="/employees" replace />} />
               <Route
                 path="employees"
@@ -43,6 +43,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <OrganizationsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="departments"
+                element={
+                  <RequireAuth>
+                    <DepartmentsPage />
                   </RequireAuth>
                 }
               />

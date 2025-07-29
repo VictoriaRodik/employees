@@ -1,4 +1,5 @@
 import pool from "../config/db.js";
+
 export class BaseRepository {
   constructor(tableName) {
     this.table = tableName;
@@ -18,24 +19,34 @@ export class BaseRepository {
     return rows[0] || null;
   }
 
-    async create(data) {
-    const keys = Object.keys(data).join(', ');
-    const placeholders = Object.keys(data).map(() => '?').join(', ');
-    const values = Object.values(data);
-    const [result] = await pool.query(
-      `INSERT INTO ${tableName} (${keys}) VALUES (${placeholders})`,
+  async create(data) {
+    const { id: _, ...newData } = data;
+    const keys = Object.keys(newData).join(", ");
+    const placeholders = Object.keys(newData)
+      .map(() => "?")
+      .join(", ");
+    const values = Object.values(newData);
+    const [result] = await this.pool.query(
+      `INSERT INTO ${this.table} (${keys}) VALUES (${placeholders})`,
       values
     );
     return { id: result.insertId };
   }
 
   async update(id, data) {
-    const fields = Object.keys(data).map(key => `${key} = ?`).join(', ');
-    const values = [...Object.values(data), id];
-    await pool.query(
-      `UPDATE ${tableName} SET ${fields} WHERE id = ?`,
+    const { id: _, ...newData } = data;
+
+    const fields = Object.keys(newData)
+      .map((key) => `${key} = ?`)
+      .join(", ");
+    const values = [...Object.values(newData), Number(id)];
+
+    const [result] = await this.pool.query(
+      `UPDATE ${this.table} SET ${fields} WHERE id = ?`,
       values
     );
+
+    return result.affectedRows;
   }
 
   async delete(id) {
