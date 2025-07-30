@@ -1,11 +1,11 @@
-import DepartmentList from "../components/depertmentComponents/DepartmentList";
+import PositionList from "../components/positionComponents/PositionList";
 import { Typography, Box, Paper } from "@mui/material";
 
-const DepartmentsPage = () => {
+const PositionsPage = () => {
   return (
     <Box>
       <Typography variant="h4" gutterBottom color="primary">
-        Підрозділи
+        Посади
       </Typography>
       <Paper
         sx={{
@@ -14,10 +14,10 @@ const DepartmentsPage = () => {
           borderRadius: 2,
         }}
       >
-        <DepartmentList />
+        <PositionList />
       </Paper>
     </Box>
   );
 };
 
-export default DepartmentsPage;
+export default PositionsPage;

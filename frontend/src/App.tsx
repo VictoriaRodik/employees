@@ -7,6 +7,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 import { registerPDFFonts } from "./config/pdfFonts";
 import OrganizationsPage from "./pages/OrganizationsPage";
 import DepartmentsPage from "./pages/DepartmentsPage";
+import PositionsPage from "./pages/PositionsPage";
 import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
 
@@ -51,6 +52,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <DepartmentsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="positions"
+                element={
+                  <RequireAuth>
+                    <PositionsPage />
                   </RequireAuth>
                 }
               />
