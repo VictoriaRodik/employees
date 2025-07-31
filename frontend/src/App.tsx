@@ -8,6 +8,7 @@ import { registerPDFFonts } from "./config/pdfFonts";
 import OrganizationsPage from "./pages/OrganizationsPage";
 import DepartmentsPage from "./pages/DepartmentsPage";
 import PositionsPage from "./pages/PositionsPage";
+import EmploymentConditionsPage from "./pages/EmploymentConditionsPage";
 import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
 
@@ -60,6 +61,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <PositionsPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="employment-conditions"
+                element={
+                  <RequireAuth>
+                    <EmploymentConditionsPage />
                   </RequireAuth>
                 }
               />
