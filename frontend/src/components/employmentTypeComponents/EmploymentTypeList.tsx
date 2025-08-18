@@ -101,7 +101,7 @@ const EmploymentTypeList = () => {
 
   return (
     <List
-      label="підрозділ"
+      label="умову роботи"
       onAdd={handleAdd}
       searchKey="employmentTypeName"
       sortOptions={[

@@ -101,7 +101,7 @@ const EmploymentConditionList = () => {
 
   return (
     <List
-      label="підрозділ"
+      label="умову прийняття на роботу"
       onAdd={handleAdd}
       searchKey="employmentConditionName"
       sortOptions={[

@@ -11,6 +11,8 @@ import PositionsPage from "./pages/PositionsPage";
 import EmploymentConditionsPage from "./pages/EmploymentConditionsPage";
 import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
+import EmploymentTypesPage from "./pages/EmploymentTypesPage";
+import WorkSchedulesPage from "./pages/WorkSchedulesPage";
 
 registerPDFFonts();
 const queryClient = new QueryClient();
@@ -72,6 +74,22 @@ function App() {
                   </RequireAuth>
                 }
               />
+                <Route
+                  path="employment-types"
+                  element={
+                    <RequireAuth>
+                      <EmploymentTypesPage />
+                    </RequireAuth>
+                  }
+                />
+                <Route
+                  path="work-schedules"
+                  element={
+                    <RequireAuth>
+                      <WorkSchedulesPage />
+                    </RequireAuth>
+                  }
+                />
               <Route path="*" element={<Navigate to="/employees" replace />} />
             </Route>
           </Routes>

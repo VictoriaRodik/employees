@@ -1,7 +1,7 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
 import { EmploymentConditionInterface } from "../types/employmentCondition";
 
-const endpoint = "employment-conditions";
+const endpoint = "employmentConditions";
 
 export const fetchEmploymentConditions = () =>
   fetchAll<EmploymentConditionInterface>(endpoint);
