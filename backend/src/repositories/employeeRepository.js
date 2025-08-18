@@ -4,6 +4,13 @@ export class EmployeeRepository extends BaseRepository {
   constructor() {
     super("employees");
   }
+
+  async getAll() {
+    const [rows] = await this.pool.query(
+      `SELECT * FROM employees ORDER BY full_name`
+    );
+    return rows;
+  }
   async create(data) {
     const {
       tax_id,

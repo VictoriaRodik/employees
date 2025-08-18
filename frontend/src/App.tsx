@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import RequireAuth from "./components/auth/RequireAuth";
 import EmploymentTypesPage from "./pages/EmploymentTypesPage";
 import WorkSchedulesPage from "./pages/WorkSchedulesPage";
+import QualificationGradesPage from "./pages/QualificationGradesPage";
 
 registerPDFFonts();
 const queryClient = new QueryClient();
@@ -74,22 +75,30 @@ function App() {
                   </RequireAuth>
                 }
               />
-                <Route
-                  path="employment-types"
-                  element={
-                    <RequireAuth>
-                      <EmploymentTypesPage />
-                    </RequireAuth>
-                  }
-                />
-                <Route
-                  path="work-schedules"
-                  element={
-                    <RequireAuth>
-                      <WorkSchedulesPage />
-                    </RequireAuth>
-                  }
-                />
+              <Route
+                path="employment-types"
+                element={
+                  <RequireAuth>
+                    <EmploymentTypesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="work-schedules"
+                element={
+                  <RequireAuth>
+                    <WorkSchedulesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="qualification-grades"
+                element={
+                  <RequireAuth>
+                    <QualificationGradesPage />
+                  </RequireAuth>
+                }
+              />
               <Route path="*" element={<Navigate to="/employees" replace />} />
             </Route>
           </Routes>
