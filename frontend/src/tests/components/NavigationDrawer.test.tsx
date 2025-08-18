@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import NavigationDrawer from "../../components/NavigationDrawer";
+import NavigationDrawer from "../../components/navigation/NavigationDrawer";
 
 let mediaQueryValue = true;
 

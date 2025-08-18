@@ -41,7 +41,7 @@ const Header = ({
           alt="logo"
           sx={{ height: 32, width: 32 }}
         />
-        Система управління договорами
+        SVARTA HRM
       </Typography>
       <IconButton onClick={toggleTheme} color="inherit">
         {isDarkMode ? <Brightness7Icon /> : <Brightness4Icon />}

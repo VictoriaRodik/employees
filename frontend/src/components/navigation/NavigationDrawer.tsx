@@ -1,18 +1,10 @@
 import {
-  Box,
   Drawer,
-  List,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
   Toolbar,
   useMediaQuery,
   useTheme as useMuiTheme,
 } from "@mui/material";
-import { Link } from "react-router-dom";
-import PeopleIcon from "@mui/icons-material/People";
-import DescriptionIcon from "@mui/icons-material/Description";
-import BusinessIcon from "@mui/icons-material/Business";
+import NavigationContent from "./NavigationContent";
 
 interface NavigationDrawerProps {
   mobileOpen: boolean;
@@ -28,41 +20,8 @@ const NavigationDrawer = ({
   const muiTheme = useMuiTheme();
   const isSmUp = useMediaQuery(muiTheme.breakpoints.up("sm"));
 
-  const navItems = [
-    {
-      to: "/employees",
-      label: "Співробітники",
-      icon: <PeopleIcon color="primary" />,
-    },
-    {
-      to: "/contracts",
-      label: "Договори",
-      icon: <DescriptionIcon color="primary" />,
-    },
-    {
-      to: "/organizations",
-      label: "Організації",
-      icon: <BusinessIcon color="primary" />,
-    },
-  ];
-
   const drawerContent = (
-    <Box sx={{ overflow: "auto" }}>
-      <List>
-        {navItems.map(({ to, label, icon }) => (
-          <ListItemButton
-            key={to}
-            component={Link}
-            to={to}
-            sx={{ color: "text.primary" }}
-            onClick={() => !isSmUp && onDrawerToggle()}
-          >
-            <ListItemIcon>{icon}</ListItemIcon>
-            <ListItemText primary={label} />
-          </ListItemButton>
-        ))}
-      </List>
-    </Box>
+    <NavigationContent isSmUp={isSmUp} onDrawerToggle={onDrawerToggle} />
   );
 
   if (isSmUp) {
