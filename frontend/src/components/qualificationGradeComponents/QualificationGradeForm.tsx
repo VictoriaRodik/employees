@@ -13,7 +13,7 @@ interface qualificationGradeFormProps {
 
 const defaultValues: QualificationGradeInterface = {
   id: 0,
-  grade: 0,
+  grade: "",
 };
 
 const QualificationGradeForm: React.FC<qualificationGradeFormProps> = ({
@@ -21,7 +21,7 @@ const QualificationGradeForm: React.FC<qualificationGradeFormProps> = ({
   onSubmit,
 }) => {
   const validationSchema = Yup.object({
-    grade: Yup.number().required("Обов'язкове поле"),
+    grade: Yup.string().required("Обов'язкове поле"),
   });
 
   return (

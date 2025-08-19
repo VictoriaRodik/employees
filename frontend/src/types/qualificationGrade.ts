@@ -1,9 +1,9 @@
 export interface QualificationGradeInterface {
   id: number;
-  grade: number;
+  grade: string;
 }
 
 export interface ApiQualificationGrade {
   id: number;
-  grade: number;
+  grade: string;
 }

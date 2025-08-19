@@ -4,5 +4,5 @@ export const qualificationGradeFormatted = (
   qualificationGrade?: Partial<QualificationGradeInterface>
 ): QualificationGradeInterface => ({
   id: qualificationGrade?.id ?? 0,
-  grade: qualificationGrade?.grade ?? 0,
+  grade: qualificationGrade?.grade ?? "",
 });

@@ -14,6 +14,7 @@ import RequireAuth from "./components/auth/RequireAuth";
 import EmploymentTypesPage from "./pages/EmploymentTypesPage";
 import WorkSchedulesPage from "./pages/WorkSchedulesPage";
 import QualificationGradesPage from "./pages/QualificationGradesPage";
+import GradeSalarysPage from "./pages/GradeSalariesPage";
 
 registerPDFFonts();
 const queryClient = new QueryClient();
@@ -96,6 +97,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <QualificationGradesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="grade-salaries"
+                element={
+                  <RequireAuth>
+                    <GradeSalarysPage />
                   </RequireAuth>
                 }
               />
