@@ -17,7 +17,7 @@ const gradeSalaryTable: React.FC<gradeSalaryTableProps> = ({
   onDelete,
 }) => {
   const columns = [
-    { key: "gradeId" as keyof GradeSalaryInterface, label: "Розряд" },
+    { key: "grade" as keyof GradeSalaryInterface, label: "Розряд" },
     { key: "baseSalary" as keyof GradeSalaryInterface, label: "Оклад" },
     { key: "effectiveFrom" as keyof GradeSalaryInterface, label: "Діє з" },
   ];

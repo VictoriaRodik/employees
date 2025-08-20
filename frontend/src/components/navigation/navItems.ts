@@ -25,13 +25,22 @@ export const referenceNavItems = [
     label: "Посади",
   },
   {
-    to: "/employment-types",
-    label: "Умови роботи",
+    to: "/grade-salaries",
+    label: "Оклади",
+  },
+  {
+    to: "/qualification-grades",
+    label: "Розряди",
   },
   {
     to: "/work-schedules",
     label: "Графіки роботи",
   },
+  {
+    to: "/employment-types",
+    label: "Умови роботи",
+  },
+
   {
     to: "/employment-conditions",
     label: "Умови праці",

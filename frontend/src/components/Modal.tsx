@@ -1,4 +1,9 @@
-import { Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+} from "@mui/material";
 import { ReactNode } from "react";
 
 interface ModalProps {
@@ -11,7 +16,14 @@ interface ModalProps {
 
 const Modal = ({ open, onClose, title, children, actions }: ModalProps) => {
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      disableEnforceFocus={false}
+      autoFocus={true}
+    >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>{children}</DialogContent>
       {actions && <DialogActions>{actions}</DialogActions>}

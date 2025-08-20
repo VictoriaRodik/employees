@@ -15,6 +15,7 @@ import EmploymentTypesPage from "./pages/EmploymentTypesPage";
 import WorkSchedulesPage from "./pages/WorkSchedulesPage";
 import QualificationGradesPage from "./pages/QualificationGradesPage";
 import GradeSalarysPage from "./pages/GradeSalariesPage";
+import ReferenceSourcesPage from "./pages/ReferenceSourcesPage";
 
 registerPDFFonts();
 const queryClient = new QueryClient();
@@ -105,6 +106,14 @@ function App() {
                 element={
                   <RequireAuth>
                     <GradeSalarysPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="reference-sources"
+                element={
+                  <RequireAuth>
+                    <ReferenceSourcesPage />
                   </RequireAuth>
                 }
               />

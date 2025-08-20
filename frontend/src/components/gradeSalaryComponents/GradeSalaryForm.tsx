@@ -15,7 +15,8 @@ interface gradeSalaryFormProps {
 
 const defaultValues: GradeSalaryInterface = {
   id: 0,
-  gradeId: 0,
+  gradeId: 1,
+  grade: "",
   baseSalary: 0,
   effectiveFrom: "",
 };
@@ -50,7 +51,7 @@ const GradeSalaryForm: React.FC<gradeSalaryFormProps> = ({
                 select
                 name="gradeId"
                 label="Розряд"
-                value={values.gradeId}
+                value={grades.length > 0 ? values.gradeId : ""}
                 onChange={handleChange}
                 fullWidth
               >
