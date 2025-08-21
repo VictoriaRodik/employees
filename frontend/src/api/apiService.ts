@@ -1,10 +1,8 @@
-import axios from "axios";
-
-const API_URL = import.meta.env.VITE_API_URL;
+import axios from "./axiosInstance";
 
 export const fetchAll = async <T>(endpoint: string): Promise<T[]> => {
   try {
-    const { data } = await axios.get(`${API_URL}/${endpoint}`);
+    const { data } = await axios.get(`/${endpoint}`);
     return data;
   } catch (error) {
     console.error(`Error fetching ${endpoint}:`, error);
@@ -14,7 +12,7 @@ export const fetchAll = async <T>(endpoint: string): Promise<T[]> => {
 
 export const addItem = async <T>(endpoint: string, item: T): Promise<T> => {
   try {
-    const { data } = await axios.post(`${API_URL}/${endpoint}`, item);
+    const { data } = await axios.post(`/${endpoint}`, item);
     return data;
   } catch (error) {
     console.error(`Error adding to ${endpoint}:`, error);
@@ -27,7 +25,7 @@ export const updateItem = async <T extends { id: number }>(
   item: T
 ): Promise<T> => {
   try {
-    const { data } = await axios.put(`${API_URL}/${endpoint}/${item.id}`, item);
+    const { data } = await axios.put(`/${endpoint}/${item.id}`, item);
     return data;
   } catch (error) {
     console.error(`Error updating ${endpoint}:`, error);
@@ -40,7 +38,7 @@ export const deleteItem = async (
   id: number
 ): Promise<void> => {
   try {
-    await axios.delete(`${API_URL}/${endpoint}/${id}`);
+    await axios.delete(`/${endpoint}/${id}`);
   } catch (error) {
     console.error(`Error deleting from ${endpoint}:`, error);
     throw error;

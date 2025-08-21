@@ -1,12 +1,11 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { OrganizationInterface } from "../types/organization";
+import { ApiOrganization } from "../types/organization";
 
 const endpoint = "organizations";
 
-export const fetchOrganizations = () =>
-  fetchAll<OrganizationInterface>(endpoint);
-export const addOrganization = (organization: OrganizationInterface) =>
+export const fetchOrganizations = () => fetchAll<ApiOrganization>(endpoint);
+export const addOrganization = (organization: ApiOrganization) =>
   addItem(endpoint, organization);
-export const updateOrganization = (organization: OrganizationInterface) =>
+export const editOrganization = (organization: ApiOrganization) =>
   updateItem(endpoint, organization);
-export const deleteOrganization = (id: number) => deleteItem(endpoint, id);
+export const removeOrganization = (id: number) => deleteItem(endpoint, id);

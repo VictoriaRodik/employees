@@ -16,6 +16,8 @@ import WorkSchedulesPage from "./pages/WorkSchedulesPage";
 import QualificationGradesPage from "./pages/QualificationGradesPage";
 import GradeSalarysPage from "./pages/GradeSalariesPage";
 import ReferenceSourcesPage from "./pages/ReferenceSourcesPage";
+import OrderTypesPage from "./pages/OrderTypesPage";
+import FieldDefinitionsPage from "./pages/FieldDefinitionPage";
 
 registerPDFFonts();
 const queryClient = new QueryClient();
@@ -114,6 +116,22 @@ function App() {
                 element={
                   <RequireAuth>
                     <ReferenceSourcesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="order-types"
+                element={
+                  <RequireAuth>
+                    <OrderTypesPage />
+                  </RequireAuth>
+                }
+              />
+              <Route
+                path="field-definitions"
+                element={
+                  <RequireAuth>
+                    <FieldDefinitionsPage />
                   </RequireAuth>
                 }
               />

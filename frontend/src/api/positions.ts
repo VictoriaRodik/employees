@@ -1,11 +1,11 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { PositionInterface } from "../types/position";
+import { ApiPosition } from "../types/position";
 
 const endpoint = "positions";
 
-export const fetchPositions = () => fetchAll<PositionInterface>(endpoint);
-export const addPosition = (position: PositionInterface) =>
+export const fetchPositions = () => fetchAll<ApiPosition>(endpoint);
+export const addPosition = (position: ApiPosition) =>
   addItem(endpoint, position);
-export const updatePosition = (position: PositionInterface) =>
+export const editPosition = (position: ApiPosition) =>
   updateItem(endpoint, position);
-export const deletePosition = (id: number) => deleteItem(endpoint, id);
+export const removePosition = (id: number) => deleteItem(endpoint, id);

@@ -10,6 +10,7 @@ export const mapToApiContract = (contract: ContractInterface) => ({
   contract_number: contract.contractNumber,
   full_name: contract.fullName,
   tax_id: contract.taxId,
+
   address: contract.address,
   passport_series: contract.passportSeries,
   passport_number: contract.passportNumber,
@@ -17,15 +18,15 @@ export const mapToApiContract = (contract: ContractInterface) => ({
   passport_issued_by: contract.passportIssuedBy,
   organization_id: contract.organizationId,
   name: contract.name,
-  shortName: contract.shortName,
-  edrpouCode: contract.edrpouCode,
-  legalAddress: contract.legalAddress,
+  short_name: contract.shortName,
+  edrpou_code: contract.edrpouCode,
+  legal_address: contract.legalAddress,
   phone: contract.phone,
-  bankAccount: contract.bankAccount,
-  bankName: contract.bankName,
-  foundationDoc: contract.foundationDoc,
-  directorPosition: contract.directorPosition,
-  directorFullName: contract.directorFullName,
+  bank_account: contract.bankAccount,
+  bank_name: contract.bankName,
+  foundation_doc: contract.foundationDoc,
+  director_position: contract.directorPosition,
+  director_full_name: contract.directorFullName,
 });
 
 export const mapFromApiContract = (

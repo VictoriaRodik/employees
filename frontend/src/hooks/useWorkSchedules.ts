@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { WorkScheduleInterface } from "../types/workSchedule";
 import {
   mapFromApiWorkSchedule,
   mapToApiWorkSchedule,
 } from "../utils/workScheduleMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/workSchedules";
+import {
+  fetchWorkSchedules,
+  addWorkSchedule,
+  editWorkSchedule,
+  removeWorkSchedule,
+} from "../api/workSchedules";
 
 export const useWorkSchedules = () => {
   const queryClient = useQueryClient();
@@ -14,17 +17,19 @@ export const useWorkSchedules = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["workSchedules"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiWorkSchedule);
+      try {
+        const result = await fetchWorkSchedules();
+        return result.map(mapFromApiWorkSchedule);
+      } catch (error) {
+        console.error("Error fetching work schedules:", error);
+        throw error;
+      }
     },
   });
 
   const createWorkSchedule = useMutation({
     mutationFn: async (workSchedule: WorkScheduleInterface) => {
-      await axios.post(
-        API_URL,
-        mapToApiWorkSchedule(workSchedule)
-      );
+      await addWorkSchedule(mapToApiWorkSchedule(workSchedule));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workSchedules"] });
@@ -33,8 +38,7 @@ export const useWorkSchedules = () => {
 
   const updateWorkSchedule = useMutation({
     mutationFn: async (workSchedule: WorkScheduleInterface) => {
-      const { id, ...data } = mapToApiWorkSchedule(workSchedule);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editWorkSchedule(mapToApiWorkSchedule(workSchedule));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workSchedules"] });
@@ -43,7 +47,7 @@ export const useWorkSchedules = () => {
 
   const deleteWorkSchedule = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeWorkSchedule(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["workSchedules"] });

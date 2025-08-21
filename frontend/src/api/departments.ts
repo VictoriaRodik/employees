@@ -1,11 +1,11 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { DepartmentInterface } from "../types/department";
+import { ApiDepartment } from "../types/department";
 
 const endpoint = "departments";
 
-export const fetchDepartments = () => fetchAll<DepartmentInterface>(endpoint);
-export const addDepartment = (department: DepartmentInterface) =>
+export const fetchDepartments = () => fetchAll<ApiDepartment>(endpoint);
+export const addDepartment = (department: ApiDepartment) =>
   addItem(endpoint, department);
-export const updateDepartment = (department: DepartmentInterface) =>
+export const editDepartment = (department: ApiDepartment) =>
   updateItem(endpoint, department);
-export const deleteDepartment = (id: number) => deleteItem(endpoint, id);
+export const removeDepartment = (id: number) => deleteItem(endpoint, id);

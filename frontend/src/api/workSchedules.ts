@@ -1,14 +1,14 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { WorkScheduleInterface } from "../types/workSchedule";
+import { ApiWorkSchedule } from "../types/workSchedule";
 const endpoint = "workSchedules";
 
 export const fetchWorkSchedules = () =>
-  fetchAll<WorkScheduleInterface>(endpoint);
+  fetchAll<ApiWorkSchedule>(endpoint);
 export const addWorkSchedule = (
-  workSchedule: WorkScheduleInterface
+  workSchedule: ApiWorkSchedule
 ) => addItem(endpoint, workSchedule);
-export const updateWorkSchedule = (
-  workSchedule: WorkScheduleInterface
+export const editWorkSchedule = (
+  workSchedule: ApiWorkSchedule
 ) => updateItem(endpoint, workSchedule);
-export const deleteWorkSchedule = (id: number) =>
+export const removeWorkSchedule = (id: number) =>
   deleteItem(endpoint, id);

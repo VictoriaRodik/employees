@@ -46,3 +46,17 @@ export const referenceNavItems = [
     label: "Умови праці",
   },
 ];
+export const orderNavItems = [
+  {
+    to: "/order-types",
+    label: "Типи наказів",
+  },
+  {
+    to: "/field-definitions",
+    label: "Типи полів",
+  },
+  {
+    to: "/reference-sources",
+    label: "Джерела даних",
+  },
+];

@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { ReferenceSourceInterface } from "../types/referenceSource";
 import {
   mapFromApiReferenceSource,
   mapToApiReferenceSource,
 } from "../utils/referenceSourceMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/referenceSources";
+import {
+  fetchReferenceSources,
+  addReferenceSource,
+  editReferenceSource,
+  removeReferenceSource,
+} from "../api/referenceSources";
 
 export const useReferenceSources = () => {
   const queryClient = useQueryClient();
@@ -14,14 +17,19 @@ export const useReferenceSources = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["referenceSources"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiReferenceSource);
+      try {
+        const result = await fetchReferenceSources();
+        return result.map(mapFromApiReferenceSource);
+      } catch (error) {
+        console.error("Error fetching reference sources:", error);
+        throw error;
+      }
     },
   });
 
   const createReferenceSource = useMutation({
     mutationFn: async (referenceSource: ReferenceSourceInterface) => {
-      await axios.post(API_URL, mapToApiReferenceSource(referenceSource));
+      await addReferenceSource(mapToApiReferenceSource(referenceSource));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["referenceSources"] });
@@ -30,8 +38,7 @@ export const useReferenceSources = () => {
 
   const updateReferenceSource = useMutation({
     mutationFn: async (referenceSource: ReferenceSourceInterface) => {
-      const { id, ...data } = mapToApiReferenceSource(referenceSource);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editReferenceSource(mapToApiReferenceSource(referenceSource));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["referenceSources"] });
@@ -40,7 +47,7 @@ export const useReferenceSources = () => {
 
   const deleteReferenceSource = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeReferenceSource(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["referenceSources"] });

@@ -1,11 +1,10 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { GradeSalaryInterface } from "../types/gradeSalary";
+import { ApiGradeSalary } from "../types/gradeSalary";
 const endpoint = "gradeSalaries";
 
-export const fetchGradeSalaries = () =>
-  fetchAll<GradeSalaryInterface>(endpoint);
-export const addGradeSalary = (gradeSalary: GradeSalaryInterface) =>
+export const fetchGradeSalaries = () => fetchAll<ApiGradeSalary>(endpoint);
+export const addGradeSalary = (gradeSalary: ApiGradeSalary) =>
   addItem(endpoint, gradeSalary);
-export const updateGradeSalary = (gradeSalary: GradeSalaryInterface) =>
+export const editGradeSalary = (gradeSalary: ApiGradeSalary) =>
   updateItem(endpoint, gradeSalary);
-export const deleteGradeSalary = (id: number) => deleteItem(endpoint, id);
+export const removeGradeSalary = (id: number) => deleteItem(endpoint, id);

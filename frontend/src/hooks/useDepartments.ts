@@ -1,9 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { DepartmentInterface } from "../types/department";
-import { mapFromApiDepartment, mapToApiDepartment } from "../utils/departmentMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/departments";
+import {
+  mapFromApiDepartment,
+  mapToApiDepartment,
+} from "../utils/departmentMapper";
+import {
+  fetchDepartments,
+  addDepartment,
+  editDepartment,
+  removeDepartment,
+} from "../api/departments";
 
 export const useDepartments = () => {
   const queryClient = useQueryClient();
@@ -11,14 +17,19 @@ export const useDepartments = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["departments"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiDepartment);
+      try {
+        const result = await fetchDepartments();
+        return result.map(mapFromApiDepartment);
+      } catch (error) {
+        console.error("Error fetching departments:", error);
+        throw error;
+      }
     },
   });
 
   const createDepartment = useMutation({
     mutationFn: async (department: DepartmentInterface) => {
-      await axios.post(API_URL, mapToApiDepartment(department));
+      await addDepartment(mapToApiDepartment(department));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["departments"] });
@@ -27,8 +38,7 @@ export const useDepartments = () => {
 
   const updateDepartment = useMutation({
     mutationFn: async (department: DepartmentInterface) => {
-      const { id, ...data } = mapToApiDepartment(department);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editDepartment(mapToApiDepartment(department));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["departments"] });
@@ -37,7 +47,7 @@ export const useDepartments = () => {
 
   const deleteDepartment = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeDepartment(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["departments"] });

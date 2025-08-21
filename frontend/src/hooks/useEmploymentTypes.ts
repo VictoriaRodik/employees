@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { EmploymentTypeInterface } from "../types/employmentType";
 import {
   mapFromApiEmploymentType,
   mapToApiEmploymentType,
 } from "../utils/employmentTypeMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/employmentTypes";
+import {
+  fetchEmploymentTypes,
+  addEmploymentType,
+  editEmploymentType,
+  removeEmploymentType,
+} from "../api/employmentTypes";
 
 export const useEmploymentTypes = () => {
   const queryClient = useQueryClient();
@@ -14,17 +17,19 @@ export const useEmploymentTypes = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["employmentTypes"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiEmploymentType);
+      try {
+        const result = await fetchEmploymentTypes();
+        return result.map(mapFromApiEmploymentType);
+      } catch (error) {
+        console.error("Error fetching employment types:", error);
+        throw error;
+      }
     },
   });
 
   const createEmploymentType = useMutation({
     mutationFn: async (employmentType: EmploymentTypeInterface) => {
-      await axios.post(
-        API_URL,
-        mapToApiEmploymentType(employmentType)
-      );
+      await addEmploymentType(mapToApiEmploymentType(employmentType));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employmentTypes"] });
@@ -33,8 +38,7 @@ export const useEmploymentTypes = () => {
 
   const updateEmploymentType = useMutation({
     mutationFn: async (employmentType: EmploymentTypeInterface) => {
-      const { id, ...data } = mapToApiEmploymentType(employmentType);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editEmploymentType(mapToApiEmploymentType(employmentType));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employmentTypes"] });
@@ -43,7 +47,7 @@ export const useEmploymentTypes = () => {
 
   const deleteEmploymentType = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeEmploymentType(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employmentTypes"] });

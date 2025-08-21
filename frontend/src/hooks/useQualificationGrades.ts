@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { QualificationGradeInterface } from "../types/qualificationGrade";
 import {
   mapFromApiQualificationGrade,
   mapToApiQualificationGrade,
 } from "../utils/qualificationGradeMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/qualificationGrades";
+import {
+  fetchQualificationGrades,
+  addQualificationGrade,
+  editQualificationGrade,
+  removeQualificationGrade,
+} from "../api/qualificationGrades";
 
 export const useQualificationGrades = () => {
   const queryClient = useQueryClient();
@@ -14,14 +17,21 @@ export const useQualificationGrades = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["qualificationGrades"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiQualificationGrade);
+      try {
+        const result = await fetchQualificationGrades();
+        return result.map(mapFromApiQualificationGrade);
+      } catch (error) {
+        console.error("Error fetching qualification grades:", error);
+        throw error;
+      }
     },
   });
 
   const createQualificationGrade = useMutation({
     mutationFn: async (qualificationGrade: QualificationGradeInterface) => {
-      await axios.post(API_URL, mapToApiQualificationGrade(qualificationGrade));
+      await addQualificationGrade(
+        mapToApiQualificationGrade(qualificationGrade)
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["qualificationGrades"] });
@@ -30,8 +40,9 @@ export const useQualificationGrades = () => {
 
   const updateQualificationGrade = useMutation({
     mutationFn: async (qualificationGrade: QualificationGradeInterface) => {
-      const { id, ...data } = mapToApiQualificationGrade(qualificationGrade);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editQualificationGrade(
+        mapToApiQualificationGrade(qualificationGrade)
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["qualificationGrades"] });
@@ -40,7 +51,7 @@ export const useQualificationGrades = () => {
 
   const deleteQualificationGrade = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeQualificationGrade(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["qualificationGrades"] });

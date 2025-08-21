@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { GradeSalaryInterface } from "../types/gradeSalary";
 import {
   mapFromApiGradeSalary,
   mapToApiGradeSalary,
 } from "../utils/gradeSalaryMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/gradeSalaries";
+import {
+  fetchGradeSalaries,
+  addGradeSalary,
+  editGradeSalary,
+  removeGradeSalary,
+} from "../api/gradeSalaries";
 
 export const useGradeSalaries = () => {
   const queryClient = useQueryClient();
@@ -14,14 +17,19 @@ export const useGradeSalaries = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["gradeSalaries"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiGradeSalary);
+      try {
+        const result = await fetchGradeSalaries();
+        return result.map(mapFromApiGradeSalary);
+      } catch (error) {
+        console.error("Error fetching grade salaries:", error);
+        throw error;
+      }
     },
   });
 
   const createGradeSalary = useMutation({
     mutationFn: async (gradeSalary: GradeSalaryInterface) => {
-      await axios.post(API_URL, mapToApiGradeSalary(gradeSalary));
+      await addGradeSalary(mapToApiGradeSalary(gradeSalary));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gradeSalaries"] });
@@ -30,8 +38,7 @@ export const useGradeSalaries = () => {
 
   const updateGradeSalary = useMutation({
     mutationFn: async (gradeSalary: GradeSalaryInterface) => {
-      const { id, ...data } = mapToApiGradeSalary(gradeSalary);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editGradeSalary(mapToApiGradeSalary(gradeSalary));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gradeSalaries"] });
@@ -40,7 +47,7 @@ export const useGradeSalaries = () => {
 
   const deleteGradeSalary = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeGradeSalary(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["gradeSalaries"] });

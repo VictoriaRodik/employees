@@ -1,14 +1,14 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { EmploymentTypeInterface } from "../types/employmentType";
+import { ApiEmploymentType } from "../types/employmentType";
 const endpoint = "employmentTypes";
 
 export const fetchEmploymentTypes = () =>
-  fetchAll<EmploymentTypeInterface>(endpoint);
+  fetchAll<ApiEmploymentType>(endpoint);
 export const addEmploymentType = (
-  employmentType: EmploymentTypeInterface
+  employmentType: ApiEmploymentType
 ) => addItem(endpoint, employmentType);
-export const updateEmploymentType = (
-  employmentType: EmploymentTypeInterface
+export const editEmploymentType = (
+  employmentType: ApiEmploymentType
 ) => updateItem(endpoint, employmentType);
-export const deleteEmploymentType = (id: number) =>
+export const removeEmploymentType = (id: number) =>
   deleteItem(endpoint, id);

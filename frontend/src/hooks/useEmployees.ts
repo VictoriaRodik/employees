@@ -1,9 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { EmployeeInterface } from "../types/employee";
 import { mapFromApiEmployee, mapToApiEmployee } from "../utils/employeeMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/employees";
+import {
+  fetchEmployees,
+  addEmployee,
+  editEmployee,
+  removeEmployee,
+} from "../api/employees";
 
 export const useEmployees = () => {
   const queryClient = useQueryClient();
@@ -11,14 +14,19 @@ export const useEmployees = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["employees"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiEmployee);
+      try {
+        const result = await fetchEmployees();
+        return result.map(mapFromApiEmployee);
+      } catch (error) {
+        console.error("Error fetching employees:", error);
+        throw error;
+      }
     },
   });
 
   const createEmployee = useMutation({
     mutationFn: async (employee: EmployeeInterface) => {
-      await axios.post(API_URL, mapToApiEmployee(employee));
+      await addEmployee(mapToApiEmployee(employee));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
@@ -27,7 +35,7 @@ export const useEmployees = () => {
 
   const updateEmployee = useMutation({
     mutationFn: async (employee: EmployeeInterface) => {
-      await axios.put(`${API_URL}/${employee.id}`, mapToApiEmployee(employee));
+      await editEmployee(mapToApiEmployee(employee));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
@@ -36,7 +44,7 @@ export const useEmployees = () => {
 
   const deleteEmployee = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeEmployee(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });

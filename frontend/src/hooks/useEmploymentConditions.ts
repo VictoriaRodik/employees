@@ -1,12 +1,15 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
 import { EmploymentConditionInterface } from "../types/employmentCondition";
 import {
   mapFromApiEmploymentCondition,
   mapToApiEmploymentCondition,
 } from "../utils/employmentConditionMapper";
-
-const API_URL = import.meta.env.VITE_API_URL + "/employmentConditions";
+import {
+  fetchEmploymentConditions,
+  addEmploymentCondition,
+  editEmploymentCondition,
+  removeEmploymentCondition,
+} from "../api/employmentConditions";
 
 export const useEmploymentConditions = () => {
   const queryClient = useQueryClient();
@@ -14,15 +17,19 @@ export const useEmploymentConditions = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["employmentConditions"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiEmploymentCondition);
+      try {
+        const result = await fetchEmploymentConditions();
+        return result.map(mapFromApiEmploymentCondition);
+      } catch (error) {
+        console.error("Error fetching employment conditions:", error);
+        throw error;
+      }
     },
   });
 
   const createEmploymentCondition = useMutation({
     mutationFn: async (employmentCondition: EmploymentConditionInterface) => {
-      await axios.post(
-        API_URL,
+      await addEmploymentCondition(
         mapToApiEmploymentCondition(employmentCondition)
       );
     },
@@ -33,8 +40,9 @@ export const useEmploymentConditions = () => {
 
   const updateEmploymentCondition = useMutation({
     mutationFn: async (employmentCondition: EmploymentConditionInterface) => {
-      const { id, ...data } = mapToApiEmploymentCondition(employmentCondition);
-      await axios.put(`${API_URL}/${id}`, data);
+      await editEmploymentCondition(
+        mapToApiEmploymentCondition(employmentCondition)
+      );
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employmentConditions"] });
@@ -43,7 +51,7 @@ export const useEmploymentConditions = () => {
 
   const deleteEmploymentCondition = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeEmploymentCondition(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["employmentConditions"] });

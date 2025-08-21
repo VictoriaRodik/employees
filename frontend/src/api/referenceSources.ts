@@ -1,14 +1,14 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { ReferenceSourceInterface } from "../types/referenceSource";
+import { ApiReferenceSource } from "../types/referenceSource";
 const endpoint = "referenceSources";
 
 export const fetchReferenceSources = () =>
-  fetchAll<ReferenceSourceInterface>(endpoint);
+  fetchAll<ApiReferenceSource>(endpoint);
 export const addReferenceSource = (
-  referenceSource: ReferenceSourceInterface
+  referenceSource: ApiReferenceSource
 ) => addItem(endpoint, referenceSource);
-export const updateReferenceSource = (
-  referenceSource: ReferenceSourceInterface
+export const editReferenceSource = (
+  referenceSource: ApiReferenceSource
 ) => updateItem(endpoint, referenceSource);
-export const deleteReferenceSource = (id: number) =>
+export const removeReferenceSource = (id: number) =>
   deleteItem(endpoint, id);
