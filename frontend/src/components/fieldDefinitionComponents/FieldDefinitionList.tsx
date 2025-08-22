@@ -101,7 +101,7 @@ const FieldDefinitionList = () => {
 
   return (
     <List
-      label="умову роботи"
+      label="тип полів"
       onAdd={handleAdd}
       searchKey="fieldDefinitionName"
       sortOptions={[

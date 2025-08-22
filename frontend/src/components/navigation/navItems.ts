@@ -48,6 +48,10 @@ export const referenceNavItems = [
 ];
 export const orderNavItems = [
   {
+    to: "/orders",
+    label: "Накази",
+  },
+  {
     to: "/order-types",
     label: "Типи наказів",
   },

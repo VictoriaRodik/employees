@@ -8,7 +8,7 @@ export class FieldDefinitionRepository extends BaseRepository {
   async getAll() {
     const [rows] = await this.pool.query(
       `SELECT field_definitions.*, 
-      referance_sources.name as reference_source_name 
+      reference_sources.table_name as reference_source_name 
       FROM field_definitions
       LEFT JOIN reference_sources ON field_definitions.reference_source_id = reference_sources.id`
     );
@@ -17,7 +17,7 @@ export class FieldDefinitionRepository extends BaseRepository {
   async getById(id) {
     const [rows] = await this.pool.query(
       `SELECT field_definitions.*, 
-      referance_sources.name as reference_source_name 
+      reference_sources.table_name as reference_source_name 
       FROM field_definitions
       LEFT JOIN reference_sources ON field_definitions.reference_source_id = reference_sources.id
       WHERE field_definitions.id = ?`,
