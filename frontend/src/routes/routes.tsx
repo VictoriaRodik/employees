@@ -10,9 +10,8 @@ import WorkSchedulesPage from "../pages/WorkSchedulesPage";
 import QualificationGradesPage from "../pages/QualificationGradesPage";
 import GradeSalarysPage from "../pages/GradeSalariesPage";
 import ReferenceSourcesPage from "../pages/ReferenceSourcesPage";
-import OrderTypesPage from "../pages/OrderTypesPage";
-import FieldDefinitionsPage from "../pages/FieldDefinitionPage";
-import OrdersPage from "../pages/OrderPage";
+import OrdersPage from "../pages/OrdersPage";
+import OrderSettingsPage from "../pages/OrderSettingsPage";
 import RequireAuth from "../components/auth/RequireAuth";
 
 export const protectedRoutes: RouteObject[] = [
@@ -105,26 +104,18 @@ export const protectedRoutes: RouteObject[] = [
     ),
   },
   {
-    path: "order-types",
-    element: (
-      <RequireAuth>
-        <OrderTypesPage />
-      </RequireAuth>
-    ),
-  },
-  {
-    path: "field-definitions",
-    element: (
-      <RequireAuth>
-        <FieldDefinitionsPage />
-      </RequireAuth>
-    ),
-  },
-  {
     path: "orders",
     element: (
       <RequireAuth>
         <OrdersPage />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "order-settings",
+    element: (
+      <RequireAuth>
+        <OrderSettingsPage />
       </RequireAuth>
     ),
   },

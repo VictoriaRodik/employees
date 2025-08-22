@@ -52,15 +52,7 @@ export const orderNavItems = [
     label: "Накази",
   },
   {
-    to: "/order-types",
-    label: "Типи наказів",
-  },
-  {
-    to: "/field-definitions",
-    label: "Типи полів",
-  },
-  {
-    to: "/reference-sources",
-    label: "Джерела даних",
+    to: "/order-settings",
+    label: "Налаштування наказів",
   },
 ];

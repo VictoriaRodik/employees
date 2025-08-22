@@ -1,10 +1,10 @@
 export interface FieldDefinitionInterface {
   id: number;
   fieldName: string;
-  fieldType: string;
+  fieldType: 'text' | 'number' | 'date' | 'reference';
   orderIndex: number;
-  referenceSourceId: number;
-  referenceSourceName: string;
+  referenceSourceId: number | null;
+  referenceSourceName: string | null;
 }
 
 export interface ApiFieldDefinition {
@@ -12,6 +12,6 @@ export interface ApiFieldDefinition {
   name: string;
   type: string;
   order_index: number;
-  reference_source_id: number;
-  reference_source_name: string;
+  reference_source_id: number | null;
+  reference_source_name: string | null;
 }

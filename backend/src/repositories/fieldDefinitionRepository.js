@@ -27,18 +27,30 @@ export class FieldDefinitionRepository extends BaseRepository {
   }
   async create(data) {
     const { name, type, order_index, reference_source_id } = data;
+    
+    // Для полів, які не потребують довідника, встановлюємо NULL
+    const finalReferenceSourceId = (type === 'reference' && reference_source_id) 
+      ? reference_source_id 
+      : null;
+    
     const [result] = await this.pool.query(
       `INSERT INTO field_definitions (name, type, order_index, reference_source_id) 
       VALUES (?, ?, ?, ?)`,
-      [name, type, order_index, reference_source_id]
+      [name, type, order_index, finalReferenceSourceId]
     );
     return result.insertId;
   }
   async update(id, data) {
     const { name, type, order_index, reference_source_id } = data;
+    
+    // Для полів, які не потребують довідника, встановлюємо NULL
+    const finalReferenceSourceId = (type === 'reference' && reference_source_id) 
+      ? reference_source_id 
+      : null;
+    
     const [result] = await this.pool.query(
       `UPDATE field_definitions SET name = ?, type = ?, order_index = ?, reference_source_id = ? WHERE id = ?`,
-      [name, type, order_index, reference_source_id, id]
+      [name, type, order_index, finalReferenceSourceId, id]
     );
     return result.affectedRows;
   }
