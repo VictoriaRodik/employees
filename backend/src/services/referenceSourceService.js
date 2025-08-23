@@ -24,3 +24,8 @@ export const deleteReferenceSource = async (id) => {
   return await referenceSourceRepository.delete(id);
 };
 
+export const getReferenceSourceItems = async (id) => {
+  const items = await referenceSourceRepository.getItems(id);
+  return items;
+};
+

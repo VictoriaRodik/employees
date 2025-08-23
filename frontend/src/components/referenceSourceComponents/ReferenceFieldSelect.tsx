@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   FormControl,
   InputLabel,
@@ -8,8 +7,7 @@ import {
   CircularProgress,
   Box,
 } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
-import { fetchAll } from "../../api/apiService";
+import { useReferenceItems } from "../../hooks/useReferenceItems";
 
 interface ReferenceFieldSelectProps {
   referenceSourceId: number | null;
@@ -23,11 +21,6 @@ interface ReferenceFieldSelectProps {
   helperText?: string;
 }
 
-interface ReferenceItem {
-  id: number;
-  name: string;
-}
-
 const ReferenceFieldSelect = ({
   referenceSourceId,
   value,
@@ -39,40 +32,16 @@ const ReferenceFieldSelect = ({
   error = false,
   helperText,
 }: ReferenceFieldSelectProps) => {
-  const [selectedValue, setSelectedValue] = useState<string>(value);
-
-  // Визначаємо endpoint на основі referenceSourceId
-  const getEndpoint = (sourceId: number | null): string => {
-    if (!sourceId) return "positions";
-    
-    const endpoints: Record<number, string> = {
-      1: "positions", // Припустимо, що 1 = positions
-      2: "departments", // Припустимо, що 2 = departments
-      3: "organizations", // Припустимо, що 3 = organizations
-      // Додайте інші мапінги за потреби
-    };
-    return endpoints[sourceId] || "positions";
-  };
-
-  const endpoint = getEndpoint(referenceSourceId);
-
-  const { data: referenceItems = [], isLoading, error: queryError } = useQuery({
-    queryKey: ["reference", endpoint],
-    queryFn: () => fetchAll<ReferenceItem>(endpoint),
-    enabled: !!referenceSourceId && referenceSourceId > 0,
-  });
-
-  useEffect(() => {
-    setSelectedValue(value);
-  }, [value]);
+  const { data: referenceItems = [], isLoading, error: queryError } = useReferenceItems(referenceSourceId);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const selectedId = event.target.value;
     const selectedItem = referenceItems.find(item => item.id.toString() === selectedId);
     
     if (selectedItem) {
-      setSelectedValue(selectedItem.name);
-      onChange(selectedItem.name, selectedItem.id);
+     
+      const displayName = selectedItem.name || selectedItem.full_name || selectedItem.label || selectedItem.id.toString();
+      onChange(displayName, selectedItem.id);
     }
   };
 
@@ -100,11 +69,15 @@ const ReferenceFieldSelect = ({
         label={label}
         onChange={handleChange}
       >
-        {referenceItems.map((item) => (
-          <MenuItem key={item.id} value={item.id.toString()}>
-            {item.name}
-          </MenuItem>
-        ))}
+        {referenceItems.map((item) => {
+          // Використовуємо name або full_name або інше поле, яке може бути в таблиці
+          const displayName = item.name || item.full_name || item.title || item.id.toString();
+          return (
+            <MenuItem key={item.id} value={item.id.toString()}>
+              {displayName}
+            </MenuItem>
+          );
+        })}
       </Select>
       {helperText && (
         <Box sx={{ color: error ? 'error.main' : 'text.secondary', fontSize: '0.75rem', mt: 0.5 }}>

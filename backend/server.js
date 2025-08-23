@@ -21,6 +21,8 @@ const app = express();
 app.use(json());
 app.use(cors());
 
+
+
 const routes = {
   auth: authRoutes,
   contracts: contractRoutes,

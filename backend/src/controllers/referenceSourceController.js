@@ -37,10 +37,20 @@ const deleteReferenceSource = async (req, res) => {
   }
 };
 
+const getReferenceSourceItems = async (req, res) => {
+  try {
+    const items = await referenceSourceService.getReferenceSourceItems(req.params.id);
+    res.json(items);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 export default {
   getReferenceSources,
   getReferenceSource,
   createReferenceSource,
   updateReferenceSource,
   deleteReferenceSource,
+  getReferenceSourceItems,
 };

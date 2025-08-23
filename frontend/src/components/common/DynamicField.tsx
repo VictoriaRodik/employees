@@ -1,6 +1,6 @@
-import { TextField, FormControl, InputLabel, Select, MenuItem } from "@mui/material";
+import { TextField } from "@mui/material";
 import { FieldDefinitionInterface } from "../../types/fieldDefinition";
-import ReferenceFieldSelect from "./ReferenceFieldSelect";
+import ReferenceFieldSelect from "../referenceSourceComponents/ReferenceFieldSelect";
 
 interface DynamicFieldProps {
   fieldDefinition: FieldDefinitionInterface;
@@ -24,7 +24,7 @@ const DynamicField = ({
   helperText,
 }: DynamicFieldProps) => {
   const handleTextChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    onChange(event.target.value, 0); // valueId = 0 для текстових полів
+    onChange(event.target.value, 0); 
   };
 
   const handleReferenceChange = (newValue: string, newValueId: number) => {
@@ -103,6 +103,8 @@ const DynamicField = ({
           label={fieldDefinition.fieldName}
           required={required}
           disabled={disabled}
+          error={error}
+          helperText={helperText}
         />
       );
 
