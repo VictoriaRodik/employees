@@ -23,8 +23,7 @@ interface ReferenceFieldSelectProps {
 
 const ReferenceFieldSelect = ({
   referenceSourceId,
-  value,
-  valueId,
+   valueId,
   onChange,
   label = "Значення",
   required = false,
@@ -32,15 +31,25 @@ const ReferenceFieldSelect = ({
   error = false,
   helperText,
 }: ReferenceFieldSelectProps) => {
-  const { data: referenceItems = [], isLoading, error: queryError } = useReferenceItems(referenceSourceId);
+  const {
+    data: referenceItems = [],
+    isLoading,
+    error: queryError,
+  } = useReferenceItems(referenceSourceId);
 
   const handleChange = (event: SelectChangeEvent<string>) => {
     const selectedId = event.target.value;
-    const selectedItem = referenceItems.find(item => item.id.toString() === selectedId);
-    
+    const selectedItem = referenceItems.find(
+      (item) => item.id.toString() === selectedId
+    );
+
     if (selectedItem) {
-     
-      const displayName = selectedItem.name || selectedItem.full_name || selectedItem.label || selectedItem.id.toString();
+      const fields = Object.entries(selectedItem)
+        .filter(([key]) => key !== "id")
+        .map(([_key, value]) => `${value}`)
+        .join(", ");
+
+      const displayName = fields || selectedItem.id.toString();
       onChange(displayName, selectedItem.id);
     }
   };
@@ -62,16 +71,21 @@ const ReferenceFieldSelect = ({
   }
 
   return (
-    <FormControl fullWidth required={required} disabled={disabled} error={error}>
+    <FormControl
+      fullWidth
+      required={required}
+      disabled={disabled}
+      error={error}
+    >
       <InputLabel>{label}</InputLabel>
-      <Select
-        value={valueId.toString()}
-        label={label}
-        onChange={handleChange}
-      >
+      <Select value={valueId.toString()} label={label} onChange={handleChange}>
         {referenceItems.map((item) => {
-          // Використовуємо name або full_name або інше поле, яке може бути в таблиці
-          const displayName = item.name || item.full_name || item.title || item.id.toString();
+          const fields = Object.entries(item)
+            .filter(([key]) => key !== "id")
+            .map(([_key, value]) => `${value}`)
+            .join(", ");
+
+          const displayName = fields || item.id.toString();
           return (
             <MenuItem key={item.id} value={item.id.toString()}>
               {displayName}
@@ -80,7 +94,13 @@ const ReferenceFieldSelect = ({
         })}
       </Select>
       {helperText && (
-        <Box sx={{ color: error ? 'error.main' : 'text.secondary', fontSize: '0.75rem', mt: 0.5 }}>
+        <Box
+          sx={{
+            color: error ? "error.main" : "text.secondary",
+            fontSize: "0.75rem",
+            mt: 0.5,
+          }}
+        >
           {helperText}
         </Box>
       )}

@@ -9,7 +9,7 @@ import { useFieldDefinitions } from "../../hooks/useFieldDefinitions";
 import { EmployeeInterface } from "../../types/employee";
 import { OrderInterface } from "../../types/order";
 import { FieldDefinitionInterface } from "../../types/fieldDefinition";
-import DynamicField from "../common/DynamicField";
+import DynamicField from "../referenceSourceComponents/DynamicField";
 
 interface orderItemFormProps {
   initialValues?: OrderItemInterface | null;
@@ -25,7 +25,7 @@ const defaultValues: OrderItemInterface = {
   value: "",
   valueId: 0,
   orderNumber: "",
-  orderDate: "",
+  orderDate: new Date().toLocaleDateString("en-CA"),
   employeeFullName: "",
   fieldDefinitionName: "",
 };
@@ -40,7 +40,9 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
 
   const validationSchema = Yup.object({
     orderId: Yup.number().min(1, "Оберіть наказ").required("Обов'язкове поле"),
-    employeeId: Yup.number().min(1, "Оберіть співробітника").required("Обов'язкове поле"),
+    employeeId: Yup.number()
+      .min(1, "Оберіть співробітника")
+      .required("Обов'язкове поле"),
     fieldId: Yup.number().min(1, "Оберіть поле").required("Обов'язкове поле"),
     value: Yup.string().required("Введіть значення"),
   });
@@ -50,7 +52,7 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
       initialValues={{
         ...defaultValues,
         ...(initialValues ? orderItemFormatted(initialValues) : {}),
-        
+
         orderId: initialValues?.orderId || 0,
         employeeId: initialValues?.employeeId || 0,
         fieldId: initialValues?.fieldId || 0,
@@ -58,7 +60,14 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ isSubmitting, values, handleChange, errors, touched, setFieldValue }) => (
+      {({
+        isSubmitting,
+        values,
+        handleChange,
+        errors,
+        touched,
+        setFieldValue,
+      }) => (
         <Form>
           <Grid2 container spacing={2} sx={{ mt: 2 }}>
             <Grid2 size={{ xs: 6 }}>
@@ -66,7 +75,9 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
                 select
                 name="orderId"
                 label="Наказ"
-                value={orders.length > 0 && values.orderId > 0 ? values.orderId : ""}
+                value={
+                  orders.length > 0 && values.orderId > 0 ? values.orderId : ""
+                }
                 onChange={handleChange}
                 fullWidth
                 error={touched.orderId && Boolean(errors.orderId)}
@@ -88,7 +99,11 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
                 select
                 name="employeeId"
                 label="Співробітник"
-                value={employees.length > 0 && values.employeeId > 0 ? values.employeeId : ""}
+                value={
+                  employees.length > 0 && values.employeeId > 0
+                    ? values.employeeId
+                    : ""
+                }
                 onChange={handleChange}
                 fullWidth
                 error={touched.employeeId && Boolean(errors.employeeId)}
@@ -109,7 +124,11 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
                 select
                 name="fieldId"
                 label="Поле"
-                value={fieldDefinitions.length > 0 && values.fieldId > 0 ? values.fieldId : ""}
+                value={
+                  fieldDefinitions.length > 0 && values.fieldId > 0
+                    ? values.fieldId
+                    : ""
+                }
                 onChange={handleChange}
                 fullWidth
                 error={touched.fieldId && Boolean(errors.fieldId)}
@@ -133,37 +152,40 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
             <Grid2 size={{ xs: 6 }}>
               {(() => {
                 const selectedField = fieldDefinitions.find(
-                  (field) => field.id === values.fieldId
+                  (field: FieldDefinitionInterface) =>
+                    field.id === values.fieldId
                 );
                 if (selectedField) {
                   return (
-                                         <DynamicField
-                       fieldDefinition={selectedField}
-                       value={values.value}
-                       valueId={values.valueId}
-                       onChange={(newValue, newValueId) => {
-                         setFieldValue('value', newValue);
-                         setFieldValue('valueId', newValueId);
-                       }}
-                       required
-                       error={touched.value && Boolean(errors.value)}
-                       helperText={touched.value && errors.value ? errors.value : undefined}
-                     />
+                    <DynamicField
+                      fieldDefinition={selectedField}
+                      value={values.value}
+                      valueId={values.valueId}
+                      onChange={(newValue, newValueId) => {
+                        setFieldValue("value", newValue);
+                        setFieldValue("valueId", newValueId);
+                      }}
+                      required
+                      error={touched.value && Boolean(errors.value)}
+                      helperText={
+                        touched.value && errors.value ? errors.value : undefined
+                      }
+                    />
                   );
                 }
-                
+
                 return (
-                                     <TextField
-                     name="value"
-                     label="Значення"
-                     value={values.value}
-                     onChange={handleChange}
-                     fullWidth
-                     disabled={!values.fieldId || values.fieldId === 0}
-                     placeholder="Спочатку оберіть поле"
-                     error={touched.value && Boolean(errors.value)}
-                     helperText={touched.value && errors.value}
-                   />
+                  <TextField
+                    name="value"
+                    label="Значення"
+                    value={values.value}
+                    onChange={handleChange}
+                    fullWidth
+                    disabled={!values.fieldId || values.fieldId === 0}
+                    placeholder="Спочатку оберіть поле"
+                    error={touched.value && Boolean(errors.value)}
+                    helperText={touched.value && errors.value}
+                  />
                 );
               })()}
             </Grid2>

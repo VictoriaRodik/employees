@@ -1,4 +1,4 @@
-import DepartmentList from "../components/depertmentComponents/DepartmentList";
+import DepartmentList from "../components/departmentComponents/DepartmentList";
 import { Typography, Box, Paper } from "@mui/material";
 
 const DepartmentsPage = () => {

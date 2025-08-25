@@ -16,7 +16,7 @@ interface orderFormProps {
 const defaultValues: OrderInterface = {
   id: 0,
   orderNumber: "",
-  orderDate: "",
+  orderDate: new Date().toLocaleDateString("en-CA"),
   orderTypeId: 0,
   orderTypeName: "",
 };
@@ -29,7 +29,7 @@ const OrderForm: React.FC<orderFormProps> = ({
 
   const validationSchema = Yup.object({
     orderNumber: Yup.string().required("Обов'язкове поле"),
-    orderDate: Yup.string().required("Обов'язкове поле"),
+    orderDate: Yup.date().required("Обов'язкове поле"),
     orderTypeId: Yup.number().required("Обов'язкове поле"),
   });
 

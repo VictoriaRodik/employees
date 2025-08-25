@@ -21,14 +21,12 @@ const ReferenceSourceList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingReferenceSource, setEditingReferenceSource] =
     useState<ReferenceSourceInterface | null>(null);
-  const [copyingReferenceSource, setCopyingReferenceSource] =
-    useState(false);
+  const [copyingReferenceSource, setCopyingReferenceSource] = useState(false);
 
   const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
-    (searchParams.get("sort") as keyof ReferenceSourceInterface) ||
-    "tableName";
+    (searchParams.get("sort") as keyof ReferenceSourceInterface) || "tableName";
 
   const handleAdd = () => {
     setEditingReferenceSource(null);
@@ -37,18 +35,13 @@ const ReferenceSourceList = () => {
   };
 
   const handleEdit = (referenceSource: ReferenceSourceInterface) => {
-
-    setEditingReferenceSource(
-      referenceSourceFormatted(referenceSource)
-    );
+    setEditingReferenceSource(referenceSourceFormatted(referenceSource));
     setCopyingReferenceSource(false);
     setModalOpen(true);
   };
 
   const handleCopy = (referenceSource: ReferenceSourceInterface) => {
-    setEditingReferenceSource(
-      referenceSourceFormatted(referenceSource)
-    );
+    setEditingReferenceSource(referenceSourceFormatted(referenceSource));
     setCopyingReferenceSource(true);
     setModalOpen(true);
   };
@@ -69,8 +62,8 @@ const ReferenceSourceList = () => {
     setCopyingReferenceSource(false);
   };
 
-  const filtered = referenceSources.filter(
-    (e: { tableName: string }) => e.tableName?.toString().includes(search)
+  const filtered = referenceSources.filter((e: { tableName: string }) =>
+    e.tableName?.toString().includes(search)
   );
 
   const sorted = [...filtered].sort((a, b) => {

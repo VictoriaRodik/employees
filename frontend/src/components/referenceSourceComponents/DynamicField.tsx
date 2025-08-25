@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import { FieldDefinitionInterface } from "../../types/fieldDefinition";
-import ReferenceFieldSelect from "../referenceSourceComponents/ReferenceFieldSelect";
+import ReferenceFieldSelect from "./ReferenceFieldSelect";
 
 interface DynamicFieldProps {
   fieldDefinition: FieldDefinitionInterface;
