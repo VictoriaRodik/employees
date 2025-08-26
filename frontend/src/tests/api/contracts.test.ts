@@ -3,10 +3,10 @@ import axios from "axios";
 import {
   fetchContracts,
   addContract,
-  updateContract,
-  deleteContract,
+  editContract,
+  removeContract,
 } from "../../api/contracts";
-import { ContractInterface } from "../../types/contract";
+import { ApiContract } from "../../types/contract";
 
 vi.mock("axios", () => ({
   default: {
@@ -18,32 +18,32 @@ vi.mock("axios", () => ({
 }));
 
 describe("Contract API Functions", () => {
-  const mockContract: ContractInterface = {
+  const mockContract: ApiContract = {
     id: 1,
-    contractDate: "2025-01-01",
-    contractEndDate: "2025-01-01",
-    contractAmount: "1000",
-    contractContent: "test",
-    contractNumber: "01-01",
-    employeeId: "1",
-    taxId: "1234567890",
-    fullName: "John Doe",
+    contract_date: "2025-01-01",
+    contract_end_date: "2025-01-01",
+    contract_amount: "1000",
+    contract_content: "test",
+    contract_number: "01-01",
+    employee_id: "1",
+    tax_id: "1234567890",
+    full_name: "John Doe",
     address: "123 Main St",
-    passportSeries: "AB",
-    passportNumber: "123456",
-    passportIssueDate: "2023-01-01",
-    passportIssuedBy: "5600",
-    organizationId: "10",
+    passport_series: "AB",
+    passport_number: "123456",
+    passport_issue_date: "2023-01-01",
+    passport_issued_by: "5600",
+    organization_id: "10",
     name: "Test company",
-    shortName: "Company",
-    edrpouCode: "32228978",
-    legalAddress: "Some street",
+    short_name: "Company",
+    edrpou_code: "32228978",
+    legal_address: "Some street",
     phone: "0362",
-    bankAccount: "UA112222220000000000000000000",
-    bankName: "Big Bank",
-    foundationDoc: "Document",
-    directorPosition: "director",
-    directorFullName: "John Doe",
+    bank_account: "UA112222220000000000000000000",
+    bank_name: "Big Bank",
+    foundation_doc: "Document",
+    director_position: "director",
+    director_full_name: "John Doe",
   };
 
   beforeEach(() => {
@@ -92,8 +92,8 @@ describe("Contract API Functions", () => {
         newContract
       );
       expect(result).toEqual(createdContract);
-      expect(result.contractDate).toBe(newContract.contractDate);
-      expect(result.contractNumber).toBe(newContract.contractNumber);
+      expect(result.contract_date).toBe(newContract.contract_date);
+      expect(result.contract_number).toBe(newContract.contract_number);
       expect(result.id).toBeDefined();
     });
 
@@ -114,21 +114,21 @@ describe("Contract API Functions", () => {
       const updatedContract = { ...mockContract, fullName: "John Updated" };
       (axios.put as any).mockResolvedValue({ data: updatedContract });
 
-      const result = await updateContract(updatedContract);
+      const result = await editContract(updatedContract);
 
       expect(axios.put).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/contracts/${updatedContract.id}`,
         updatedContract
       );
       expect(result).toEqual(updatedContract);
-      expect(result.fullName).toBe("John Updated");
+      expect(result.full_name).toBe("John Updated");
     });
 
     it("should throw error on update failure", async () => {
       const error = new Error("Not found");
       (axios.put as any).mockRejectedValue(error);
 
-      await expect(updateContract(mockContract)).rejects.toThrow("Not found");
+      await expect(editContract(mockContract)).rejects.toThrow("Not found");
       expect(console.error).toHaveBeenCalledWith(
         "Error updating contracts:",
         error
@@ -140,7 +140,7 @@ describe("Contract API Functions", () => {
     it("should delete a contract successfully", async () => {
       (axios.delete as any).mockResolvedValue({});
 
-      await deleteContract(mockContract.id);
+      await removeContract(mockContract.id);
 
       expect(axios.delete).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/contracts/${mockContract.id}`
@@ -151,7 +151,7 @@ describe("Contract API Functions", () => {
       const error = new Error("Forbidden");
       (axios.delete as any).mockRejectedValue(error);
 
-      await expect(deleteContract(mockContract.id)).rejects.toThrow(
+      await expect(removeContract(mockContract.id)).rejects.toThrow(
         "Forbidden"
       );
       expect(console.error).toHaveBeenCalledWith(

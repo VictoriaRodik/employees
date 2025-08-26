@@ -3,10 +3,10 @@ import axios from "axios";
 import {
   fetchOrganizations,
   addOrganization,
-  updateOrganization,
-  deleteOrganization,
+  editOrganization,
+  removeOrganization,
 } from "../../api/organizations";
-import { OrganizationInterface } from "../../types/organization";
+import { ApiOrganization } from "../../types/organization";
 
 vi.mock("axios", () => ({
   default: {
@@ -18,18 +18,18 @@ vi.mock("axios", () => ({
 }));
 
 describe("Organization API Functions", () => {
-  const mockOrganization: OrganizationInterface = {
+  const mockOrganization: ApiOrganization = {
     id: 1,
     name: "Test company",
-    shortName: "Company",
-    edrpouCode: "32228978",
-    legalAddress: "Some street",
+    short_name: "Company",
+    edrpou_code: "32228978",
+    legal_address: "Some street",
     phone: "0362",
-    bankAccount: "UA112222220000000000000000000",
-    bankName: "Big Bank",
-    foundationDoc: "Document",
-    directorPosition: "director",
-    directorFullName: "John Doe",
+    bank_account: "UA112222220000000000000000000",
+    bank_name: "Big Bank",
+    foundation_doc: "Document",
+    director_position: "director",
+    director_full_name: "John Doe",
   };
 
   beforeEach(() => {
@@ -76,7 +76,7 @@ describe("Organization API Functions", () => {
       );
       expect(result).toEqual(createdOrganization);
       expect(result.name).toBe(newOrganization.name);
-      expect(result.edrpouCode).toBe(newOrganization.edrpouCode);
+      expect(result.edrpou_code).toBe(newOrganization.edrpou_code);
       expect(result.id).toBeDefined();
     });
 
@@ -97,7 +97,7 @@ describe("Organization API Functions", () => {
       const updatedOrganization = { ...mockOrganization, name: "Company Updated" };
       (axios.put as any).mockResolvedValue({ data: updatedOrganization });
 
-      const result = await updateOrganization(updatedOrganization);
+      const result = await editOrganization(updatedOrganization);
 
       expect(axios.put).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/organizations/${updatedOrganization.id}`,
@@ -111,7 +111,7 @@ describe("Organization API Functions", () => {
       const error = new Error("Not found");
       (axios.put as any).mockRejectedValue(error);
 
-      await expect(updateOrganization(mockOrganization)).rejects.toThrow("Not found");
+      await expect(editOrganization(mockOrganization)).rejects.toThrow("Not found");
       expect(console.error).toHaveBeenCalled();
     });
   });
@@ -120,7 +120,7 @@ describe("Organization API Functions", () => {
     it("should delete an organization successfully", async () => {
       (axios.delete as any).mockResolvedValue({});
 
-      await deleteOrganization(mockOrganization.id);
+      await removeOrganization(mockOrganization.id);
 
       expect(axios.delete).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/organizations/${mockOrganization.id}`
@@ -131,7 +131,7 @@ describe("Organization API Functions", () => {
       const error = new Error("Forbidden");
       (axios.delete as any).mockRejectedValue(error);
 
-      await expect(deleteOrganization(mockOrganization.id)).rejects.toThrow(
+      await expect(removeOrganization(mockOrganization.id)).rejects.toThrow(
         "Forbidden"
       );
       expect(console.error).toHaveBeenCalled();

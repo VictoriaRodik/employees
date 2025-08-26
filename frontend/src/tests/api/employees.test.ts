@@ -3,10 +3,10 @@ import axios from "axios";
 import {
   fetchEmployees,
   addEmployee,
-  updateEmployee,
-  deleteEmployee,
+  editEmployee,
+  removeEmployee,
 } from "../../api/employees";
-import { EmployeeInterface } from "../../types/employee";
+import { ApiEmployee } from "../../types/employee";
 
 vi.mock("axios", () => ({
   default: {
@@ -18,16 +18,16 @@ vi.mock("axios", () => ({
 }));
 
 describe("Employee API Functions", () => {
-  const mockEmployee: EmployeeInterface = {
+  const mockEmployee: ApiEmployee = {
     id: 1,
-    taxId: "1234567890",
-    fullName: "John Doe",
+    tax_id: "1234567890",
+    full_name: "John Doe",
     address: "123 Main St",
-    passportSeries: "СР",
-    passportNumber: "123456",
-    passportIssueDate: "2023-01-01",
-    passportIssuedBy: "5600",
-    personnelNumber: "001",
+    passport_series: "СР",
+    passport_number: "123456",
+    passport_issue_date: "2023-01-01",
+    passport_issued_by: "5600",
+    personnel_number: "001",
   };
 
   beforeEach(() => {
@@ -73,8 +73,8 @@ describe("Employee API Functions", () => {
         newEmployee
       );
       expect(result).toEqual(createdEmployee);
-      expect(result.taxId).toBe(newEmployee.taxId);
-      expect(result.fullName).toBe(newEmployee.fullName);
+      expect(result.tax_id).toBe(newEmployee.tax_id);
+      expect(result.full_name).toBe(newEmployee.full_name);
       expect(result.id).toBeDefined();
     });
 
@@ -95,21 +95,21 @@ describe("Employee API Functions", () => {
       const updatedEmployee = { ...mockEmployee, fullName: "John Updated" };
       (axios.put as any).mockResolvedValue({ data: updatedEmployee });
 
-      const result = await updateEmployee(updatedEmployee);
+      const result = await editEmployee(updatedEmployee);
 
       expect(axios.put).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/employees/${updatedEmployee.id}`,
         updatedEmployee
       );
       expect(result).toEqual(updatedEmployee);
-      expect(result.fullName).toBe("John Updated");
+      expect(result.full_name).toBe("John Updated");
     });
 
     it("should throw error on update failure", async () => {
       const error = new Error("Not found");
       (axios.put as any).mockRejectedValue(error);
 
-      await expect(updateEmployee(mockEmployee)).rejects.toThrow("Not found");
+      await expect(editEmployee(mockEmployee)).rejects.toThrow("Not found");
       expect(console.error).toHaveBeenCalled();
     });
   });
@@ -118,7 +118,7 @@ describe("Employee API Functions", () => {
     it("should delete an employee successfully", async () => {
       (axios.delete as any).mockResolvedValue({});
 
-      await deleteEmployee(mockEmployee.id);
+      await removeEmployee(mockEmployee.id);
 
       expect(axios.delete).toHaveBeenCalledWith(
         `${import.meta.env.VITE_API_URL}/employees/${mockEmployee.id}`
@@ -129,7 +129,7 @@ describe("Employee API Functions", () => {
       const error = new Error("Forbidden");
       (axios.delete as any).mockRejectedValue(error);
 
-      await expect(deleteEmployee(mockEmployee.id)).rejects.toThrow(
+      await expect(removeEmployee(mockEmployee.id)).rejects.toThrow(
         "Forbidden"
       );
       expect(console.error).toHaveBeenCalled();

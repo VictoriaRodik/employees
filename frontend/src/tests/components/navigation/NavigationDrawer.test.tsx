@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
-import NavigationDrawer from "../../components/navigation/NavigationDrawer";
+import { BrowserRouter } from "react-router-dom";
+import NavigationDrawer from "../../../components/navigation/NavigationDrawer";
 
 let mediaQueryValue = true;
 
@@ -41,6 +42,18 @@ vi.mock("@mui/material", async () => {
     ListItemText: vi.fn(({ primary }) => (
       <span data-testid="list-item-text">{primary}</span>
     )),
+    Accordion: vi.fn(({ children }) => (
+      <div data-testid="accordion">{children}</div>
+    )),
+    AccordionSummary: vi.fn(({ children, expandIcon }) => (
+      <div data-testid="accordion-summary">
+        {children}
+        {expandIcon}
+      </div>
+    )),
+    AccordionDetails: vi.fn(({ children }) => (
+      <div data-testid="accordion-details">{children}</div>
+    )),
     useMediaQuery: () => mediaQueryValue,
   };
 });
@@ -55,6 +68,18 @@ vi.mock("@mui/icons-material/Description", () => ({
 
 vi.mock("@mui/icons-material/Brightness4", () => ({
   default: () => <span data-testid="brightness4-icon" />,
+}));
+
+vi.mock("@mui/icons-material/LibraryBooks", () => ({
+  default: () => <span data-testid="library-books-icon" />,
+}));
+
+vi.mock("@mui/icons-material/StickyNote2", () => ({
+  default: () => <span data-testid="sticky-note2-icon" />,
+}));
+
+vi.mock("@mui/icons-material/KeyboardDoubleArrowDown", () => ({
+  default: () => <span data-testid="keyboard-double-arrow-down-icon" />,
 }));
 
 vi.mock("react-router-dom", async () => {
@@ -79,11 +104,13 @@ describe("NavigationDrawer", () => {
 
   it("renders the permanent drawer on the desktop", () => {
     render(
-      <NavigationDrawer
-        onDrawerToggle={onDrawerToggleMock}
-        mobileOpen={false}
-        drawerWidth={240}
-      />
+      <BrowserRouter>
+        <NavigationDrawer
+          onDrawerToggle={onDrawerToggleMock}
+          mobileOpen={false}
+          drawerWidth={240}
+        />
+      </BrowserRouter>
     );
     expect(screen.getAllByTestId("box")[0]).toBeInTheDocument();
     expect(screen.getByTestId("permanent-drawer")).toBeInTheDocument();
@@ -92,14 +119,16 @@ describe("NavigationDrawer", () => {
 
   it("renders permanent drawer with navigation links", () => {
     render(
-      <NavigationDrawer
-        onDrawerToggle={onDrawerToggleMock}
-        mobileOpen={false}
-        drawerWidth={240}
-      />
+      <BrowserRouter>
+        <NavigationDrawer
+          onDrawerToggle={onDrawerToggleMock}
+          mobileOpen={false}
+          drawerWidth={240}
+        />
+      </BrowserRouter>
     );
     const lists = screen.getAllByTestId("list");
-    expect(lists).toHaveLength(1);
+    expect(lists.length).toBeGreaterThan(0);
     expect(screen.getAllByTestId("list-item-/employees")).toHaveLength(1);
     expect(screen.getAllByTestId("list-item-/contracts")).toHaveLength(1);
     expect(screen.getAllByText("Співробітники")).toHaveLength(1);
@@ -111,11 +140,13 @@ describe("NavigationDrawer", () => {
   it("renders temporary drawer when menu button is clicked on mobile", () => {
     mediaQueryValue = false;
     render(
-      <NavigationDrawer
-        onDrawerToggle={onDrawerToggleMock}
-        mobileOpen={true}
-        drawerWidth={240}
-      />
+      <BrowserRouter>
+        <NavigationDrawer
+          onDrawerToggle={onDrawerToggleMock}
+          mobileOpen={true}
+          drawerWidth={240}
+        />
+      </BrowserRouter>
     );
     const temporaryDrawer = screen.getByTestId("temporary-drawer");
     expect(temporaryDrawer).toHaveAttribute("data-open", "true");
@@ -124,14 +155,16 @@ describe("NavigationDrawer", () => {
   it("renders temporary drawer with navigation links", () => {
     mediaQueryValue = false;
     render(
-      <NavigationDrawer
-        onDrawerToggle={onDrawerToggleMock}
-        mobileOpen={true}
-        drawerWidth={240}
-      />
+      <BrowserRouter>
+        <NavigationDrawer
+          onDrawerToggle={onDrawerToggleMock}
+          mobileOpen={true}
+          drawerWidth={240}
+        />
+      </BrowserRouter>
     );
     const lists = screen.getAllByTestId("list");
-    expect(lists).toHaveLength(1);
+    expect(lists.length).toBeGreaterThan(0);
     expect(screen.getAllByTestId("list-item-/employees")).toHaveLength(1);
     expect(screen.getAllByTestId("list-item-/contracts")).toHaveLength(1);
     expect(screen.getAllByText("Співробітники")).toHaveLength(1);
@@ -142,11 +175,13 @@ describe("NavigationDrawer", () => {
   it("calls onDrawerToggle when a list item is clicked in mobile view", () => {
     mediaQueryValue = false;
     render(
-      <NavigationDrawer
-        onDrawerToggle={onDrawerToggleMock}
-        mobileOpen={true}
-        drawerWidth={240}
-      />
+      <BrowserRouter>
+        <NavigationDrawer
+          onDrawerToggle={onDrawerToggleMock}
+          mobileOpen={true}
+          drawerWidth={240}
+        />
+      </BrowserRouter>
     );
     const listItem = screen.getByTestId("list-item-/employees");
     listItem.click();

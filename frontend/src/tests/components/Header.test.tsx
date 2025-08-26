@@ -75,7 +75,7 @@ describe("Header", () => {
       />
     );
     expect(screen.getByTestId("typography")).toHaveTextContent(
-      "Система управління договорами"
+      "SVARTA HRM"
     );
     expect(screen.getAllByTestId("icon-button")[0]).toBeInTheDocument();
     expect(screen.getAllByTestId("icon-button")[1]).toBeInTheDocument();

@@ -49,10 +49,10 @@ export const referenceNavItems = [
 export const orderNavItems = [
   {
     to: "/orders",
-    label: "Накази",
+    label: "Створення",
   },
   {
     to: "/order-settings",
-    label: "Налаштування наказів",
+    label: "Налаштування",
   },
 ];
