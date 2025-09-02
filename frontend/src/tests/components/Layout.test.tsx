@@ -43,7 +43,7 @@ vi.mock("../../components/Header", () => ({
   )),
 }));
 
-vi.mock("../../components/NavigationDrawer", () => ({
+vi.mock("../../components/navigation/NavigationDrawer", () => ({
   default: vi.fn(({ mobileOpen, onDrawerToggle, drawerWidth }) => (
     <div
       data-testid={mobileOpen ? "temporary-drawer" : "permanent-drawer"}
@@ -103,9 +103,7 @@ describe("Layout", () => {
         <Layout />
       </BrowserRouter>
     );
-    expect(screen.getByTestId("typography")).toHaveTextContent(
-      "SVARTA HRM"
-    );
+    expect(screen.getByTestId("typography")).toHaveTextContent("SVARTA HRM");
     const menuButton = screen.getByTestId("menu-button");
     expect(menuButton).toBeInTheDocument();
   });
@@ -173,9 +171,6 @@ describe("Layout", () => {
     });
   });
 
-
-  
-
   it("renders with correct drawer width", () => {
     render(
       <BrowserRouter>
@@ -183,10 +178,10 @@ describe("Layout", () => {
       </BrowserRouter>
     );
     const drawer = screen.getByTestId("permanent-drawer");
-    expect(drawer).toHaveStyle({ width: 240 });
+    expect(drawer).toHaveStyle({ width: "240px" });
 
     fireEvent.click(screen.getByTestId("menu-button"));
     const tempDrawer = screen.getByTestId("temporary-drawer");
-    expect(tempDrawer).toHaveStyle({ width: 240 });
+    expect(tempDrawer).toHaveStyle({ width: "240px" });
   });
 });

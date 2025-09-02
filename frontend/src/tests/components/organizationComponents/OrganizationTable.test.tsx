@@ -11,7 +11,7 @@ vi.mock("../../../components/Table", () => ({
           {columns.map((col: any) => (
             <th key={col.key}>{col.label}</th>
           ))}
-          <th>Actions</th>
+          <th>Дії</th>
         </tr>
       </thead>
       <tbody>
@@ -28,40 +28,17 @@ vi.mock("../../../components/Table", () => ({
   ),
 }));
 
-vi.mock("@mui/material", () => ({
-  IconButton: ({ children, onClick }: any) => (
-    <button data-testid="more-button" onClick={onClick}>
-      {children}
-    </button>
-  ),
-  Dialog: ({ open, children }: any) =>
-    open ? <div data-testid="dialog">{children}</div> : null,
-  DialogActions: ({ children }: any) => (
-    <div data-testid="dialog-actions">{children}</div>
-  ),
-  useMediaQuery: () => true,
-  useTheme: () => ({
-    breakpoints: {
-      up: (key: string) => key === "sm",
-    },
-  }),
-}));
-
-vi.mock("@mui/icons-material/MoreHoriz", () => ({
-  default: () => <span data-testid="more-horiz-icon">More</span>,
-}));
-
-vi.mock("../../../components/ActionButtons", () => ({
+vi.mock("../../../components/Actions", () => ({
   default: ({ onEdit, onCopy, onDelete }: any) => (
-    <div data-testid="action-buttons">
-      <button data-testid="edit-button" onClick={onEdit}>
-        {"Edit"}
+    <div data-testid="actions">
+      <button data-testid="edit-button" onClick={() => onEdit()}>
+        Edit
       </button>
-      <button data-testid="copy-button" onClick={onCopy}>
-        {"Copy"}
+      <button data-testid="copy-button" onClick={() => onCopy()}>
+        Copy
       </button>
-      <button data-testid="delete-button" onClick={onDelete}>
-        {"Delete"}
+      <button data-testid="delete-button" onClick={() => onDelete()}>
+        Delete
       </button>
     </div>
   ),
@@ -118,7 +95,7 @@ describe("OrganizationTable", () => {
     expect(screen.getByText("Скорочена назва")).toBeInTheDocument();
     expect(screen.getByText("ЄДРПОУ")).toBeInTheDocument();
     expect(screen.getByText("Керівник")).toBeInTheDocument();
-    expect(screen.getByText("Actions")).toBeInTheDocument();
+    expect(screen.getByText("Дії")).toBeInTheDocument();
 
     expect(screen.getByText("Test Company")).toBeInTheDocument();
     expect(screen.getByText("Company")).toBeInTheDocument();
@@ -134,19 +111,14 @@ describe("OrganizationTable", () => {
   it("renders Actions component for each organization", () => {
     render(<OrganizationTable {...defaultProps} />);
 
-    const editButtons = screen.getAllByText("Edit");
-    const copyButtons = screen.getAllByText("Copy");
-    const deleteButtons = screen.getAllByText("Delete");
-
-    expect(editButtons).toHaveLength(2);
-    expect(copyButtons).toHaveLength(2);
-    expect(deleteButtons).toHaveLength(2);
+    const actions = screen.getAllByTestId("actions");
+    expect(actions).toHaveLength(2);
   });
 
   it("calls onEdit when edit button is clicked", () => {
     render(<OrganizationTable {...defaultProps} />);
 
-    const editButtons = screen.getAllByText("Edit");
+    const editButtons = screen.getAllByTestId("edit-button");
     fireEvent.click(editButtons[0]);
     expect(mockOnEdit).toHaveBeenCalledWith(mockOrganizations[0]);
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
@@ -155,7 +127,7 @@ describe("OrganizationTable", () => {
   it("calls onCopy when copy button is clicked", () => {
     render(<OrganizationTable {...defaultProps} />);
 
-    const copyButtons = screen.getAllByText("Copy");
+    const copyButtons = screen.getAllByTestId("copy-button");
     fireEvent.click(copyButtons[1]);
     expect(mockOnCopy).toHaveBeenCalledWith(mockOrganizations[1]);
     expect(mockOnCopy).toHaveBeenCalledTimes(1);
@@ -164,7 +136,7 @@ describe("OrganizationTable", () => {
   it("calls onDelete when delete button is clicked", () => {
     render(<OrganizationTable {...defaultProps} />);
 
-    const deleteButtons = screen.getAllByText("Delete");
+    const deleteButtons = screen.getAllByTestId("delete-button");
     fireEvent.click(deleteButtons[0]);
     expect(mockOnDelete).toHaveBeenCalledWith(mockOrganizations[0].id);
     expect(mockOnDelete).toHaveBeenCalledTimes(1);

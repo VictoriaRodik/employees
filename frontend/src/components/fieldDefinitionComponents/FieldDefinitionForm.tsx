@@ -16,7 +16,7 @@ interface fieldDefinitionFormProps {
 const defaultValues: FieldDefinitionInterface = {
   id: 0,
   fieldName: "",
-  fieldType: "",
+  fieldType: "text",
   orderIndex: 0,
   referenceSourceId: 0,
   referenceSourceName: "",
