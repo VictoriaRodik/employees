@@ -1,114 +1,117 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import FieldDefinitionForm from "../../../components/fieldDefinitionComponents/FieldDefinitionForm";
+import { useReferenceSources } from "../../../hooks/useReferenceSources";
 import { FieldDefinitionInterface } from "../../../types/fieldDefinition";
+import { ReferenceSourceInterface } from "../../../types/referenceSource";
 
 vi.mock("../../../hooks/useReferenceSources", () => ({
-  useReferenceSources: () => ({
-    data: [
-      { id: 1, tableName: "Test Table 1" },
-      { id: 2, tableName: "Test Table 2" },
-    ],
-    isLoading: false,
-    error: null,
-  }),
+  useReferenceSources: vi.fn(),
 }));
 
-vi.mock("../../../components/TextInput", () => ({
-  default: ({ name, label }: any) => (
-    <div>
-      <label htmlFor={name}>{label}</label>
-      <input id={name} name={name} data-testid={name} />
-    </div>
-  ),
+vi.mock("../../../hooks/useFieldDefinitions", () => ({
+  useFieldDefinitions: vi.fn(),
 }));
 
-vi.mock("@mui/material", () => ({
-  Grid2: ({ children }: any) => <div data-testid="grid">{children}</div>,
-  Button: ({ children, type, disabled }: any) => (
-    <button type={type} disabled={disabled} data-testid="submit-button">
-      {children}
-    </button>
-  ),
-  TextField: ({ name, label, value, onChange, children }: any) => (
-    <div>
-      <label htmlFor={name}>{label}</label>
-      <select
-        id={name}
-        name={name}
-        value={value}
-        onChange={onChange}
-        data-testid={name}
-      >
-        {children}
-      </select>
-    </div>
-  ),
-  MenuItem: ({ children, value }: any) => (
-    <option value={value}>{children}</option>
-  ),
-}));
 
 describe("FieldDefinitionForm", () => {
+  const mockReferenceSources: ReferenceSourceInterface[] = [
+    {
+      id: 1,
+      tableName: "Table 1",
+    },
+    {
+      id: 2,
+      tableName: "Table 2",
+    },
+  ];
+
   const mockOnSubmit = vi.fn();
+  const mockOnClose = vi.fn();
+
+  const defaultProps = {
+    onSubmit: mockOnSubmit,
+    onClose: mockOnClose,
+  };
 
   beforeEach(() => {
-    mockOnSubmit.mockClear();
+    vi.clearAllMocks();
+    (useReferenceSources as any).mockReturnValue({
+      data: mockReferenceSources,
+    });
   });
 
   it("renders all fields with default values", () => {
-    render(<FieldDefinitionForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<FieldDefinitionForm {...defaultProps} />);
 
     expect(screen.getByLabelText("Назва")).toBeInTheDocument();
     expect(screen.getByLabelText("Тип")).toBeInTheDocument();
     expect(screen.getByLabelText("Індекс")).toBeInTheDocument();
     expect(screen.getByLabelText("Посилання на таблицю")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Додати" })).toBeInTheDocument();
   });
 
-  it("renders with initial values when provided", () => {
+  it("renders options in select fields", async () => {
+    render(<FieldDefinitionForm {...defaultProps} />);
+
+    await userEvent.click(screen.getByLabelText("Посилання на таблицю"));
+    expect(screen.getByText("Table 1")).toBeInTheDocument();
+    expect(screen.getByText("Table 2")).toBeInTheDocument();
+  });
+
+  it("renders with initial values when provided", async () => {
     const initialValues: FieldDefinitionInterface = {
       id: 1,
-      fieldName: "Some fieldDefinition",
+      referenceSourceId: 1,
+      fieldName: "Test field",
       fieldType: "text",
-      orderIndex: 0,
-      referenceSourceId: null,
-      referenceSourceName: null,
+      orderIndex: 1,
+      referenceSourceName: "Table 1",
     };
 
     render(
-      <FieldDefinitionForm
-        initialValues={initialValues}
-        onSubmit={mockOnSubmit}
-        onClose={() => {}}
-      />
+      <FieldDefinitionForm {...defaultProps} initialValues={initialValues} />
     );
 
-    expect(screen.getByLabelText("Назва")).toBeInTheDocument();
-    expect(screen.getByLabelText("Тип")).toBeInTheDocument();
-    expect(screen.getByLabelText("Індекс")).toBeInTheDocument();
-    expect(screen.getByLabelText("Посилання на таблицю")).toBeInTheDocument();
+    const fieldDefinitionNameInput = screen.getByLabelText(
+      "Назва"
+    ) as HTMLInputElement;
+
+    await waitFor(() => {
+      const hiddenInput = screen.getAllByDisplayValue("Test field")[0];
+      expect(hiddenInput).toHaveAttribute("name", "fieldName");
+      expect(fieldDefinitionNameInput.value).toBe("Test field");
+    });
+    expect(
+      screen.getByRole("button", { name: "Зберегти зміни" })
+    ).toBeInTheDocument();
   });
 
   it("submits form with valid data", async () => {
-    render(<FieldDefinitionForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<FieldDefinitionForm {...defaultProps} />);
 
-    const nameInput = screen.getByTestId("fieldName");
-    fireEvent.change(nameInput, {
-      target: { value: "Test Field" },
-    });
-    const typeInput = screen.getByTestId("fieldType");
-    fireEvent.change(typeInput, {
-      target: { value: "text" },
+    fireEvent.change(screen.getByLabelText("Назва"), {
+      target: { value: "Test 2" },
     });
 
-    const submitButton = screen.getByTestId("submit-button");
-    fireEvent.click(submitButton);
+    fireEvent.change(screen.getByLabelText("Тип"), {
+      target: { value: "number" },
+    });
+    fireEvent.change(screen.getByLabelText("Індекс"), {
+      target: { value: "2" },
+    });
+
+    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
 
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          fieldName: "Test Field",
-          fieldType: "text",
+          fieldName: "Test 2",
+          fieldType: "number",
+          orderIndex: 2,
+          referenceSourceId: 0,
+          referenceSourceName: "",
         }),
         expect.any(Object)
       );
@@ -119,34 +122,34 @@ describe("FieldDefinitionForm", () => {
     const slowOnSubmit = vi
       .fn()
       .mockImplementation(
-        () => new Promise((resolve) => setTimeout(resolve, 200))
+        () => new Promise((resolve) => setTimeout(resolve, 100))
       );
+    render(<FieldDefinitionForm {...defaultProps} onSubmit={slowOnSubmit} />);
 
-    render(<FieldDefinitionForm onSubmit={slowOnSubmit} onClose={() => {}} />);
-
-    const nameInput = screen.getByTestId("fieldName");
-    fireEvent.change(nameInput, {
-      target: { value: "Test Field" },
-    });
-    const typeInput = screen.getByTestId("fieldType");
-    fireEvent.change(typeInput, {
-      target: { value: "text" },
+    fireEvent.change(screen.getByLabelText("Назва"), {
+      target: { value: "Test 3" },
     });
 
-    const submitButton = screen.getByRole("button", { name: /додати/i });
+    fireEvent.change(screen.getByLabelText("Тип"), {
+      target: { value: "number" },
+    });
+    fireEvent.change(screen.getByLabelText("Індекс"), {
+      target: { value: "3" },
+    });
+
+    const submitButton = screen.getByRole("button", { name: "Додати" });
     fireEvent.click(submitButton);
 
     expect(submitButton).toBeDisabled();
     await waitFor(() => expect(slowOnSubmit).toHaveBeenCalled(), {
-      timeout: 300,
+      timeout: 200,
     });
   });
 
   it("does not call onSubmit with invalid data", async () => {
-    render(<FieldDefinitionForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<FieldDefinitionForm {...defaultProps} />);
 
-    const submitButton = screen.getByTestId("submit-button");
-    fireEvent.click(submitButton);
+    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
 
     await waitFor(
       () => {
@@ -154,5 +157,16 @@ describe("FieldDefinitionForm", () => {
       },
       { timeout: 1000 }
     );
+  });
+
+  it("shows validation errors on submit with invalid data", async () => {
+    render(<FieldDefinitionForm {...defaultProps} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
+
+    await waitFor(() => {
+      const errors = screen.getAllByText("Обов'язкове поле");
+      expect(errors.length).toBeGreaterThan(0);
+    });
   });
 });

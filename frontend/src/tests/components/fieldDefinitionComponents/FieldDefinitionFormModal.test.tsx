@@ -1,57 +1,12 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import FieldDefinitionFormModal from "../../../components/fieldDefinitionComponents/FieldDefinitionFormModal";
+import { useReferenceSources } from "../../../hooks/useReferenceSources";
 import { FieldDefinitionInterface } from "../../../types/fieldDefinition";
+import { ReferenceSourceInterface } from "../../../types/referenceSource";
 
 vi.mock("../../../hooks/useReferenceSources", () => ({
-  useReferenceSources: () => ({
-    data: [
-      { id: 1, tableName: "Test Table 1" },
-      { id: 2, tableName: "Test Table 2" },
-    ],
-    isLoading: false,
-    error: null,
-  }),
-}));
-
-vi.mock("../../../components/TextInput", () => ({
-  default: ({ name, label }: any) => (
-    <div>
-      <label htmlFor={name}>{label}</label>
-      <input id={name} name={name} data-testid={name} />
-    </div>
-  ),
-}));
-
-vi.mock("@mui/material", () => ({
-  Grid2: ({ children }: any) => <div data-testid="grid">{children}</div>,
-  Button: ({ children, onClick, disabled, type }: any) => (
-    <button
-      onClick={onClick}
-      disabled={disabled}
-      type={type}
-      data-testid="submit-button"
-    >
-      {children}
-    </button>
-  ),
-  TextField: ({ name, label, value, onChange, children }: any) => (
-    <div>
-      <label htmlFor={name}>{label}</label>
-      <select
-        id={name}
-        name={name}
-        value={value}
-        onChange={onChange}
-        data-testid={name}
-      >
-        {children}
-      </select>
-    </div>
-  ),
-  MenuItem: ({ children, value }: any) => (
-    <option value={value}>{children}</option>
-  ),
+  useReferenceSources: vi.fn(),
 }));
 
 vi.mock("../../../components/Modal", () => ({
@@ -68,6 +23,17 @@ vi.mock("../../../components/Modal", () => ({
 }));
 
 describe("FieldDefinitionFormModal", () => {
+  const mockReferenceSources: ReferenceSourceInterface[] = [
+    {
+      id: 1,
+      tableName: "Employees",
+    },
+    {
+      id: 2,
+      tableName: "Contracts",
+    },
+  ];
+
   const mockOnClose = vi.fn();
   const mockOnSubmit = vi.fn();
 
@@ -78,12 +44,20 @@ describe("FieldDefinitionFormModal", () => {
     title: "Test Modal",
   };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (useReferenceSources as any).mockReturnValue({
+      data: mockReferenceSources,
+    });
+  });
+
   it("renders Modal with correct props when open", () => {
     render(<FieldDefinitionFormModal {...defaultProps} />);
 
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
   });
 
   it("does not render Modal content when closed", () => {
@@ -97,11 +71,11 @@ describe("FieldDefinitionFormModal", () => {
   it("renders FieldDefinitionForm with passed props", () => {
     const initialValues: FieldDefinitionInterface = {
       id: 1,
-      fieldName: "Some fieldDefinition",
-      fieldType: "number",
-      orderIndex: 0,
-      referenceSourceId: null,
-      referenceSourceName: null,
+      fieldName: "Test field",
+      fieldType: "reference",
+      orderIndex: 1,
+      referenceSourceId: 1,
+      referenceSourceName: "Employees",
     };
 
     render(
@@ -111,25 +85,43 @@ describe("FieldDefinitionFormModal", () => {
       />
     );
 
-    expect(screen.getByLabelText("Назва")).toBeInTheDocument();
-    expect(screen.getByLabelText("Тип")).toBeInTheDocument();
-    expect(screen.getByLabelText("Індекс")).toBeInTheDocument();
-    expect(screen.getByLabelText("Посилання на таблицю")).toBeInTheDocument();
+    const nameInput = screen.getByLabelText("Назва") as HTMLInputElement;
+    expect(nameInput.value).toBe("Test field");
+    const typeInput = screen.getByLabelText("Тип") as HTMLInputElement;
+    expect(typeInput.value).toBe("reference");
+    const orderIndexInput = screen.getByLabelText("Індекс") as HTMLInputElement;
+    expect(orderIndexInput.value).toBe("1");
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(screen.getByText("Зберегти зміни")).toBeInTheDocument();
   });
 
   it("passes onSubmit to FieldDefinitionForm and calls it with valid data", async () => {
     render(<FieldDefinitionFormModal {...defaultProps} />);
 
-    const nameInput = screen.getByTestId("fieldName");
-    fireEvent.change(nameInput, {
-      target: { value: "Test Field" },
+    fireEvent.change(screen.getByLabelText("Назва"), {
+      target: { value: "Test field new" },
+    });
+    fireEvent.change(screen.getByLabelText("Тип"), {
+      target: { value: "reference" },
+    });
+    fireEvent.change(screen.getByLabelText("Індекс"), {
+      target: { value: "10" },
     });
 
-    const submitButton = screen.getByTestId("submit-button");
-    fireEvent.click(submitButton);
+    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
 
     await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalled();
+      expect(mockOnSubmit).toHaveBeenCalledWith(
+        expect.objectContaining({
+          fieldName: "Test field new",
+          fieldType: "reference",
+          orderIndex: 10,
+          referenceSourceId: 0,
+          referenceSourceName: "",
+        }),
+
+        expect.any(Object)
+      );
     });
   });
 });

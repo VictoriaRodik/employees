@@ -54,7 +54,7 @@ const FieldDefinitionForm: React.FC<fieldDefinitionFormProps> = ({
               <TextInput name="fieldType" label="Тип" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
-              <TextInput name="orderIndex" label="Індекс" />
+              <TextInput name="orderIndex" label="Індекс" type="number" />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextField
