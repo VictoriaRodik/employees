@@ -1,7 +1,14 @@
-import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import GradeSalaryFormModal from "../../../components/gradeSalaryComponents/GradeSalaryFormModal";
+import { useQualificationGrades } from "../../../hooks/useQualificationGrades";
 import { GradeSalaryInterface } from "../../../types/gradeSalary";
+import { QualificationGradeInterface } from "../../../types/qualificationGrade";
+
+vi.mock("../../../hooks/useQualificationGrades", () => ({
+  useQualificationGrades: vi.fn(),
+}));
 
 vi.mock("../../../components/Modal", () => ({
   default: ({ open, title, children }: any) => (
@@ -17,6 +24,17 @@ vi.mock("../../../components/Modal", () => ({
 }));
 
 describe("GradeSalaryFormModal", () => {
+  const mockQualificationGrades: QualificationGradeInterface[] = [
+    {
+      id: 1,
+      grade: "1",
+    },
+    {
+      id: 2,
+      grade: "2",
+    },
+  ];
+
   const mockOnClose = vi.fn();
   const mockOnSubmit = vi.fn();
 
@@ -27,12 +45,20 @@ describe("GradeSalaryFormModal", () => {
     title: "Test Modal",
   };
 
+  beforeEach(() => {
+    vi.clearAllMocks();
+    (useQualificationGrades as any).mockReturnValue({
+      data: mockQualificationGrades,
+    });
+  });
+
   it("renders Modal with correct props when open", () => {
     render(<GradeSalaryFormModal {...defaultProps} />);
 
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
   });
 
   it("does not render Modal content when closed", () => {
@@ -46,30 +72,41 @@ describe("GradeSalaryFormModal", () => {
   it("renders GradeSalaryForm with passed props", () => {
     const initialValues: GradeSalaryInterface = {
       id: 1,
-      grade: "Some gradeSalary",
+      grade: "1",
+      gradeId: 1,
       baseSalary: 10000,
-      effectiveFrom: "2021-01-01",
-      gradeId: 0
+      effectiveFrom: "2025-01-01",
     };
 
     render(
-      <GradeSalaryFormModal {...defaultProps} initialValues={initialValues} />
+      <GradeSalaryFormModal
+        {...defaultProps}
+        initialValues={initialValues}
+      />
     );
 
-    const gradeSalaryNameInput = screen.getByLabelText(
-      "Назва"
-    ) as HTMLInputElement;
-    expect(gradeSalaryNameInput.value).toBe("Some gradeSalary");
-    expect(
-      screen.getByRole("button", { name: "Зберегти зміни" })
-    ).toBeInTheDocument();
+    const gradeCombobox = screen.getByRole("combobox");
+    expect(gradeCombobox).toHaveTextContent("1");
+    const typeInput = screen.getByLabelText("Базова зарплата") as HTMLInputElement;
+    expect(typeInput.value).toBe("10000");
+    const orderIndexInput = screen.getByLabelText("Діє з") as HTMLInputElement;
+    expect(orderIndexInput.value).toBe("2025-01-01");
+    expect(screen.getByRole("combobox")).toBeInTheDocument();
+    expect(screen.getByText("Зберегти зміни")).toBeInTheDocument();
   });
 
   it("passes onSubmit to GradeSalaryForm and calls it with valid data", async () => {
     render(<GradeSalaryFormModal {...defaultProps} />);
 
-    fireEvent.change(screen.getByLabelText("Назва"), {
-      target: { value: "1234567890" },
+    await userEvent.click(screen.getByLabelText("Розряд"));
+    const listbox = await screen.findByRole("listbox");
+    await userEvent.click(within(listbox).getByRole("option", { name: "2" }));
+
+    fireEvent.change(screen.getByLabelText("Базова зарплата"), {
+      target: { value: "20000" },
+    });
+    fireEvent.change(screen.getByLabelText("Діє з"), {
+      target: { value: "2025-07-01" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Додати" }));
@@ -77,8 +114,11 @@ describe("GradeSalaryFormModal", () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          gradeSalaryName: "1234567890",
+          gradeId: 2,
+          baseSalary: "20000",
+          effectiveFrom: "2025-07-01",
         }),
+
         expect.any(Object)
       );
     });

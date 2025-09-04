@@ -3,14 +3,14 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import OrderItemTable from "../../../components/orderItemComponents/OrderItemTable";
 import { OrderItemInterface } from "../../../types/orderItem";
 
-interface ActionButtonsProps {
+interface ActionsProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
 }
 
-vi.mock("../../../components/ActionButtons", () => ({
-  default: ({ onEdit, onCopy, onDelete }: ActionButtonsProps) => (
+vi.mock("../../../components/Actions", () => ({
+  default: ({ onEdit, onCopy, onDelete }: ActionsProps) => (
     <div data-testid="action-buttons">
       <button data-testid="edit-button" onClick={onEdit}>
         Edit
@@ -83,9 +83,9 @@ describe("OrderItemTable", () => {
       />
     );
 
-    expect(screen.getByText("IT OrderItem")).toBeInTheDocument();
-    expect(screen.getByText("HR OrderItem")).toBeInTheDocument();
-    expect(screen.getByText("Finance OrderItem")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem2")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem3")).toBeInTheDocument();
   });
 
   it("renders table headers", () => {
@@ -98,8 +98,10 @@ describe("OrderItemTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Наказ")).toBeInTheDocument();
+    expect(screen.getByText("Співробітник")).toBeInTheDocument();
+    expect(screen.getByText("Поле")).toBeInTheDocument();
+    expect(screen.getByText("Значення")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
   });
 
@@ -175,13 +177,16 @@ describe("OrderItemTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Наказ")).toBeInTheDocument();
+    expect(screen.getByText("Співробітник")).toBeInTheDocument();
+    expect(screen.getByText("Поле")).toBeInTheDocument();
+    expect(screen.getByText("Значення")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
-    expect(screen.queryByText("IT OrderItem")).not.toBeInTheDocument();
+    expect(screen.queryByText("Some order")).not.toBeInTheDocument();
+    expect(screen.queryByText("Some orderItem")).not.toBeInTheDocument();
   });
 
-  it("displays orderItem IDs correctly", () => {
+  it("displays orderNumbers values correctly", () => {
     render(
       <OrderItemTable
         orderItems={mockOrderItems}
@@ -191,9 +196,9 @@ describe("OrderItemTable", () => {
       />
     );
 
-    expect(screen.getByText("1")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(screen.getByText("Some order")).toBeInTheDocument();
+    expect(screen.getByText("Some order2")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem3")).toBeInTheDocument();
   });
 
   it("displays orderItem names correctly", () => {
@@ -206,8 +211,8 @@ describe("OrderItemTable", () => {
       />
     );
 
-    expect(screen.getByText("IT OrderItem")).toBeInTheDocument();
-    expect(screen.getByText("HR OrderItem")).toBeInTheDocument();
-    expect(screen.getByText("Finance OrderItem")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem2")).toBeInTheDocument();
+    expect(screen.getByText("Some orderItem3")).toBeInTheDocument();
   });
 });

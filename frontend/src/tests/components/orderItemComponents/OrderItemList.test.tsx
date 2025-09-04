@@ -77,7 +77,7 @@ vi.mock("../../../components/orderItemComponents/OrderItemTable", () => ({
     <div data-testid="orderItem-table">
       {orderItems.map((emp: OrderItemInterface) => (
         <div key={emp.id}>
-          <span>{emp.orderNumber}</span>
+          <span>{emp.value}</span>
           <button onClick={() => onEdit(emp)}>Edit</button>
           <button onClick={() => onCopy(emp)}>Copy</button>
           <button onClick={() => onDelete(emp.id)}>Delete</button>

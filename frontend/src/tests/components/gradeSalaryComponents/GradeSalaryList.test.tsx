@@ -21,7 +21,7 @@ interface ButtonProps {
 }
 
 interface GradeSalaryTableProps {
-  gradeSalarys: GradeSalaryInterface[];
+  gradeSalaries: GradeSalaryInterface[];
   onEdit: (gradeSalary: GradeSalaryInterface) => void;
   onCopy: (gradeSalary: GradeSalaryInterface) => void;
   onDelete: (id: number) => void;
@@ -35,8 +35,8 @@ interface GradeSalaryFormModalProps {
   initialValues?: GradeSalaryInterface;
 }
 
-vi.mock("../../../hooks/useGradeSalarys", () => ({
-  useGradeSalarys: vi.fn(),
+vi.mock("../../../hooks/useGradeSalaries", () => ({
+  useGradeSalaries: vi.fn(),
 }));
 
 vi.mock("../../../hooks/useUrlSearchParams", () => ({
@@ -73,9 +73,9 @@ vi.mock("../../../components/Button", () => ({
 }));
 
 vi.mock("../../../components/gradeSalaryComponents/GradeSalaryTable", () => ({
-  default: ({ gradeSalarys, onEdit, onCopy, onDelete }: GradeSalaryTableProps) => (
+  default: ({ gradeSalaries, onEdit, onCopy, onDelete }: GradeSalaryTableProps) => (
     <div data-testid="gradeSalary-table">
-      {gradeSalarys.map((emp: GradeSalaryInterface) => (
+      {gradeSalaries.map((emp: GradeSalaryInterface) => (
         <div key={emp.id}>
           <span>{emp.grade}</span>
           <button onClick={() => onEdit(emp)}>Edit</button>
@@ -125,7 +125,7 @@ vi.mock("../../../components/gradeSalaryComponents/GradeSalaryFormModal", () => 
 });
 
 describe("GradeSalaryList", () => {
-  const mockGradeSalarys: GradeSalaryInterface[] = [
+  const mockGradeSalaries: GradeSalaryInterface[] = [
     {
       id: 1,
       grade: "Some gradeSalary",
@@ -158,9 +158,9 @@ describe("GradeSalaryList", () => {
     expect(screen.getByText("Помилка при завантаженні")).toBeInTheDocument();
   });
 
-  it("renders gradeSalarys and components when loaded", () => {
+  it("renders gradeSalaries and components when loaded", () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -174,9 +174,9 @@ describe("GradeSalaryList", () => {
     expect(screen.getByText("Some gradeSalary2")).toBeInTheDocument();
   });
 
-  it.skip("filters gradeSalarys by search", async () => {
+  it.skip("filters gradeSalaries by search", async () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -191,9 +191,9 @@ describe("GradeSalaryList", () => {
     });
   });
 
-  it.skip("sorts gradeSalarys by selected field", async () => {
+  it.skip("sorts gradeSalaries by selected field", async () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -210,7 +210,7 @@ describe("GradeSalaryList", () => {
 
   it("opens modal to add gradeSalary", () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -223,7 +223,7 @@ describe("GradeSalaryList", () => {
 
   it("opens modal to edit gradeSalary", () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -236,7 +236,7 @@ describe("GradeSalaryList", () => {
 
   it("opens modal to copy gradeSalary", () => {
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
     });
@@ -250,7 +250,7 @@ describe("GradeSalaryList", () => {
   it("deletes gradeSalary", () => {
     const deleteGradeSalary = { mutate: vi.fn() };
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
       deleteGradeSalary,
@@ -264,7 +264,7 @@ describe("GradeSalaryList", () => {
   it("submits new gradeSalary", async () => {
     const createGradeSalary = { mutate: vi.fn() };
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
       createGradeSalary,
@@ -281,7 +281,7 @@ describe("GradeSalaryList", () => {
   it("updates existing gradeSalary", async () => {
     const updateGradeSalary = { mutate: vi.fn() };
     (useGradeSalaries as any).mockReturnValue({
-      data: mockGradeSalarys,
+      data: mockGradeSalaries,
       isLoading: false,
       error: null,
       updateGradeSalary,

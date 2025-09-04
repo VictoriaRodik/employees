@@ -2,6 +2,7 @@ import React from "react";
 import GeneralTable from "../Table";
 import Actions from "../Actions";
 import { OrderInterface } from "../../types/order";
+import { orderFormatted } from "../../utils/orderFormatted";
 
 interface orderTableProps {
   orders: OrderInterface[];
@@ -24,7 +25,7 @@ const orderTable: React.FC<orderTableProps> = ({
 
   return (
     <GeneralTable
-      data={orders}
+      data={orders.map(orderFormatted)}
       columns={columns}
       renderActions={(order) => (
         <Actions

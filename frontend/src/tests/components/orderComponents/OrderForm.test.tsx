@@ -1,53 +1,93 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, waitFor, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, waitFor, within } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import OrderForm from "../../../components/orderComponents/OrderForm";
+import { useOrderTypes } from "../../../hooks/useOrderTypes";
 import { OrderInterface } from "../../../types/order";
+import { OrderTypeInterface } from "../../../types/orderType";
+
+vi.mock("../../../hooks/useOrderTypes", () => ({
+  useOrderTypes: vi.fn(),
+}));
 
 describe("OrderForm", () => {
+  const mockOrderTypes: OrderTypeInterface[] = [
+    {
+      id: 1,
+      orderTypeName: "Test order type",
+    },
+    {
+      id: 2,
+      orderTypeName: "Test order type 2",
+    },
+  ];
+
   const mockOnSubmit = vi.fn();
+  const mockOnClose = vi.fn();
+
+  const defaultProps = {
+    onSubmit: mockOnSubmit,
+    onClose: mockOnClose,
+  };
 
   beforeEach(() => {
-    mockOnSubmit.mockClear();
+    vi.clearAllMocks();
+    (useOrderTypes as any).mockReturnValue({ data: mockOrderTypes });
   });
 
   it("renders all fields with default values", () => {
-    render(<OrderForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<OrderForm {...defaultProps} />);
 
-    expect(screen.getByLabelText("Назва")).toBeInTheDocument();
+    expect(screen.getByLabelText("Тип")).toBeInTheDocument();
+    expect(screen.getByLabelText("Номер")).toBeInTheDocument();
+    expect(screen.getByLabelText("Дата")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Додати" })).toBeInTheDocument();
   });
 
-  it("renders with initial values when provided", () => {
+  it("renders options in select fields", async () => {
+    render(<OrderForm {...defaultProps} />);
+
+    await userEvent.click(screen.getByLabelText("Тип"));
+    const listbox = await screen.findByRole("listbox");
+    expect(within(listbox).getByText("Test order type")).toBeInTheDocument();
+    expect(within(listbox).getByText("Test order type 2")).toBeInTheDocument();
+  });
+
+  it("renders with initial values when provided", async () => {
     const initialValues: OrderInterface = {
       id: 1,
-      orderNumber: "Some order",
-      orderDate: "2021-01-01",
       orderTypeId: 1,
-      orderTypeName: "Some order type",
-    };
+      orderTypeName: "Test order type",
+      orderDate: "2023-01-01",
+      orderNumber: "C123",
+    } as unknown as OrderInterface;
 
-    render(
-      <OrderForm
-        initialValues={initialValues}
-        onSubmit={mockOnSubmit}
-        onClose={() => {}}
-      />
-    );
+    render(<OrderForm {...defaultProps} initialValues={initialValues} />);
 
-    const orderNameInput = screen.getByLabelText(
-      "Назва"
-    ) as HTMLInputElement;
-    expect(orderNameInput.value).toBe("Some order");
+    const orderDateInput = screen.getByLabelText("Дата") as HTMLInputElement;
+
+    await waitFor(() => {
+      const combobox = screen.getByRole("combobox");
+      expect(combobox).toHaveTextContent("Test order type");
+      expect(orderDateInput.value).toBe("2023-01-01");
+    });
     expect(
       screen.getByRole("button", { name: "Зберегти зміни" })
     ).toBeInTheDocument();
   });
 
   it("submits form with valid data", async () => {
-    render(<OrderForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<OrderForm {...defaultProps} />);
 
-    fireEvent.change(screen.getByLabelText("Назва"), {
-      target: { value: "1234567890" },
+    await userEvent.click(screen.getByLabelText("Тип"));
+    const listbox = await screen.findByRole("listbox");
+    await userEvent.click(within(listbox).getByRole("option", { name: "Test order type" }));
+
+    fireEvent.change(screen.getByLabelText("Дата"), {
+      target: { value: "2023-01-01" },
+    });
+    fireEvent.change(screen.getByLabelText("Номер"), {
+      target: { value: "C123" },
     });
 
     fireEvent.click(screen.getByRole("button", { name: "Додати" }));
@@ -55,18 +95,9 @@ describe("OrderForm", () => {
     await waitFor(() => {
       expect(mockOnSubmit).toHaveBeenCalledWith(
         expect.objectContaining({
-          orderName: "1234567890",
-        }),
-        expect.any(Object)
-      );
-    });
-
-    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
-
-    await waitFor(() => {
-      expect(mockOnSubmit).toHaveBeenCalledWith(
-        expect.objectContaining({
-          orderName: "1234567890",
+          orderTypeId: 1,
+          orderDate: "2023-01-01",
+          orderNumber: "C123",
         }),
         expect.any(Object)
       );
@@ -79,10 +110,17 @@ describe("OrderForm", () => {
       .mockImplementation(
         () => new Promise((resolve) => setTimeout(resolve, 100))
       );
-    render(<OrderForm onSubmit={slowOnSubmit} onClose={() => {}} />);
+    render(<OrderForm {...defaultProps} onSubmit={slowOnSubmit} />);
 
-    fireEvent.change(screen.getByLabelText("Назва"), {
-      target: { value: "1234567890" },
+    await userEvent.click(screen.getByLabelText("Тип"));
+    const listbox2 = await screen.findByRole("listbox");
+    await userEvent.click(within(listbox2).getByRole("option", { name: "Test order type" }));
+
+    fireEvent.change(screen.getByLabelText("Дата"), {
+      target: { value: "2023-01-01" },
+    });
+    fireEvent.change(screen.getByLabelText("Номер"), {
+      target: { value: "C123" },
     });
 
     const submitButton = screen.getByRole("button", { name: "Додати" });
@@ -95,7 +133,7 @@ describe("OrderForm", () => {
   });
 
   it("does not call onSubmit with invalid data", async () => {
-    render(<OrderForm onSubmit={mockOnSubmit} onClose={() => {}} />);
+    render(<OrderForm {...defaultProps} />);
 
     fireEvent.click(screen.getByRole("button", { name: "Додати" }));
 
@@ -105,5 +143,16 @@ describe("OrderForm", () => {
       },
       { timeout: 1000 }
     );
+  });
+
+  it("shows validation errors on submit with invalid data", async () => {
+    render(<OrderForm {...defaultProps} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Додати" }));
+
+    await waitFor(() => {
+      const errors = screen.getAllByText("Обов'язкове поле");
+      expect(errors.length).toBeGreaterThan(0);
+    });
   });
 });

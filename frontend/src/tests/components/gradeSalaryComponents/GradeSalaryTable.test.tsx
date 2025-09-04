@@ -3,14 +3,14 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import GradeSalaryTable from "../../../components/gradeSalaryComponents/GradeSalaryTable";
 import { GradeSalaryInterface } from "../../../types/gradeSalary";
 
-interface ActionButtonsProps {
+interface ActionsProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
 }
 
-vi.mock("../../../components/ActionButtons", () => ({
-  default: ({ onEdit, onCopy, onDelete }: ActionButtonsProps) => (
+vi.mock("../../../components/Actions", () => ({
+  default: ({ onEdit, onCopy, onDelete }: ActionsProps) => (
     <div data-testid="action-buttons">
       <button data-testid="edit-button" onClick={onEdit}>
         Edit
@@ -28,24 +28,25 @@ vi.mock("../../../components/ActionButtons", () => ({
 describe("GradeSalaryTable", () => {
   const mockGradeSalaries: GradeSalaryInterface[] = [
     {
-      id: 1, grade: "IT GradeSalary",
+      id: 1,
+      grade: "IT GradeSalary",
       gradeId: 0,
       baseSalary: 0,
-      effectiveFrom: ""
+      effectiveFrom: "",
     },
     {
       id: 2,
       grade: "HR GradeSalary",
       gradeId: 0,
       baseSalary: 0,
-      effectiveFrom: ""
+      effectiveFrom: "",
     },
     {
       id: 3,
       grade: "Finance GradeSalary",
       gradeId: 0,
       baseSalary: 0,
-      effectiveFrom: ""
+      effectiveFrom: "",
     },
   ];
 
@@ -57,7 +58,7 @@ describe("GradeSalaryTable", () => {
     vi.clearAllMocks();
   });
 
-  it("renders gradeSalarys table", () => {
+  it("renders gradeSalaries table", () => {
     render(
       <GradeSalaryTable
         gradeSalaries={mockGradeSalaries}
@@ -82,8 +83,9 @@ describe("GradeSalaryTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Розряд")).toBeInTheDocument();
+    expect(screen.getByText("Оклад")).toBeInTheDocument();
+    expect(screen.getByText("Діє з")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
   });
 
@@ -149,7 +151,7 @@ describe("GradeSalaryTable", () => {
     expect(mockOnDelete).toHaveBeenCalledWith(mockGradeSalaries[0].id);
   });
 
-  it("renders empty table when no gradeSalarys", () => {
+  it("renders empty table when no gradeSalaries", () => {
     render(
       <GradeSalaryTable
         gradeSalaries={[]}
@@ -159,27 +161,14 @@ describe("GradeSalaryTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Розряд")).toBeInTheDocument();
+    expect(screen.getByText("Оклад")).toBeInTheDocument();
+    expect(screen.getByText("Діє з")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
     expect(screen.queryByText("IT GradeSalary")).not.toBeInTheDocument();
   });
 
-  it("displays gradeSalary IDs correctly", () => {
-    render(
-      <GradeSalaryTable
-        gradeSalaries={mockGradeSalaries}
-        onEdit={mockOnEdit}
-        onCopy={mockOnCopy}
-        onDelete={mockOnDelete}
-      />
-    );
-
-    expect(screen.getByText("1")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("3")).toBeInTheDocument();
-  });
-
+  
   it("displays gradeSalary names correctly", () => {
     render(
       <GradeSalaryTable

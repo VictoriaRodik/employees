@@ -44,7 +44,7 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
       .min(1, "Оберіть співробітника")
       .required("Обов'язкове поле"),
     fieldId: Yup.number().min(1, "Оберіть поле").required("Обов'язкове поле"),
-    value: Yup.string().required("Введіть значення"),
+    value: Yup.string().required("Обов'язкове поле"),
   });
 
   return (
@@ -88,7 +88,8 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
                 </MenuItem>
                 {orders.map((order: OrderInterface) => (
                   <MenuItem key={order.id} value={order.id}>
-                    {order.orderNumber} ({order.orderDate})
+                    № {order.orderNumber} від{" "}
+                    {new Date(order.orderDate).toLocaleDateString("en-CA")}
                   </MenuItem>
                 ))}
               </TextField>

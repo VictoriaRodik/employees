@@ -3,14 +3,14 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import OrderTable from "../../../components/orderComponents/OrderTable";
 import { OrderInterface } from "../../../types/order";
 
-interface ActionButtonsProps {
+interface ActionsProps {
   onEdit: () => void;
   onCopy: () => void;
   onDelete: () => void;
 }
 
-vi.mock("../../../components/ActionButtons", () => ({
-  default: ({ onEdit, onCopy, onDelete }: ActionButtonsProps) => (
+vi.mock("../../../components/Actions", () => ({
+  default: ({ onEdit, onCopy, onDelete }: ActionsProps) => (
     <div data-testid="action-buttons">
       <button data-testid="edit-button" onClick={onEdit}>
         Edit
@@ -83,8 +83,9 @@ describe("OrderTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Номер")).toBeInTheDocument();
+    expect(screen.getByText("Дата")).toBeInTheDocument();
+    expect(screen.getByText("Тип")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
   });
 
@@ -160,13 +161,14 @@ describe("OrderTable", () => {
       />
     );
 
-    expect(screen.getByText("ID")).toBeInTheDocument();
-    expect(screen.getByText("Назва відділу")).toBeInTheDocument();
+    expect(screen.getByText("Номер")).toBeInTheDocument();
+    expect(screen.getByText("Дата")).toBeInTheDocument();
+    expect(screen.getByText("Тип")).toBeInTheDocument();
     expect(screen.getByText("Дії")).toBeInTheDocument();
     expect(screen.queryByText("IT Order")).not.toBeInTheDocument();
   });
 
-  it("displays order IDs correctly", () => {
+  it("displays order numbers correctly", () => {
     render(
       <OrderTable
         orders={mockOrders}
@@ -176,9 +178,9 @@ describe("OrderTable", () => {
       />
     );
 
-    expect(screen.getByText("1")).toBeInTheDocument();
-    expect(screen.getByText("2")).toBeInTheDocument();
-    expect(screen.getByText("3")).toBeInTheDocument();
+    expect(screen.getByText("IT Order")).toBeInTheDocument();
+    expect(screen.getByText("HR Order")).toBeInTheDocument();
+    expect(screen.getByText("Finance Order")).toBeInTheDocument();
   });
 
   it("displays order names correctly", () => {
