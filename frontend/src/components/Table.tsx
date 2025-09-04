@@ -32,7 +32,7 @@ const GeneralTable = <T,>({ data, columns, renderActions }: TableProps<T>) => {
             <TableRow key={index}>
               {columns.map((col) => (
                 <TableCell key={col.key as string}>
-                  {String(row[col.key])}
+                  {row[col.key] ? String(row[col.key]) : '-'}
                 </TableCell>
               ))}
               {renderActions && <TableCell>{renderActions(row)}</TableCell>}

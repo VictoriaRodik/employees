@@ -1,8 +1,15 @@
 import { BaseRepository } from "./baseRepository.js";
 
 export class EmployeeRepository extends BaseRepository {
-  constructor(pool) {
-    super("employees", pool);
+  constructor() {
+    super("employees");
+  }
+
+  async getAll() {
+    const [rows] = await this.pool.query(
+      `SELECT * FROM employees ORDER BY full_name`
+    );
+    return rows;
   }
   async create(data) {
     const {

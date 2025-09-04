@@ -1,7 +1,6 @@
 import { EmployeeRepository } from '../repositories/employeeRepository.js';
-import pool from '../config/db.js';
 
-const employeeRepository = new EmployeeRepository(pool);
+const employeeRepository = new EmployeeRepository();
 
 export const getAllEmployees = async () => {
   return await employeeRepository.getAll();

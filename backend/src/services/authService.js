@@ -1,11 +1,11 @@
 import { compare } from "bcrypt";
 import pkg from "jsonwebtoken";
 import { UserRepository } from "../repositories/userRepository.js";
-import pool from "../config/db.js";
+
 
 const { sign } = pkg;
 
-const userRepository = new UserRepository(pool);
+const userRepository = new UserRepository();
 
 export const loginUser = async (username, password) => {
   const user = await userRepository.getByUsername(username);

@@ -11,16 +11,15 @@ vi.mock("../../../components/Table", () => ({
           {columns.map((col: any) => (
             <th key={col.key}>{col.label}</th>
           ))}
-          <th>Actions</th>
+          <th>Дії</th>
         </tr>
       </thead>
       <tbody>
         {data.map((item: any, index: number) => (
           <tr key={index}>
-            <td>{item.fullName}</td>
-            <td>{item.contractNumber}</td>
-            <td>{item.contractDate}</td>
-            <td>{item.contractAmount}</td>
+            {columns.map((col: any) => (
+              <td key={col.key}>{item[col.key]}</td>
+            ))}
             <td>{renderActions(item)}</td>
           </tr>
         ))}
@@ -29,40 +28,17 @@ vi.mock("../../../components/Table", () => ({
   ),
 }));
 
-vi.mock("@mui/material", () => ({
-  IconButton: ({ children, onClick }: any) => (
-    <button data-testid="more-button" onClick={onClick}>
-      {children}
-    </button>
-  ),
-  Dialog: ({ open, children }: any) =>
-    open ? <div data-testid="dialog">{children}</div> : null,
-  DialogActions: ({ children }: any) => (
-    <div data-testid="dialog-actions">{children}</div>
-  ),
-  useMediaQuery: () => true,
-  useTheme: () => ({
-    breakpoints: {
-      up: (key: string) => key === "sm",
-    },
-  }),
-}));
-
-vi.mock("@mui/icons-material/MoreHoriz", () => ({
-  default: () => <span data-testid="more-horiz-icon">More</span>,
-}));
-
-vi.mock("../../../components/ActionButtons", () => ({
+vi.mock("../../../components/Actions", () => ({
   default: ({ onEdit, onCopy, onDelete }: any) => (
-    <div data-testid="action-buttons">
-      <button data-testid="edit-button" onClick={onEdit}>
-        {"Edit"}
+    <div data-testid="actions">
+      <button data-testid="edit-button" onClick={() => onEdit()}>
+        Edit
       </button>
-      <button data-testid="copy-button" onClick={onCopy}>
-        {"Copy"}
+      <button data-testid="copy-button" onClick={() => onCopy()}>
+        Copy
       </button>
-      <button data-testid="delete-button" onClick={onDelete}>
-        {"Delete"}
+      <button data-testid="delete-button" onClick={() => onDelete()}>
+        Delete
       </button>
     </div>
   ),
@@ -71,17 +47,15 @@ vi.mock("../../../components/ActionButtons", () => ({
 vi.mock("../../../components/PrintActions", () => ({
   default: ({ onPreviewContract, onPreviewCashOrder }: any) => (
     <div data-testid="print-buttons">
-      <button data-testid="contract-button" onClick={onPreviewContract}>
-        {"Preview Contract PDF"}
+      <button data-testid="contract-button" onClick={() => onPreviewContract()}>
+        Preview Contract PDF
       </button>
-      <button data-testid="cash-order-button" onClick={onPreviewCashOrder}>
-        {"Preview Cash Order PDF"}
+      <button data-testid="cash-order-button" onClick={() => onPreviewCashOrder()}>
+        Preview Cash Order PDF
       </button>
     </div>
   ),
 }));
-
-
 
 describe("ContractTable", () => {
   const mockContracts: ContractInterface[] = [
@@ -162,12 +136,11 @@ describe("ContractTable", () => {
     const table = screen.getByTestId("general-table");
     expect(table).toBeInTheDocument();
 
-
-    expect(screen.getByText("ПІБ")).toBeInTheDocument();
     expect(screen.getByText("Номер договору")).toBeInTheDocument();
     expect(screen.getByText("Дата договору")).toBeInTheDocument();
     expect(screen.getByText("Сума")).toBeInTheDocument();
-    expect(screen.getByText("Actions")).toBeInTheDocument();
+    expect(screen.getByText("ПІБ")).toBeInTheDocument();
+    expect(screen.getByText("Дії")).toBeInTheDocument();
 
     expect(screen.getByText("John Doe")).toBeInTheDocument();
     expect(screen.getByText("01-01")).toBeInTheDocument();
@@ -180,13 +153,8 @@ describe("ContractTable", () => {
   it("renders Actions component for each contract", () => {
     render(<ContractTable {...defaultProps} />);
 
-    const editButtons = screen.getAllByText("Edit");
-    const copyButtons = screen.getAllByText("Copy");
-    const deleteButtons = screen.getAllByText("Delete");
-
-    expect(editButtons).toHaveLength(2);
-    expect(copyButtons).toHaveLength(2);
-    expect(deleteButtons).toHaveLength(2);
+    const actions = screen.getAllByTestId("actions");
+    expect(actions).toHaveLength(2);
   });
 
   it("renders PrintActions component for each contract", () => {
@@ -202,7 +170,7 @@ describe("ContractTable", () => {
   it("calls onEdit when edit button is clicked", () => {
     render(<ContractTable {...defaultProps} />);
 
-    const editButtons = screen.getAllByText("Edit");
+    const editButtons = screen.getAllByTestId("edit-button");
     fireEvent.click(editButtons[0]);
     expect(mockOnEdit).toHaveBeenCalledWith(mockContracts[0]);
     expect(mockOnEdit).toHaveBeenCalledTimes(1);
@@ -211,7 +179,7 @@ describe("ContractTable", () => {
   it("calls onCopy when copy button is clicked", () => {
     render(<ContractTable {...defaultProps} />);
 
-    const copyButtons = screen.getAllByText("Copy");
+    const copyButtons = screen.getAllByTestId("copy-button");
     fireEvent.click(copyButtons[1]);
     expect(mockOnCopy).toHaveBeenCalledWith(mockContracts[1]);
     expect(mockOnCopy).toHaveBeenCalledTimes(1);
@@ -220,9 +188,9 @@ describe("ContractTable", () => {
   it("calls onDelete when delete button is clicked", () => {
     render(<ContractTable {...defaultProps} />);
 
-    const deleteButtons = screen.getAllByText("Delete");
+    const deleteButtons = screen.getAllByTestId("delete-button");
     fireEvent.click(deleteButtons[0]);
-    expect(mockOnDelete).toHaveBeenCalledWith(mockContracts[0].id); // 1
+    expect(mockOnDelete).toHaveBeenCalledWith(mockContracts[0].id);
     expect(mockOnDelete).toHaveBeenCalledTimes(1);
   });
 

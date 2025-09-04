@@ -1,11 +1,11 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { EmployeeInterface } from "../types/employee";
+import { ApiEmployee } from "../types/employee";
 
 const endpoint = "employees";
 
-export const fetchEmployees = () => fetchAll<EmployeeInterface>(endpoint);
-export const addEmployee = (employee: EmployeeInterface) =>
+export const fetchEmployees = () => fetchAll<ApiEmployee>(endpoint);
+export const addEmployee = (employee: ApiEmployee) =>
   addItem(endpoint, employee);
-export const updateEmployee = (employee: EmployeeInterface) =>
+export const editEmployee = (employee: ApiEmployee) =>
   updateItem(endpoint, employee);
-export const deleteEmployee = (id: number) => deleteItem(endpoint, id);
+export const removeEmployee = (id: number) => deleteItem(endpoint, id);

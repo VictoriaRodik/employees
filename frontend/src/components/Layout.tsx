@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, useTheme as useMuiTheme, useMediaQuery } from "@mui/material";
 
 import Header from "./Header";
-import NavigationDrawer from "./NavigationDrawer";
+import NavigationDrawer from "./navigation/NavigationDrawer";
 import MainContent from "./MainContent";
 
 import { useTheme } from "../hooks/useTheme";

@@ -28,7 +28,7 @@ const defaultValues: ContractInterface = {
   passportNumber: "",
   passportIssueDate: new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: "",
-  organizationId: "1",
+  organizationId: "",
   name: "",
   shortName: "",
   edrpouCode: "",
@@ -77,7 +77,7 @@ const ContractForm: React.FC<ContractFormProps> = ({
                 select
                 name="organizationId"
                 label="Замовник"
-                value={values.organizationId}
+                value={organizations.length > 0 ? values.organizationId : ""}
                 onChange={handleChange}
                 fullWidth
               >
@@ -93,7 +93,7 @@ const ContractForm: React.FC<ContractFormProps> = ({
                 select
                 name="employeeId"
                 label="Співробітник"
-                value={values.employeeId}
+                value={employees.length > 0 ? values.employeeId : ""}
                 onChange={handleChange}
                 fullWidth
               >

@@ -10,7 +10,7 @@ import { ContractInterface } from "../../types/contract";
 import { contractFormatted } from "../../utils/contractFormatted";
 import List from "../List";
 
-const ContractList = () => {
+const ContractList: React.FC = () => {
   const {
     data: contracts = [],
     isLoading,
@@ -21,14 +21,18 @@ const ContractList = () => {
   } = useContracts();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingContract, setEditingContract] = useState<ContractInterface | null>(null);
+  const [editingContract, setEditingContract] =
+    useState<ContractInterface | null>(null);
   const [copyingContract, setCopyingContract] = useState(false);
-  const [previewContract, setPreviewContract] = useState<ContractInterface | null>(null);
-  const [previewCashOrder, setPreviewCashOrder] = useState<ContractInterface | null>(null);
+  const [previewContract, setPreviewContract] =
+    useState<ContractInterface | null>(null);
+  const [previewCashOrder, setPreviewCashOrder] =
+    useState<ContractInterface | null>(null);
 
   const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
+  const sort =
+    (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
 
   const handleAdd = () => {
     setEditingContract(null);
@@ -71,7 +75,7 @@ const ContractList = () => {
     setPreviewCashOrder(contract);
   };
 
-  const filtered = contracts.filter((c: { fullName: string; }) =>
+  const filtered = contracts.filter((c: { fullName: string }) =>
     c.fullName?.toLowerCase().includes(search.toLowerCase())
   );
 

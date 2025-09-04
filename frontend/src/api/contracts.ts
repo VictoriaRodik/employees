@@ -1,11 +1,11 @@
 import { fetchAll, addItem, updateItem, deleteItem } from "./apiService";
-import { ContractInterface } from "../types/contract";
+import { ApiContract } from "../types/contract";
 
 const endpoint = "contracts";
 
-export const fetchContracts = () => fetchAll<ContractInterface>(endpoint);
-export const addContract = (contract: ContractInterface) =>
+export const fetchContracts = () => fetchAll<ApiContract>(endpoint);
+export const addContract = (contract: ApiContract) =>
   addItem(endpoint, contract);
-export const updateContract = (contract: ContractInterface) =>
+export const editContract = (contract: ApiContract) =>
   updateItem(endpoint, contract);
-export const deleteContract = (id: number) => deleteItem(endpoint, id);
+export const removeContract = (id: number) => deleteItem(endpoint, id);

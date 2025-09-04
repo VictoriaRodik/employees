@@ -1,9 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "../api/axiosInstance";
-import { OrganizationInterface } from "../types/organization";
-import { mapFromApiOrganization, mapToApiOrganization } from "../utils/organizationMapper";
 
-const API_URL = import.meta.env.VITE_API_URL + "/organizations";
+import { OrganizationInterface } from "../types/organization";
+import {
+  mapFromApiOrganization,
+  mapToApiOrganization,
+} from "../utils/organizationMapper";
+
+import {
+  fetchOrganizations,
+  addOrganization,
+  editOrganization,
+  removeOrganization,
+} from "../api/organizations";
 
 export const useOrganizations = () => {
   const queryClient = useQueryClient();
@@ -11,14 +19,19 @@ export const useOrganizations = () => {
   const { data, isLoading, error } = useQuery({
     queryKey: ["organizations"],
     queryFn: async () => {
-      const response = await axios.get(API_URL);
-      return response.data.map(mapFromApiOrganization);
+      try {
+        const result = await fetchOrganizations();
+        return result.map(mapFromApiOrganization);
+      } catch (error) {
+        console.error("Error fetching organizations:", error);
+        throw error;
+      }
     },
   });
 
   const createOrganization = useMutation({
     mutationFn: async (organization: OrganizationInterface) => {
-      await axios.post(API_URL, mapToApiOrganization(organization));
+      await addOrganization(mapToApiOrganization(organization));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
@@ -27,7 +40,7 @@ export const useOrganizations = () => {
 
   const updateOrganization = useMutation({
     mutationFn: async (organization: OrganizationInterface) => {
-      await axios.put(`${API_URL}/${organization.id}`, mapToApiOrganization(organization));
+      await editOrganization(mapToApiOrganization(organization));
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });
@@ -36,7 +49,7 @@ export const useOrganizations = () => {
 
   const deleteOrganization = useMutation({
     mutationFn: async (id: number) => {
-      await axios.delete(`${API_URL}/${id}`);
+      await removeOrganization(id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["organizations"] });

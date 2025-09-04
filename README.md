@@ -1,70 +1,114 @@
-#Contracts and Cash Orders
-A web application for creating, saving, and printing ЦПХ (civil law) contracts and cash expenditure orders. Suitable for small organizations working with temporary employees.
+# Employees HR and Orders Management
+A web app to manage HR reference data, contracts, and orders with PDF generation. Suitable for small and medium organizations working with temporary employees.
 
 🔗 https://print-for-employees.onrender.com
 
-user: test
-password: test
+Demo:
+- user: test
+- password: test
 
-#⚙️ Features:
-📄 Generation of contracts
-💵 Printing of cash expenditure orders
-🧑‍💼 Storage of employee and organization information
-🔍 Search and sort employees
-✏️ Create, edit, copy, and delete records
+## ⚙️ Features
+- Contracts and cash orders
+  - Generate, preview and print contract and cash order PDFs
+  - Contract/Order lists with actions (edit, copy, delete)
+- HR reference data management
+  - Employees, Organizations, Departments, Positions
+  - Employment Types and Conditions
+  - Qualification Grades and Grade Salaries
+  - Work Schedules
+  - Field Definitions and Reference Sources
+- Orders module
+  - Orders and Order Items with dynamic fields (text/number/date/reference)
+  - Order settings
+- Common UX
+  - Search/sort, create/edit/copy/delete
+  - Consistent tables and modals, confirmation dialogs
+  - Authentication (login)
 
-#🛠️ Tech Stack
-Frontend: React, React Query, Material UI
-Backend: Node.js (Express)
-Database: MySQL
-Deployment: Render (backend + frontend) / Aiven (DB)
+## 🛠️ Tech Stack
+- Frontend: React + Vite + TypeScript, React Router, @tanstack/react-query, Material UI, Vitest + Testing Library
+- Backend: Node.js (Express)
+- Database: MySQL
+- PDFs: React PDF renderer (custom components and fonts)
+- Deployment: Render (frontend + backend), Aiven (DB)
 
-#📦 Local Setup
-To run the project locally, you need Node.js and MySQL installed.
+## 📦 Local Setup
+Requirements: Node.js (LTS), MySQL
 
-1. Clone the repository:
-git clone https://github.com/your-username/your-repo-name.git
-cd your-repo-name
-2. Install dependencies for both frontend and backend:
+1) Clone the repository
+```
+git clone <your-repo-url>
+cd <your-repo-folder>
+```
+
+2) Install dependencies
+```
 cd backend
 npm install
 
 cd ../frontend
 npm install
-3. Set up your .env files:
+```
 
-Refer to .env.example for the required environment variables.
+3) Configure environment
+- Create `.env` files based on `.env.example` files (backend and frontend)
+- Backend: DB connection (host, port, user, password, database)
+- Frontend: API base URL
 
-4. Run the application:
-
-In one terminal, run the backend
+4) Run the app
+```
+# Terminal A
 cd backend
 npm run dev
 
-In another terminal, run the frontend
+# Terminal B
 cd frontend
 npm run dev
-The frontend will be available at http://localhost:5173 and the backend at http://localhost:5000.
+```
+- Frontend: http://localhost:5173
+- Backend: http://localhost:5000
 
-#📁 Folder Structure
+5) Run tests (frontend)
+```
+cd frontend
+npm run test
+```
 
+## 📁 Folder Structure
+```
 employees/
-├── backend/                # Express backend
-│   ├── controllers/        # Route controllers
-│   ├── models/             # Database models
-│   ├── routes/             # API routes
-│   └── app.js              # Express app setup
-├── frontend/               # React frontend
-│   ├── components/         # Reusable components
-│   ├── pages/              # Page components
-│   └── App.js              # Main React component
-├── .env.example            # Example environment variables
-├── package.json            # Project metadata and scripts
-└── README.md               # Project documentation
+├── backend/                       # Express backend
+│   ├── src/
+│   │   ├── controllers/
+│   │   ├── routes/
+│   │   ├── services/
+│   │   ├── repositories/
+│   │   └── middlewares/
+│   └── server.js
+├── frontend/                      # React frontend (Vite + TS)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── auth/
+│   │   │   ├── pdf/               # PDF components (ContractPDF, CashOrderPDF)
+│   │   │   ├── referenceSourceComponents/
+│   │   │   ├── orderComponents/   # Orders tables/forms
+│   │   │   ├── orderItemComponents/
+│   │   │   ├── contractComponents/
+│   │   │   ├── employeeComponents/
+│   │   │   ├── ...
+│   │   ├── hooks/                  # React Query hooks
+│   │   ├── pages/                  # Route pages (Employees, Orders, etc.)
+│   │   ├── routes/
+│   │   ├── types/
+│   │   ├── utils/                  # formatters/mappers
+│   │   └── tests/                  # Vitest + Testing Library
+│   └── vite config, tsconfig, etc.
+└── README.md
+```
 
+## ✨ Notes
+- Dates are normalized to `YYYY-MM-DD` in UI lists and selects.
+- Dynamic fields in Order Items support text/number/date/reference with validation.
 
-#✨ Future Plans:
-- Generate HR orders (hiring, dismissal, leave, bonuses, etc.)
-
-#📬 Feedback & Contributions
-Feel free to fork the project, submit pull requests, or suggest improvements through issues.
+## 📬 Feedback & Contributions
+Issues and PRs are welcome.

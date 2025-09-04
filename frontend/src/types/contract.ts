@@ -37,7 +37,7 @@ export interface ApiContract {
   full_name: string;
   tax_id: string;
   address?: string;
-  personnel_number: string;
+  personnel_number?: string;
   passport_series?: string;
   passport_number: string;
   passport_issue_date: string;
