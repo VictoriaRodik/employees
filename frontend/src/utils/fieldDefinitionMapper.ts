@@ -14,8 +14,8 @@ export const mapFromApiFieldDefinition = (
 ): FieldDefinitionInterface => ({
   id: fieldDefinition.id,
   fieldName: fieldDefinition.name,
-  fieldType: fieldDefinition.type,
+  fieldType: (fieldDefinition.type as FieldDefinitionInterface["fieldType"]) || "text",
   orderIndex: fieldDefinition.order_index,
   referenceSourceId: fieldDefinition.reference_source_id,
-  referenceSourceName: fieldDefinition.name,
+  referenceSourceName: fieldDefinition.reference_source_name ?? "",
 });

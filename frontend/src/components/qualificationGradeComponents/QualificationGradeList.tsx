@@ -69,8 +69,8 @@ const QualificationGradeList = () => {
     setCopyingQualificationGrade(false);
   };
 
-  const filtered = qualificationGrades.filter(
-    (e: { grade: number }) => e.grade?.toString().includes(search)
+  const filtered = qualificationGrades.filter((e) =>
+    String(e.grade).includes(search)
   );
 
   const sorted = [...filtered].sort((a, b) => {
