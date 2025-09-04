@@ -1,5 +1,6 @@
 import express, { json } from "express";
 import cors from "cors";
+import "dotenv/config";
 import authRoutes from "./src/routes/authRoutes.js";
 import employeeRoutes from "./src/routes/employeeRoutes.js";
 import contractRoutes from "./src/routes/contractRoutes.js";
@@ -19,9 +20,28 @@ import workScheduleRoutes from "./src/routes/workScheduleRoutes.js";
 
 const app = express();
 app.use(json());
-app.use(cors());
 
+const allowedOriginsEnv =
+  process.env.CORS_ORIGINS || process.env.ALLOWED_ORIGINS;
+const allowedOrigins = allowedOriginsEnv
+  ? allowedOriginsEnv.split(",").map((s) => s.trim())
+  : ["http://localhost:5173"];
 
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error("Not allowed by CORS"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 204,
+  maxAge: 86400,
+};
+
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions));
 
 const routes = {
   auth: authRoutes,
