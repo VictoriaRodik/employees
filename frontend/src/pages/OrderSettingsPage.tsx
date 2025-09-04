@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Container, Tabs, Tab, Box, Typography, Paper } from "@mui/material";
+import { Tabs, Tab, Box, Typography, Paper } from "@mui/material";
 import OrderTypeList from "../components/orderTypeComponents/OrderTypeList";
 import FieldDefinitionList from "../components/fieldDefinitionComponents/FieldDefinitionList";
 import ReferenceSourceList from "../components/referenceSourceComponents/ReferenceSourceList";
@@ -29,7 +29,7 @@ function TabPanel(props: TabPanelProps) {
 const OrderSettingsPage = () => {
   const [tabValue, setTabValue] = useState(0);
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setTabValue(newValue);
   };
 
