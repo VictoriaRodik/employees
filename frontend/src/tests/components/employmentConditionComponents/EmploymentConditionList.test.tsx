@@ -80,7 +80,7 @@ vi.mock("../../../components/Button", () => ({
 }));
 
 vi.mock(
-  "../../../components/employmentConditionComponents/employmentConditionTable",
+  "../../../components/employmentConditionComponents/EmploymentConditionTable",
   () => ({
     default: ({
       employmentConditions,
