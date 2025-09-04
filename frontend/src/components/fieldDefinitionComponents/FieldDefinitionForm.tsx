@@ -62,7 +62,9 @@ const FieldDefinitionForm: React.FC<fieldDefinitionFormProps> = ({
                 name="referenceSourceId"
                 label="Посилання на таблицю"
                 value={
-                  referenceSources.length > 0 ? values.referenceSourceId : ""
+                  referenceSources.some((r) => r.id === values.referenceSourceId)
+                    ? values.referenceSourceId
+                    : ""
                 }
                 onChange={handleChange}
                 fullWidth

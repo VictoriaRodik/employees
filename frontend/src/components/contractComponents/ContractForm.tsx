@@ -28,7 +28,7 @@ const defaultValues: ContractInterface = {
   passportNumber: "",
   passportIssueDate: new Date().toLocaleDateString("en-CA"),
   passportIssuedBy: "",
-  organizationId: "1",
+  organizationId: "",
   name: "",
   shortName: "",
   edrpouCode: "",

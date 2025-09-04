@@ -60,7 +60,9 @@ const OrderForm: React.FC<orderFormProps> = ({
                 name="orderTypeId"
                 label="Тип"
                 value={
-                  orderTypes.length > 0 ? values.orderTypeId : ""
+                  orderTypes.some((t) => t.id === values.orderTypeId)
+                    ? values.orderTypeId
+                    : ""
                 }
                 onChange={handleChange}
                 fullWidth
