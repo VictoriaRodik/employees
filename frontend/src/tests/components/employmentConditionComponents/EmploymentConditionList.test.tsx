@@ -103,7 +103,7 @@ vi.mock(
 );
 
 vi.mock(
-  "../../../components/employmentConditionComponents/employmentConditionFormModal",
+  "../../../components/employmentConditionComponents/EmploymentConditionFormModal",
   () => {
     const defaultValues: EmploymentConditionInterface = {
       id: 0,
@@ -139,7 +139,7 @@ vi.mock(
   }
 );
 
-describe("employmentConditionList", () => {
+describe("EmploymentConditionList", () => {
   const mockEmploymentConditions: EmploymentConditionInterface[] = [
     {
       id: 1,
