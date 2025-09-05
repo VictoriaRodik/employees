@@ -13,9 +13,10 @@ interface TableProps<T> {
   data: T[];
   columns: { key: keyof T; label: string }[];
   renderActions?: (item: T) => React.ReactNode;
+  renderExtraActions?: (item: T) => React.ReactNode;
 }
 
-const GeneralTable = <T,>({ data, columns, renderActions }: TableProps<T>) => {
+const GeneralTable = <T,>({ data, columns, renderActions, renderExtraActions }: TableProps<T>) => {
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -25,6 +26,7 @@ const GeneralTable = <T,>({ data, columns, renderActions }: TableProps<T>) => {
               <TableCell key={col.key as string}>{col.label}</TableCell>
             ))}
             {renderActions && <TableCell>Дії</TableCell>}
+            {renderExtraActions && <TableCell>Друк</TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -36,6 +38,7 @@ const GeneralTable = <T,>({ data, columns, renderActions }: TableProps<T>) => {
                 </TableCell>
               ))}
               {renderActions && <TableCell>{renderActions(row)}</TableCell>}
+              {renderExtraActions && <TableCell>{renderExtraActions(row)}</TableCell>}
             </TableRow>
           ))}
         </TableBody>

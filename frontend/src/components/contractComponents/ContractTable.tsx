@@ -39,22 +39,22 @@ const ContractTable: React.FC<ContractTableProps> = ({
       data={formattedContracts}
       columns={columns}
       renderActions={(contract) => (
-        <>
-          <Actions
-            onEdit={() => onEdit(contract)}
-            onCopy={() => onCopy(contract)}
-            onDelete={() => onDelete(contract.id)}
-            editTitle="Edit"
-            copyTitle="Copy"
-            deleteTitle="Delete"
-          />
-          <PrintActions
-            onPreviewContract={() => onPreviewContract(contract)}
-            onPreviewCashOrder={() => onPreviewCashOrder(contract)}
-            previewContractTitle="Preview Contract PDF"
-            previewCashOrderTitle="Preview Cash Order PDF"
-          />
-        </>
+        <Actions
+          onEdit={() => onEdit(contract)}
+          onCopy={() => onCopy(contract)}
+          onDelete={() => onDelete(contract.id)}
+          editTitle="Edit"
+          copyTitle="Copy"
+          deleteTitle="Delete"
+        />
+      )}
+      renderExtraActions={(contract: ContractInterface) => (
+        <PrintActions
+          onPreviewContract={() => onPreviewContract(contract)}
+          onPreviewCashOrder={() => onPreviewCashOrder(contract)}
+          previewContractTitle="Preview Contract PDF"
+          previewCashOrderTitle="Preview Cash Order PDF"
+        />
       )}
     />
   );

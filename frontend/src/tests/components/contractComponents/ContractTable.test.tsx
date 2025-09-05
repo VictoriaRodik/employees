@@ -4,13 +4,14 @@ import ContractTable from "../../../components/contractComponents/ContractTable"
 import { ContractInterface } from "../../../types/contract";
 
 vi.mock("../../../components/Table", () => ({
-  default: ({ data, columns, renderActions }: any) => (
+  default: ({ data, columns, renderActions, renderExtraActions }: any) => (
     <table data-testid="general-table">
       <thead>
         <tr>
           {columns.map((col: any) => (
             <th key={col.key}>{col.label}</th>
           ))}
+          {renderExtraActions && <th></th>}
           <th>Дії</th>
         </tr>
       </thead>
@@ -20,6 +21,7 @@ vi.mock("../../../components/Table", () => ({
             {columns.map((col: any) => (
               <td key={col.key}>{item[col.key]}</td>
             ))}
+            {renderExtraActions && <td>{renderExtraActions(item)}</td>}
             <td>{renderActions(item)}</td>
           </tr>
         ))}
