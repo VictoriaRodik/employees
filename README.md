@@ -29,7 +29,7 @@ Demo:
 - Frontend: React + Vite + TypeScript, React Router, @tanstack/react-query, Material UI, Vitest + Testing Library
 - Backend: Node.js (Express)
 - Database: MySQL
-- PDFs: React PDF renderer (custom components and fonts)
+- PDFs/DOCs: React PDF renderer (custom components and fonts), DOCX export (backend)
 - Deployment: Render (frontend + backend), Aiven (DB)
 
 ## 📦 Local Setup
@@ -48,6 +48,12 @@ npm install
 
 cd ../frontend
 npm install
+```
+
+Install additional backend dependency for DOCX export:
+```
+cd ../backend
+npm install docx
 ```
 
 3) Configure environment
@@ -107,8 +113,11 @@ employees/
 ```
 
 ## ✨ Notes
-- Dates are normalized to `YYYY-MM-DD` in UI lists and selects.
 - Dynamic fields in Order Items support text/number/date/reference with validation.
+- Orders DOCX export:
+  - Endpoint: `GET /orders/:id/export.docx` (auth required)
+  - Groups Order Items by employee; items ordered by `field_definitions.order_index`
+  - Frontend export button in `components/orderComponents/OrderTable.tsx`
 
 ## 📬 Feedback & Contributions
 Issues and PRs are welcome.
