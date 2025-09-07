@@ -1,15 +1,17 @@
 import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 import { fetchEmployeeProfile } from "../api/employees";
-import type { EmployeeProfileData } from "../components/pdf/EmployeeProfilePDF";
+import { type EmployeeProfile, type ApiEmployeeProfile } from "../types/employeeProfile";
+import { mapFromApiEmployeeProfile } from "../utils/employeeProfileMapper";
 
 export const useEmployeeProfile = (
   id: number | undefined
-): UseQueryResult<EmployeeProfileData, unknown> => {
-  return useQuery<EmployeeProfileData>({
+): UseQueryResult<EmployeeProfile, unknown> => {
+  return useQuery<EmployeeProfile>({
     queryKey: ["employeeProfile", id],
-    queryFn: () => fetchEmployeeProfile<EmployeeProfileData>(id as number),
     enabled: !!id,
+    queryFn: async () => {
+      const raw = await fetchEmployeeProfile<ApiEmployeeProfile>(id as number);
+      return mapFromApiEmployeeProfile(raw);
+    },
   });
 };
-
-

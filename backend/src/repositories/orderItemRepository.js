@@ -106,6 +106,26 @@ export class OrderItemRepository extends BaseRepository {
     );
     return rows[0];
   }
+  async getByOrderId(orderId) {
+    const [rows] = await this.pool.query(
+      `SELECT order_items.*, 
+      orders.order_number,
+      orders.order_date,
+      order_types.name as order_type_name,
+      employees.full_name as employee_full_name,
+      field_definitions.name as field_definition_name,
+      field_definitions.order_index as field_order_index
+      FROM order_items
+      JOIN orders ON order_items.order_id = orders.id
+      LEFT JOIN order_types ON orders.order_type_id = order_types.id
+      JOIN employees ON order_items.employee_id = employees.id
+      JOIN field_definitions ON order_items.field_id = field_definitions.id
+      WHERE order_items.order_id = ?
+      ORDER BY employees.full_name ASC, field_definitions.order_index ASC, order_items.id ASC`,
+      [orderId]
+    );
+    return rows;
+  }
   async create(data) {
     const { order_id, employee_id, field_id, value, value_id } = data;
     const [result] = await this.pool.query(

@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Box, Button, CircularProgress } from "@mui/material";
 import { pdf } from "@react-pdf/renderer";
-import EmployeeProfilePDF, { EmployeeProfileData } from "./EmployeeProfilePDF";
+import EmployeeProfilePDF from "./EmployeeProfilePDF";
+import type { EmployeeProfile } from "../../types/employeeProfile";
 
 interface EmployeeProfilePDFPreviewProps {
-  data: EmployeeProfileData | undefined;
+  data: EmployeeProfile | undefined;
   open: boolean;
   onClose: () => void;
 }
