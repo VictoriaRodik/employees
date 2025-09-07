@@ -111,7 +111,6 @@ employees/
 │   └── vite config, tsconfig, etc.
 └── README.md
 ```
-
 ## ✨ Notes
 - Dynamic fields in Order Items support text/number/date/reference with validation.
 - Orders DOCX export:
