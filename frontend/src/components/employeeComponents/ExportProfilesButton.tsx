@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import JSZip from "jszip";
 import { pdf } from "@react-pdf/renderer";
-import EmployeeProfilePDF, { type EmployeeProfileData } from "../pdf/EmployeeProfilePDF";
+import EmployeeProfilePDF from "../pdf/EmployeeProfilePDF";
 import type { EmployeeInterface } from "../../types/employee";
+import type { EmployeeProfile, ApiEmployeeProfile } from "../../types/employeeProfile";
+import { mapFromApiEmployeeProfile } from "../../utils/employeeProfileMapper";
 
 interface ExportProfilesButtonProps {
   employees: EmployeeInterface[];
@@ -27,13 +29,15 @@ const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
           }
         );
         if (!res.ok) continue;
-        const profile: EmployeeProfileData = await res.json();
+        const raw: ApiEmployeeProfile = await res.json();
+        const profile: EmployeeProfile = mapFromApiEmployeeProfile(raw);
         const blob = await pdf(
           <EmployeeProfilePDF
             data={{
               ...profile,
               orderItems: (profile.orderItems || []).filter(
-                (oi) => new Date(oi.order_date).getFullYear() === year
+                (oi: EmployeeProfile["orderItems"][number]) =>
+                  new Date(oi.orderDate).getFullYear() === year
               ),
             }}
           />
