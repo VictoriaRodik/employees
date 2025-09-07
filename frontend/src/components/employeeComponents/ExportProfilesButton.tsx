@@ -14,6 +14,7 @@ interface ExportProfilesButtonProps {
 const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
   const [exporting, setExporting] = useState<boolean>(false);
   const [year, setYear] = useState<number>(new Date().getFullYear());
+  type OrderItem = NonNullable<EmployeeProfile["orderItems"]>[number];
 
   const handleExportAll = async () => {
     setExporting(true);
@@ -31,14 +32,12 @@ const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
         if (!res.ok) continue;
         const raw: ApiEmployeeProfile = await res.json();
         const profile: EmployeeProfile = mapFromApiEmployeeProfile(raw);
+        const items: OrderItem[] = (profile.orderItems ?? []) as OrderItem[];
         const blob = await pdf(
           <EmployeeProfilePDF
             data={{
               ...profile,
-              orderItems: (profile.orderItems || []).filter(
-                (oi: EmployeeProfile["orderItems"][number]) =>
-                  new Date(oi.orderDate).getFullYear() === year
-              ),
+              orderItems: items.filter((oi) => new Date(oi.orderDate).getFullYear() === year),
             }}
           />
         ).toBlob();
