@@ -51,10 +51,7 @@ const OrderForm: React.FC<orderFormProps> = ({
             <Grid2 size={{ xs: 6 }}>
               <TextInput name="orderDate" label="Дата" type="date" />
             </Grid2>
-            <Grid2 size={{ xs: 6 }}>
-              <TextInput name="orderIndex" label="Індекс" />
-            </Grid2>
-            <Grid2 size={{ xs: 6 }}>
+            <Grid2 size={{ xs: 12 }}>
               <TextField
                 select
                 name="orderTypeId"

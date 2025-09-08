@@ -354,6 +354,47 @@ const ContractPDF: React.FC<ContractPDFProps> = ({ contract }) => (
         </View>
       </View>
     </Page>
+    <Page size="A4" style={styles.page}>
+      <View style={styles.header}>
+        <Text style={styles.title}>
+          Лист-згода{"\n"}на обробку персональних даних
+        </Text>
+        <View style={styles.paragraph}>
+          <Text>
+            Відповідно до Закону України «Про захист персональних даних» від
+            01.06.2010 № 2297-VI,
+          </Text>
+          <Text>я, {contract.fullName},</Text>
+          <View style={styles.signatureLine} />
+          <Text style={styles.signatureText}>
+            (прізвище, ім’я, по-батькові)
+          </Text>
+
+          <Text>
+            даю згоду на обробку, використання, поширення та доступ до
+            персональних даних, які передбачено Законом України «Про публічні
+            закупівлі», а також згідно з нормами чинного законодавства, моїх
+            персональних даних (у т. ч. паспортні дані, ідентифікаційний код,
+            електронні ідентифікаційні дані: номери телефонів, електронні адреси
+            або інша необхідна інформація, передбачена законодавством),
+            відомостей, які надаю про себе для забезпечення участі у процедурі
+            закупівлі, цивільно-правових та господарських відносин. Наведена
+            вище інформація також може надаватися третім особам, визначеним у
+            Законі України «Про публічні закупівлі».
+          </Text>
+          <View style={styles.signatures}>
+            <View style={styles.signatureBlock}>
+              <View style={styles.signatureLine} />
+              <Text>Дата</Text>
+            </View>
+            <View style={styles.signatureBlock}>
+              <View style={styles.signatureLine} />
+              <Text style={styles.signatureText}>підпис, прізвище</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </Page>
   </Document>
 );
 

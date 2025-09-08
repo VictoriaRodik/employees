@@ -11,6 +11,7 @@ interface ListProps<T extends string> {
   children: ReactNode;
   onAdd: () => void;
   searchKey: T;
+  extraToolbar?: ReactNode;
 }
 
 const List = <T extends string>({
@@ -18,6 +19,7 @@ const List = <T extends string>({
   sortOptions,
   onAdd,
   children,
+  extraToolbar,
 }: ListProps<T>) => {
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
 
@@ -39,6 +41,7 @@ const List = <T extends string>({
     >
       <Search value={search} onChange={handleSearch} />
       <Sort<T> value={sort} onChange={handleSort} options={sortOptions} />
+      {extraToolbar}
       <Button onClick={onAdd}>Додати {label}</Button>
       {children}
     </Container>

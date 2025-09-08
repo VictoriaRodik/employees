@@ -37,10 +37,24 @@ const deleteEmployee = async (req, res) => {
   }
 };
 
+const getEmployeeProfile = async (req, res) => {
+  try {
+    const profile = await employeeService.getEmployeeProfile(req.params.id);
+    res.json(profile);
+  } catch (e) {
+    if (e.message === 'Employee not found') {
+      res.status(404).json({ message: e.message });
+    } else {
+      res.status(500).json({ message: 'Failed to load profile' });
+    }
+  }
+};
+
 export default {
   getEmployees,
   getEmployee,
   createEmployee,
   updateEmployee,
   deleteEmployee,
+  getEmployeeProfile,
 };
