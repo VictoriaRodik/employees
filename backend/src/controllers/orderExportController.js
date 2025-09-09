@@ -48,12 +48,15 @@ export const exportOrderDocx = async (req, res) => {
   });
 
   const buffer = await Packer.toBuffer(doc);
-  const fileName = `order-${order.order_number}.docx`;
+  const rawBaseName = `order-${order.order_number || id}`;
+  const asciiBaseName = String(rawBaseName).replace(/[^A-Za-z0-9 _.-]+/g, "_").trim() || `order-${id}`;
+  const safeAsciiFilename = `${asciiBaseName}.docx`;
+  const utf8FilenameStar = `UTF-8''${encodeURIComponent(`${rawBaseName}.docx`)}`;
   res
     .status(200)
     .set({
       "Content-Type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-      "Content-Disposition": `attachment; filename="${fileName}"`,
+      "Content-Disposition": `attachment; filename="${safeAsciiFilename}"; filename*=${utf8FilenameStar}`,
     })
     .send(buffer);
 };
