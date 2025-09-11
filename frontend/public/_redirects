@@ -1,1 +1,6 @@
+# Handle client-side routing
 /*    /index.html   200
+
+# Cache static assets
+/assets/*    /assets/:splat    200
+/fonts/*     /fonts/:splat     200
