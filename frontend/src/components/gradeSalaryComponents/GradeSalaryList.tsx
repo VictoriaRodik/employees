@@ -8,6 +8,8 @@ import { GradeSalaryInterface } from "../../types/gradeSalary";
 import { gradeSalaryFormatted } from "../../utils/gradeSalaryFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const GradeSalaryList = () => {
   const {
     data: gradeSalaries = [],
@@ -24,11 +26,12 @@ const GradeSalaryList = () => {
   const [copyingGradeSalary, setCopyingGradeSalary] =
     useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof GradeSalaryInterface) ||
     "baseSalary";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingGradeSalary(null);
@@ -69,6 +72,10 @@ const GradeSalaryList = () => {
     setCopyingGradeSalary(false);
   };
 
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
   const filtered = gradeSalaries.filter(
     (e: { baseSalary: number }) => e.baseSalary?.toString().includes(search)
   );
@@ -83,6 +90,11 @@ const GradeSalaryList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -109,9 +121,14 @@ const GradeSalaryList = () => {
         { value: "baseSalary", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <GradeSalaryTable
-        gradeSalaries={sorted}
+        gradeSalaries={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

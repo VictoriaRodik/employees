@@ -1,22 +1,11 @@
 import ReferenceSourceList from "../components/referenceSourceComponents/ReferenceSourceList";
-import { Typography, Box, Paper } from "@mui/material";
+import BasePage from "./BasePage";
 
 const ReferenceSourcesPage = () => {
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom color="primary">
-        Reference Sources
-      </Typography>
-      <Paper
-        sx={{
-          p: 2,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-        }}
-      >
-        <ReferenceSourceList />
-      </Paper>
-    </Box>
+    <BasePage title="Reference Sources">
+      <ReferenceSourceList />
+    </BasePage>
   );
 };
 

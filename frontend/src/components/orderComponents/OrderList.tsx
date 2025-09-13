@@ -8,6 +8,8 @@ import { OrderInterface } from "../../types/order";
 import { orderFormatted } from "../../utils/orderFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const OrderList = () => {
   const {
     data: orders = [],
@@ -22,9 +24,10 @@ const OrderList = () => {
   const [editingOrder, setEditingOrder] = useState<OrderInterface | null>(null);
   const [copyingOrder, setCopyingOrder] = useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") as keyof OrderInterface) || "fullName";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingOrder(null);
@@ -59,6 +62,10 @@ const OrderList = () => {
     setCopyingOrder(false);
   };
 
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
   const filtered = orders.filter((e: { orderNumber: string }) =>
     e.orderNumber?.toLowerCase().includes(search.toLowerCase())
   );
@@ -73,6 +80,11 @@ const OrderList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -99,9 +111,14 @@ const OrderList = () => {
         { value: "orderNumber", label: "За номером" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <OrderTable
-        orders={sorted}
+        orders={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

@@ -10,6 +10,8 @@ import { ContractInterface } from "../../types/contract";
 import { contractFormatted } from "../../utils/contractFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const ContractList: React.FC = () => {
   const {
     data: contracts = [],
@@ -29,10 +31,11 @@ const ContractList: React.FC = () => {
   const [previewCashOrder, setPreviewCashOrder] =
     useState<ContractInterface | null>(null);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingContract(null);
@@ -75,6 +78,10 @@ const ContractList: React.FC = () => {
     setPreviewCashOrder(contract);
   };
 
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
   const filtered = contracts.filter((c: { fullName: string }) =>
     c.fullName?.toLowerCase().includes(search.toLowerCase())
   );
@@ -84,6 +91,11 @@ const ContractList: React.FC = () => {
     const bVal = b[sort];
     return String(aVal).localeCompare(String(bVal));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -110,9 +122,14 @@ const ContractList: React.FC = () => {
         { value: "contractDate", label: "За датою договору" },
         { value: "fullName", label: "За ПІБ" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <ContractTable
-        contracts={sorted}
+        contracts={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

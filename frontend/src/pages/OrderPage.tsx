@@ -1,22 +1,11 @@
 import OrderList from "../components/orderComponents/OrderList";
-import { Typography, Box, Paper } from "@mui/material";
+import BasePage from "./BasePage";
 
 const OrdersPage = () => {
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom color="primary">
-        Накази
-      </Typography>
-      <Paper
-        sx={{
-          p: 2,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-        }}
-      >
-        <OrderList />
-      </Paper>
-    </Box>
+    <BasePage title="Накази">
+      <OrderList />
+    </BasePage>
   );
 };
 

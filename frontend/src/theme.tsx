@@ -75,6 +75,12 @@ const commonSettings: ThemeOptions = {
           textTransform: 'none',
           borderRadius: 10,
         },
+        containedPrimary: {
+          color: '#ffffff',
+        },
+        containedSecondary: {
+          color: '#ffffff',
+        },
       },
     },
     MuiPaper: {
