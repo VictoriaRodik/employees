@@ -8,6 +8,8 @@ import { EmployeeInterface } from "../../types/employee";
 import { employeeFormatted } from "../../utils/employeeFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const EmployeeList = () => {
   const {
     data: employees = [],
@@ -22,9 +24,10 @@ const EmployeeList = () => {
   const [editingEmployee, setEditingEmployee] = useState<EmployeeInterface | null>(null);
   const [copyingEmployee, setCopyingEmployee] = useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") as keyof EmployeeInterface) || "fullName";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingEmployee(null);
@@ -59,7 +62,11 @@ const EmployeeList = () => {
     setCopyingEmployee(false);
   };
 
-  const filtered = employees.filter((e: { fullName: string; }) =>
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
+   const filtered = employees.filter((e: { fullName: string; }) =>
     e.fullName?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -73,6 +80,11 @@ const EmployeeList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -94,9 +106,14 @@ const EmployeeList = () => {
         { value: "fullName", label: "За ПІБ" },
         { value: "personnelNumber", label: "За табельним номером" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <EmployeeTable
-        employees={sorted}
+        employees={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

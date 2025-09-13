@@ -8,6 +8,8 @@ import { DepartmentInterface } from "../../types/department";
 import { departmentFormatted } from "../../utils/departmentFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const DepartmentList = () => {
   const {
     data: departments = [],
@@ -22,9 +24,10 @@ const DepartmentList = () => {
   const [editingDepartment, setEditingDepartment] = useState<DepartmentInterface | null>(null);
   const [copyingDepartment, setCopyingDepartment] = useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") as keyof DepartmentInterface) || "fullName";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingDepartment(null);
@@ -59,7 +62,11 @@ const DepartmentList = () => {
     setCopyingDepartment(false);
   };
 
-  const filtered = departments.filter((e: { departmentName: string; }) =>
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
+    const filtered = departments.filter((e: { departmentName: string; }) =>
     e.departmentName?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -73,6 +80,11 @@ const DepartmentList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -94,9 +106,14 @@ const DepartmentList = () => {
         { value: "departmentName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <DepartmentTable
-        departments={sorted}
+        departments={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

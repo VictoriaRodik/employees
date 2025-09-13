@@ -8,6 +8,8 @@ import { PositionInterface } from "../../types/position";
 import { positionFormatted } from "../../utils/positionFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const PositionList = () => {
   const {
     data: positions = [],
@@ -22,9 +24,10 @@ const PositionList = () => {
   const [editingPosition, setEditingPosition] = useState<PositionInterface | null>(null);
   const [copyingPosition, setCopyingPosition] = useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") as keyof PositionInterface) || "fullName";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingPosition(null);
@@ -59,6 +62,10 @@ const PositionList = () => {
     setCopyingPosition(false);
   };
 
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
   const filtered = positions.filter((e: { positionName: string; }) =>
     e.positionName?.toLowerCase().includes(search.toLowerCase())
   );
@@ -73,6 +80,11 @@ const PositionList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -94,9 +106,14 @@ const PositionList = () => {
         { value: "positionName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <PositionTable
-        positions={sorted}
+        positions={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}

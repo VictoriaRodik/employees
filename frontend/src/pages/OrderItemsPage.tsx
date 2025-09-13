@@ -1,23 +1,12 @@
-import OrderTypeList from "../components/orderTypeComponents/OrderTypeList";
-import { Typography, Box, Paper } from "@mui/material";
+import OrderItemList from "../components/orderItemComponents/OrderItemList";
+import BasePage from "./BasePage";
 
-const OrderTypesPage = () => {
+const OrderItemsPage = () => {
   return (
-    <Box>
-      <Typography variant="h4" gutterBottom color="primary">
-        Типи наказів
-      </Typography>
-      <Paper
-        sx={{
-          p: 2,
-          bgcolor: "background.paper",
-          borderRadius: 2,
-        }}
-      >
-        <OrderTypeList />
-      </Paper>
-    </Box>
+    <BasePage title="Елементи наказів">
+      <OrderItemList />
+    </BasePage>
   );
 };
 
-export default OrderTypesPage;
+export default OrderItemsPage;

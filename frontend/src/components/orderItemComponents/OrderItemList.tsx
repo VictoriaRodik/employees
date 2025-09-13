@@ -8,6 +8,8 @@ import { OrderItemInterface } from "../../types/orderItem";
 import { orderItemFormatted } from "../../utils/orderItemFormatted";
 import List from "../List";
 
+const ITEMS_PER_PAGE = 10;
+
 const OrderItemList = () => {
   const {
     data: orderItems = [],
@@ -25,11 +27,12 @@ const OrderItemList = () => {
   const [copyingOrderItem, setCopyingOrderItem] =
     useState(false);
 
-  const { searchParams } = useUrlSearchParams();
+  const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof OrderItemInterface) ||
     "orderNumber";
+  const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
     setEditingOrderItem(null);
@@ -68,7 +71,11 @@ const OrderItemList = () => {
     setCopyingOrderItem(false);
   };
 
-  const filtered = orderItems.filter(
+  const handlePageChange = (page: number) => {
+    setUrlSearchParams({ page: page.toString() });
+  };
+
+    const filtered = orderItems.filter(
     (e: OrderItemInterface) =>
       e.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
       e.employeeFullName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -86,6 +93,11 @@ const OrderItemList = () => {
 
     return String(aValue).localeCompare(String(bValue));
   });
+
+  const totalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedData = sorted.slice(startIndex, endIndex);
 
   if (isLoading)
     return (
@@ -116,9 +128,14 @@ const OrderItemList = () => {
         { value: "value", label: "За значенням" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      pagination={{
+        currentPage,
+        totalPages,
+        onPageChange: handlePageChange,
+      }}
     >
       <OrderItemTable
-        orderItems={sorted}
+        orderItems={paginatedData}
         onEdit={handleEdit}
         onCopy={handleCopy}
         onDelete={handleDelete}
