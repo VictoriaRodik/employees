@@ -52,7 +52,6 @@ const BaseTabbedPage: React.FC<BaseTabbedPageProps> = ({
   paperPadding = 2,
   paperBackgroundColor = 'background.paper',
   paperBorderRadius = 2,
-  tabPanelPadding = 3,
   ariaLabel = 'tabs',
 }) => {
   const [tabValue, setTabValue] = useState(0);
