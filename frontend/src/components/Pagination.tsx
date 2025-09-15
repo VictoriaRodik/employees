@@ -29,7 +29,6 @@ const Pagination = ({
       onChange={handleChange}
       color="primary"
       size="large"
-      style={{ position: "sticky", bottom: 0, left: 0, right: 0 }}
       showFirstButton
       showLastButton
       renderItem={(item) => (
