@@ -14,7 +14,7 @@ const Sort = <T extends string>({
   placeholder = "Сортувати",
 }: SortProps<T>) => {
   return (
-    <Select value={value} onChange={onChange} displayEmpty>
+    <Select value={value} onChange={onChange} displayEmpty sx={{ flexGrow: 1 }}>
       <MenuItem value="" disabled>
         {placeholder}
       </MenuItem>

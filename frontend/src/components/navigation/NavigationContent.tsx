@@ -16,6 +16,10 @@ import { mainNavItems, referenceNavItems, orderNavItems } from "./navItems";
 
 import PeopleIcon from "@mui/icons-material/People";
 import DescriptionIcon from "@mui/icons-material/Description";
+import BusinessIcon from '@mui/icons-material/Business';
+import SettingsIcon from '@mui/icons-material/Settings';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import GraphicEqIcon from '@mui/icons-material/GraphicEq';
 import { JSX } from "react";
 
 interface NavigationContentProps {
@@ -26,6 +30,16 @@ interface NavigationContentProps {
 const iconMap: Record<string, JSX.Element> = {
   people: <PeopleIcon color="primary" />,
   contracts: <DescriptionIcon color="primary" />,
+  organization: <BusinessIcon color="primary" />,
+  department: <GraphicEqIcon color="primary" />,
+  position: <GraphicEqIcon color="primary" />,
+  gradeSalary: <GraphicEqIcon color="primary" />,
+  qualificationGrade: <GraphicEqIcon color="primary" />,
+  workSchedule: <GraphicEqIcon color="primary" />,
+  employmentType: <GraphicEqIcon color="primary" />,
+  employmentCondition: <GraphicEqIcon color="primary" />,
+  order: <NoteAddIcon color="primary" />,
+  orderSettings: <SettingsIcon color="primary" />,
 };
 
 const NavigationContent = ({
@@ -67,7 +81,7 @@ const NavigationContent = ({
         <AccordionDetails>
           <Box sx={{ overflow: "auto" }}>
             <List>
-              {orderNavItems.map(({ to, label }) => (
+              {orderNavItems.map(({ to, label, icon }) => (
                 <ListItemButton
                   key={to}
                   component={Link}
@@ -75,6 +89,7 @@ const NavigationContent = ({
                   sx={{ color: "text.primary" }}
                   onClick={() => !isSmUp && onDrawerToggle()}
                 >
+                  {icon && <ListItemIcon>{iconMap[icon]}</ListItemIcon>}
                   <ListItemText primary={label} />
                 </ListItemButton>
               ))}
@@ -101,7 +116,7 @@ const NavigationContent = ({
         <AccordionDetails>
           <Box sx={{ overflow: "auto" }}>
             <List>
-              {referenceNavItems.map(({ to, label }) => (
+              {referenceNavItems.map(({ to, label, icon }) => (
                 <ListItemButton
                   key={to}
                   component={Link}
@@ -109,6 +124,7 @@ const NavigationContent = ({
                   sx={{ color: "text.primary" }}
                   onClick={() => !isSmUp && onDrawerToggle()}
                 >
+                  {icon && <ListItemIcon>{iconMap[icon]}</ListItemIcon>}
                   <ListItemText primary={label} />
                 </ListItemButton>
               ))}

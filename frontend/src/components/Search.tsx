@@ -8,12 +8,12 @@ interface SearchProps {
 
 const Search = ({ value, onChange, placeholder = "Пошук..." }: SearchProps) => {
   return (
-    <TextField 
-      fullWidth 
-      label={placeholder} 
-      variant="outlined" 
-      value={value} 
-      onChange={onChange} 
+    <TextField
+      sx={{ flexGrow: 1 }}
+      label={placeholder}
+      variant="outlined"
+      value={value}
+      onChange={onChange}
     />
   );
 };

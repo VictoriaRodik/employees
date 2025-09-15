@@ -17,9 +17,10 @@ const Button: React.FC<ButtonProps> = ({
       color={color}
       onClick={onClick}
       size="large"
+      fullWidth
       sx={{
         width: "fit-content",
-        alignSelf: "flex-end",
+        alignSelf: {xs: "center", md: "stretch"},
         textTransform: "uppercase",
         fontWeight: "bold",
       }}

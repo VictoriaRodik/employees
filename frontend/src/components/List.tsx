@@ -52,12 +52,21 @@ const List = <T extends string>({
       maxWidth="lg"
       sx={{ display: "flex", flexDirection: "column", gap: 4 }}
     >
-      <Box sx={{ display: "flex", justifyContent: "space-between", gap: 4 }}>
-      <Search value={search} onChange={handleSearch} />
-      <Sort<T> value={sort} onChange={handleSort} options={sortOptions} />
-      {extraToolbar}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: { xs: "column", md: "row" },
+          justifyContent: { xs: "center", md: "space-between" },
+          alignItems: {md:"center"},
+          gap: { xs: 2, md: 4 },
+        }}
+      >
+        <Search value={search} onChange={handleSearch} />
+        <Sort<T> value={sort} onChange={handleSort} options={sortOptions} />
+        <Button onClick={onAdd}>Додати {label}</Button>
+        {extraToolbar}
       </Box>
-      <Button onClick={onAdd}>Додати {label}</Button>
+
       {children}
       {pagination && (
         <Pagination
