@@ -21,12 +21,14 @@ const PositionList = () => {
   } = usePositions();
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [editingPosition, setEditingPosition] = useState<PositionInterface | null>(null);
+  const [editingPosition, setEditingPosition] =
+    useState<PositionInterface | null>(null);
   const [copyingPosition, setCopyingPosition] = useState(false);
 
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = (searchParams.get("sort") as keyof PositionInterface) || "fullName";
+  const sort =
+    (searchParams.get("sort") as keyof PositionInterface) || "positionName";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
@@ -66,7 +68,7 @@ const PositionList = () => {
     setUrlSearchParams({ page: page.toString() });
   };
 
-  const filtered = positions.filter((e: { positionName: string; }) =>
+  const filtered = positions.filter((e: { positionName: string }) =>
     e.positionName?.toLowerCase().includes(search.toLowerCase())
   );
 
@@ -89,7 +91,12 @@ const PositionList = () => {
   if (isLoading)
     return (
       <Container
-        sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "50vh",
+        }}
       >
         <CircularProgress />
       </Container>
@@ -103,8 +110,8 @@ const PositionList = () => {
       onAdd={handleAdd}
       searchKey="positionName"
       sortOptions={[
-        { value: "positionName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "positionName", label: "За назвою" },
       ]}
       pagination={{
         currentPage,

@@ -28,7 +28,7 @@ const WorkScheduleList = () => {
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof WorkScheduleInterface) ||
-    "fullName";
+    "workScheduleName";
 
   const handleAdd = () => {
     setEditingWorkSchedule(null);
@@ -105,8 +105,8 @@ const WorkScheduleList = () => {
       onAdd={handleAdd}
       searchKey="workScheduleName"
       sortOptions={[
-        { value: "workScheduleName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "workScheduleName", label: "За назвою" },
       ]}
     >
       <WorkScheduleTable

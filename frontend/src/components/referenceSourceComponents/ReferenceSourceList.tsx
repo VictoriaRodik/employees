@@ -99,8 +99,8 @@ const ReferenceSourceList = () => {
       onAdd={handleAdd}
       searchKey="tableName"
       sortOptions={[
-        { value: "tableName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "tableName", label: "За назвою" },
       ]}
     >
       <ReferenceSourceTable

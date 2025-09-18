@@ -26,7 +26,7 @@ const OrderList = () => {
 
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = (searchParams.get("sort") as keyof OrderInterface) || "fullName";
+  const sort = (searchParams.get("sort") as keyof OrderInterface) || "orderNumber";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -77,16 +77,17 @@ const OrderList = () => {
   };
 
   const filtered = orders.filter((e: OrderInterface) => {
-    // Фільтрація по пошуку
-    const matchesSearch = e.orderNumber?.toLowerCase().includes(search.toLowerCase());
-    
-    // Фільтрація по діапазону дат
+
+    const matchesSearch = e.orderNumber
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
     let matchesDateRange = true;
     if (startDate || endDate) {
       const orderDate = new Date(e.orderDate);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-      
+
       if (start && orderDate < start) {
         matchesDateRange = false;
       }
@@ -94,7 +95,7 @@ const OrderList = () => {
         matchesDateRange = false;
       }
     }
-    
+
     return matchesSearch && matchesDateRange;
   });
 
@@ -136,8 +137,10 @@ const OrderList = () => {
       onAdd={handleAdd}
       searchKey="orderNumber"
       sortOptions={[
-        { value: "orderNumber", label: "За номером" },
         { value: "id", label: "За замовчуванням" },
+        { value: "orderNumber", label: "За номером" },
+        { value: "orderDate", label: "За датою" },
+        { value: "orderTypeName", label: "За типом" },
       ]}
       dateRange={{
         startDate,

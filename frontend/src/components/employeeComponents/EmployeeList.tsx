@@ -105,6 +105,7 @@ const EmployeeList = () => {
       sortOptions={[
         { value: "fullName", label: "За ПІБ" },
         { value: "personnelNumber", label: "За табельним номером" },
+        { value: "taxId", label: "За ІПН" },
       ]}
       pagination={{
         currentPage,

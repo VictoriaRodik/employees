@@ -28,7 +28,7 @@ const FieldDefinitionList = () => {
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof FieldDefinitionInterface) ||
-    "fullName";
+    "fieldDefinitionName";
 
   const handleAdd = () => {
     setEditingFieldDefinition(null);
@@ -105,8 +105,8 @@ const FieldDefinitionList = () => {
       onAdd={handleAdd}
       searchKey="fieldDefinitionName"
       sortOptions={[
-        { value: "fieldDefinitionName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "fieldDefinitionName", label: "За назвою" },
       ]}
     >
       <FieldDefinitionTable

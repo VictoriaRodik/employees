@@ -28,7 +28,7 @@ const EmploymentConditionList = () => {
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof EmploymentConditionInterface) ||
-    "fullName";
+    "employmentConditionName";
 
   const handleAdd = () => {
     setEditingEmploymentCondition(null);
@@ -105,8 +105,8 @@ const EmploymentConditionList = () => {
       onAdd={handleAdd}
       searchKey="employmentConditionName"
       sortOptions={[
-        { value: "employmentConditionName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "employmentConditionName", label: "За назвою" },
       ]}
     >
       <EmploymentConditionTable

@@ -27,8 +27,7 @@ const QualificationGradeList = () => {
   const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
-    (searchParams.get("sort") as keyof QualificationGradeInterface) ||
-    "grade";
+    (searchParams.get("sort") as keyof QualificationGradeInterface) || "grade";
 
   const handleAdd = () => {
     setEditingQualificationGrade(null);
@@ -37,7 +36,6 @@ const QualificationGradeList = () => {
   };
 
   const handleEdit = (qualificationGrade: QualificationGradeInterface) => {
-
     setEditingQualificationGrade(
       qualificationGradeFormatted(qualificationGrade)
     );
@@ -106,8 +104,8 @@ const QualificationGradeList = () => {
       onAdd={handleAdd}
       searchKey="grade"
       sortOptions={[
-        { value: "grade", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "grade", label: "За назвою" },
       ]}
     >
       <QualificationGradeTable
