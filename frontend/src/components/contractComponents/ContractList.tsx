@@ -36,6 +36,8 @@ const ContractList: React.FC = () => {
   const sort =
     (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
 
   const handleAdd = () => {
     setEditingContract(null);
@@ -82,9 +84,33 @@ const ContractList: React.FC = () => {
     setUrlSearchParams({ page: page.toString() });
   };
 
-  const filtered = contracts.filter((c: { fullName: string }) =>
-    c.fullName?.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleStartDateChange = (date: string | null) => {
+    setUrlSearchParams({ startDate: date });
+  };
+
+  const handleEndDateChange = (date: string | null) => {
+    setUrlSearchParams({ endDate: date });
+  };
+
+  const filtered = contracts.filter((c: ContractInterface) => {
+
+    const matchesSearch = c.fullName?.toLowerCase().includes(search.toLowerCase());
+    
+
+      let matchesDateRange = true;
+      if (startDate || endDate) {
+        const contractDateOnly = c.contractDate.split('T')[0];
+        
+        if (startDate && contractDateOnly < startDate) {
+          matchesDateRange = false;
+        }
+        if (endDate && contractDateOnly > endDate) {
+          matchesDateRange = false;
+        }
+      }
+    
+    return matchesSearch && matchesDateRange;
+  });
 
   const sorted = [...filtered].sort((a, b) => {
     const aVal = a[sort];
@@ -122,6 +148,13 @@ const ContractList: React.FC = () => {
         { value: "contractDate", label: "За датою договору" },
         { value: "fullName", label: "За ПІБ" },
       ]}
+      dateRange={{
+        startDate,
+        endDate,
+        onStartDateChange: handleStartDateChange,
+        onEndDateChange: handleEndDateChange,
+        label: "Фільтр по даті договору",
+      }}
       pagination={{
         currentPage,
         totalPages,

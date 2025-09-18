@@ -28,6 +28,8 @@ const OrderList = () => {
   const search = searchParams.get("search") || "";
   const sort = (searchParams.get("sort") as keyof OrderInterface) || "fullName";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
+  const startDate = searchParams.get("startDate");
+  const endDate = searchParams.get("endDate");
 
   const handleAdd = () => {
     setEditingOrder(null);
@@ -66,9 +68,35 @@ const OrderList = () => {
     setUrlSearchParams({ page: page.toString() });
   };
 
-  const filtered = orders.filter((e: { orderNumber: string }) =>
-    e.orderNumber?.toLowerCase().includes(search.toLowerCase())
-  );
+  const handleStartDateChange = (date: string | null) => {
+    setUrlSearchParams({ startDate: date });
+  };
+
+  const handleEndDateChange = (date: string | null) => {
+    setUrlSearchParams({ endDate: date });
+  };
+
+  const filtered = orders.filter((e: OrderInterface) => {
+    // Фільтрація по пошуку
+    const matchesSearch = e.orderNumber?.toLowerCase().includes(search.toLowerCase());
+    
+    // Фільтрація по діапазону дат
+    let matchesDateRange = true;
+    if (startDate || endDate) {
+      const orderDate = new Date(e.orderDate);
+      const start = startDate ? new Date(startDate) : null;
+      const end = endDate ? new Date(endDate) : null;
+      
+      if (start && orderDate < start) {
+        matchesDateRange = false;
+      }
+      if (end && orderDate > end) {
+        matchesDateRange = false;
+      }
+    }
+    
+    return matchesSearch && matchesDateRange;
+  });
 
   const sorted = [...filtered].sort((a, b) => {
     const aValue = a[sort];
@@ -111,6 +139,13 @@ const OrderList = () => {
         { value: "orderNumber", label: "За номером" },
         { value: "id", label: "За замовчуванням" },
       ]}
+      dateRange={{
+        startDate,
+        endDate,
+        onStartDateChange: handleStartDateChange,
+        onEndDateChange: handleEndDateChange,
+        label: "Фільтр по даті наказу",
+      }}
       pagination={{
         currentPage,
         totalPages,
