@@ -20,7 +20,7 @@ const Button: React.FC<ButtonProps> = ({
       fullWidth
       sx={{
         width: "fit-content",
-        alignSelf: {xs: "center", md: "stretch"},
+        alignSelf:  "center",
         textTransform: "uppercase",
         fontWeight: "bold",
       }}
