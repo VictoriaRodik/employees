@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, CircularProgress } from "@mui/material";
 import OrderTable from "./OrderTable";
 import OrderFormModal from "./OrderFormModal";
+import ExportOrdersButton from "./ExportOrdersButton";
 import { useOrders } from "../../hooks/useOrders";
 import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { OrderInterface } from "../../types/order";
@@ -131,6 +132,18 @@ const OrderList = () => {
 
   if (error) return <p>Помилка при завантаженні</p>;
 
+  const exportButton = (
+    <ExportOrdersButton
+      orders={sorted}
+      filters={{
+        search,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+        sort,
+      }}
+    />
+  );
+
   return (
     <List
       label="наказ"
@@ -154,6 +167,7 @@ const OrderList = () => {
         totalPages,
         onPageChange: handlePageChange,
       }}
+      extraToolbar={exportButton}
     >
       <OrderTable
         orders={paginatedData}

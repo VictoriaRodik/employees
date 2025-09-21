@@ -98,8 +98,6 @@ const List = <T extends string>({
         </Box>
       )}
 
-      {extraToolbar}
-
       {children}
       {pagination && (
         <Pagination
