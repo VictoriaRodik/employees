@@ -118,8 +118,8 @@ const GradeSalaryList = () => {
       onAdd={handleAdd}
       searchKey="baseSalary"
       sortOptions={[
-        { value: "baseSalary", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "baseSalary", label: "За назвою" },
       ]}
       pagination={{
         currentPage,

@@ -20,18 +20,15 @@ const OrderItemList = () => {
     deleteOrderItem,
   } = useOrderItems();
 
-
   const [modalOpen, setModalOpen] = useState(false);
   const [editingOrderItem, setEditingOrderItem] =
     useState<OrderItemInterface | null>(null);
-  const [copyingOrderItem, setCopyingOrderItem] =
-    useState(false);
+  const [copyingOrderItem, setCopyingOrderItem] = useState(false);
 
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
-    (searchParams.get("sort") as keyof OrderItemInterface) ||
-    "orderNumber";
+    (searchParams.get("sort") as keyof OrderItemInterface) || "orderNumber";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
@@ -41,17 +38,13 @@ const OrderItemList = () => {
   };
 
   const handleEdit = (orderItem: OrderItemInterface) => {
-    setEditingOrderItem(
-      orderItemFormatted(orderItem)
-    );
+    setEditingOrderItem(orderItemFormatted(orderItem));
     setCopyingOrderItem(false);
     setModalOpen(true);
   };
 
   const handleCopy = (orderItem: OrderItemInterface) => {
-    setEditingOrderItem(
-      orderItemFormatted(orderItem)
-    );
+    setEditingOrderItem(orderItemFormatted(orderItem));
     setCopyingOrderItem(true);
     setModalOpen(true);
   };
@@ -75,7 +68,7 @@ const OrderItemList = () => {
     setUrlSearchParams({ page: page.toString() });
   };
 
-    const filtered = orderItems.filter(
+  const filtered = orderItems.filter(
     (e: OrderItemInterface) =>
       e.orderNumber?.toLowerCase().includes(search.toLowerCase()) ||
       e.employeeFullName?.toLowerCase().includes(search.toLowerCase()) ||
@@ -121,12 +114,12 @@ const OrderItemList = () => {
       onAdd={handleAdd}
       searchKey="search"
       sortOptions={[
+        { value: "id", label: "За замовчуванням" },
         { value: "orderNumber", label: "За номером наказу" },
         { value: "orderDate", label: "За датою наказу" },
         { value: "employeeFullName", label: "За співробітником" },
         { value: "fieldDefinitionName", label: "За полем" },
         { value: "value", label: "За значенням" },
-        { value: "id", label: "За замовчуванням" },
       ]}
       pagination={{
         currentPage,
@@ -144,9 +137,7 @@ const OrderItemList = () => {
       <OrderItemFormModal
         open={modalOpen}
         title={
-          editingOrderItem && !copyingOrderItem
-            ? `Редагування`
-            : "Введення"
+          editingOrderItem && !copyingOrderItem ? `Редагування` : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}

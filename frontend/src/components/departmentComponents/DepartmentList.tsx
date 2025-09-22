@@ -26,7 +26,7 @@ const DepartmentList = () => {
 
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = (searchParams.get("sort") as keyof DepartmentInterface) || "fullName";
+  const sort = (searchParams.get("sort") as keyof DepartmentInterface) || "departmentName";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
 
   const handleAdd = () => {
@@ -103,8 +103,8 @@ const DepartmentList = () => {
       onAdd={handleAdd}
       searchKey="departmentName"
       sortOptions={[
-        { value: "departmentName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "departmentName", label: "За назвою" },
       ]}
       pagination={{
         currentPage,

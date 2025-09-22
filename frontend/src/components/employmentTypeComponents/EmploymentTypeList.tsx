@@ -21,14 +21,12 @@ const EmploymentTypeList = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEmploymentType, setEditingEmploymentType] =
     useState<EmploymentTypeInterface | null>(null);
-  const [copyingEmploymentType, setCopyingEmploymentType] =
-    useState(false);
+  const [copyingEmploymentType, setCopyingEmploymentType] = useState(false);
 
   const { searchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
-    (searchParams.get("sort") as keyof EmploymentTypeInterface) ||
-    "fullName";
+    (searchParams.get("sort") as keyof EmploymentTypeInterface) || "fullName";
 
   const handleAdd = () => {
     setEditingEmploymentType(null);
@@ -37,17 +35,13 @@ const EmploymentTypeList = () => {
   };
 
   const handleEdit = (employmentType: EmploymentTypeInterface) => {
-    setEditingEmploymentType(
-      employmentTypeFormatted(employmentType)
-    );
+    setEditingEmploymentType(employmentTypeFormatted(employmentType));
     setCopyingEmploymentType(false);
     setModalOpen(true);
   };
 
   const handleCopy = (employmentType: EmploymentTypeInterface) => {
-    setEditingEmploymentType(
-      employmentTypeFormatted(employmentType)
-    );
+    setEditingEmploymentType(employmentTypeFormatted(employmentType));
     setCopyingEmploymentType(true);
     setModalOpen(true);
   };
@@ -67,9 +61,8 @@ const EmploymentTypeList = () => {
     setCopyingEmploymentType(false);
   };
 
-  const filtered = employmentTypes.filter(
-    (e: { employmentTypeName: string }) =>
-      e.employmentTypeName?.toLowerCase().includes(search.toLowerCase())
+  const filtered = employmentTypes.filter((e: { employmentTypeName: string }) =>
+    e.employmentTypeName?.toLowerCase().includes(search.toLowerCase())
   );
 
   const sorted = [...filtered].sort((a, b) => {
@@ -105,8 +98,8 @@ const EmploymentTypeList = () => {
       onAdd={handleAdd}
       searchKey="employmentTypeName"
       sortOptions={[
-        { value: "employmentTypeName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "employmentTypeName", label: "За назвою" },
       ]}
     >
       <EmploymentTypeTable

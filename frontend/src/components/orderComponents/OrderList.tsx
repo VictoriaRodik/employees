@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Container, CircularProgress } from "@mui/material";
 import OrderTable from "./OrderTable";
 import OrderFormModal from "./OrderFormModal";
+import ExportOrdersButton from "./ExportOrdersButton";
 import { useOrders } from "../../hooks/useOrders";
 import { useUrlSearchParams } from "../../hooks/useUrlSearchParams";
 import { OrderInterface } from "../../types/order";
@@ -26,7 +27,7 @@ const OrderList = () => {
 
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
-  const sort = (searchParams.get("sort") as keyof OrderInterface) || "fullName";
+  const sort = (searchParams.get("sort") as keyof OrderInterface) || "orderNumber";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -77,16 +78,17 @@ const OrderList = () => {
   };
 
   const filtered = orders.filter((e: OrderInterface) => {
-    // Фільтрація по пошуку
-    const matchesSearch = e.orderNumber?.toLowerCase().includes(search.toLowerCase());
-    
-    // Фільтрація по діапазону дат
+
+    const matchesSearch = e.orderNumber
+      ?.toLowerCase()
+      .includes(search.toLowerCase());
+
     let matchesDateRange = true;
     if (startDate || endDate) {
       const orderDate = new Date(e.orderDate);
       const start = startDate ? new Date(startDate) : null;
       const end = endDate ? new Date(endDate) : null;
-      
+
       if (start && orderDate < start) {
         matchesDateRange = false;
       }
@@ -94,7 +96,7 @@ const OrderList = () => {
         matchesDateRange = false;
       }
     }
-    
+
     return matchesSearch && matchesDateRange;
   });
 
@@ -130,14 +132,28 @@ const OrderList = () => {
 
   if (error) return <p>Помилка при завантаженні</p>;
 
+  const exportButton = (
+    <ExportOrdersButton
+      orders={sorted}
+      filters={{
+        search,
+        startDate: startDate || undefined,
+        endDate: endDate || undefined,
+        sort,
+      }}
+    />
+  );
+
   return (
     <List
       label="наказ"
       onAdd={handleAdd}
       searchKey="orderNumber"
       sortOptions={[
-        { value: "orderNumber", label: "За номером" },
         { value: "id", label: "За замовчуванням" },
+        { value: "orderNumber", label: "За номером" },
+        { value: "orderDate", label: "За датою" },
+        { value: "orderTypeName", label: "За типом" },
       ]}
       dateRange={{
         startDate,
@@ -151,6 +167,7 @@ const OrderList = () => {
         totalPages,
         onPageChange: handlePageChange,
       }}
+      extraToolbar={exportButton}
     >
       <OrderTable
         orders={paginatedData}

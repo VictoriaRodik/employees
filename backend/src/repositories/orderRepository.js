@@ -9,7 +9,8 @@ export class OrderRepository extends BaseRepository {
       `SELECT orders.*, 
       order_types.name as order_type_name 
       FROM orders
-      LEFT JOIN order_types ON orders.order_type_id = order_types.id`
+      LEFT JOIN order_types ON orders.order_type_id = order_types.id
+      ORDER BY orders.order_date DESC, orders.id DESC`
     );
     return rows;
   }
@@ -19,7 +20,8 @@ export class OrderRepository extends BaseRepository {
       order_types.name as order_type_name 
       FROM orders
       LEFT JOIN order_types ON orders.order_type_id = order_types.id
-      WHERE orders.id = ?`,
+      WHERE orders.id = ?
+      ORDER BY orders.order_date DESC, orders.id DESC`,
       [id]
     );
     return rows[0];

@@ -28,7 +28,7 @@ const OrderTypeList = () => {
   const search = searchParams.get("search") || "";
   const sort =
     (searchParams.get("sort") as keyof OrderTypeInterface) ||
-    "fullName";
+    "orderTypeName";
 
   const handleAdd = () => {
     setEditingOrderType(null);
@@ -105,8 +105,9 @@ const OrderTypeList = () => {
       onAdd={handleAdd}
       searchKey="orderTypeName"
       sortOptions={[
-        { value: "orderTypeName", label: "За назвою" },
         { value: "id", label: "За замовчуванням" },
+        { value: "orderTypeName", label: "За назвою" },
+
       ]}
     >
       <OrderTypeTable

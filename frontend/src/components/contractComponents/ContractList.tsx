@@ -34,7 +34,7 @@ const ContractList: React.FC = () => {
   const { searchParams, setUrlSearchParams } = useUrlSearchParams();
   const search = searchParams.get("search") || "";
   const sort =
-    (searchParams.get("sort") as keyof ContractInterface) || "contractDate";
+    (searchParams.get("sort") as keyof ContractInterface) || "id";
   const currentPage = parseInt(searchParams.get("page") || "1", 10);
   const startDate = searchParams.get("startDate");
   const endDate = searchParams.get("endDate");
@@ -145,7 +145,9 @@ const ContractList: React.FC = () => {
       onAdd={handleAdd}
       searchKey="fullName"
       sortOptions={[
-        { value: "contractDate", label: "За датою договору" },
+        { value: "id", label: "За замовчуванням" },
+        { value: "contractNumber", label: "За номером" },
+        { value: "contractDate", label: "За датою" },
         { value: "fullName", label: "За ПІБ" },
       ]}
       dateRange={{

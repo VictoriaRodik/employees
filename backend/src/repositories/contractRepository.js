@@ -27,7 +27,8 @@ export class ContractRepository extends BaseRepository {
       organizations.director_full_name
       FROM contracts
       JOIN employees ON contracts.employee_id = employees.id
-      JOIN organizations ON contracts.organization_id = organizations.id`
+      JOIN organizations ON contracts.organization_id = organizations.id
+      ORDER BY contracts.contract_date DESC, contracts.id DESC`
     );
     return rows;
   }
@@ -87,7 +88,8 @@ export class ContractRepository extends BaseRepository {
       FROM contracts
       JOIN employees ON contracts.employee_id = employees.id
       JOIN organizations ON contracts.organization_id = organizations.id 
-      WHERE contracts.id = ?`,
+      WHERE contracts.id = ?
+      ORDER BY contracts.contract_date DESC, contracts.id DESC`,
       [id]
     );
     return rows[0];
