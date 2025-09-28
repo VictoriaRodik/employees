@@ -247,7 +247,7 @@ describe("FieldDefinitionList", () => {
 
     fireEvent.click(screen.getAllByText("Copy")[1]);
     expect(screen.getByTestId("modal")).toBeInTheDocument();
-    expect(screen.getByText("Введення")).toBeInTheDocument();
+    expect(screen.getByText("Копіювання")).toBeInTheDocument();
   });
 
   it("deletes fieldDefinition", () => {

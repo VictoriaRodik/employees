@@ -121,11 +121,13 @@ const WorkScheduleList = () => {
         title={
           editingWorkSchedule && !copyingWorkSchedule
             ? `Редагування`
+            : copyingWorkSchedule
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingWorkSchedule}
+        initialValues={editingWorkSchedule || copyingWorkSchedule ? editingWorkSchedule : null}
       />
     </List>
   );

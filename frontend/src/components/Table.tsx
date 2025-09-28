@@ -30,17 +30,31 @@ const GeneralTable = <T,>({ data, columns, renderActions, renderExtraActions }: 
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, index) => (
-            <TableRow key={index}>
-              {columns.map((col) => (
-                <TableCell key={col.key as string}>
-                  {row[col.key] ? String(row[col.key]) : '-'}
-                </TableCell>
-              ))}
-              {renderActions && <TableCell>{renderActions(row)}</TableCell>}
-              {renderExtraActions && <TableCell>{renderExtraActions(row)}</TableCell>}
-            </TableRow>
-          ))}
+          {data.map((row, index) => {
+            const rowData = row as T & { _onClick?: () => void; _isSelected?: boolean; _key?: string | number };
+            return (
+              <TableRow 
+                key={rowData._key || index}
+                hover
+                selected={rowData._isSelected}
+                onClick={rowData._onClick}
+                sx={{ 
+                  cursor: rowData._onClick ? 'pointer' : 'default',
+                  '&:hover': {
+                    backgroundColor: rowData._onClick ? 'action.hover' : 'inherit'
+                  }
+                }}
+              >
+                {columns.map((col) => (
+                  <TableCell key={col.key as string}>
+                    {row[col.key] ? String(row[col.key]) : '-'}
+                  </TableCell>
+                ))}
+                {renderActions && <TableCell>{renderActions(row)}</TableCell>}
+                {renderExtraActions && <TableCell>{renderExtraActions(row)}</TableCell>}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

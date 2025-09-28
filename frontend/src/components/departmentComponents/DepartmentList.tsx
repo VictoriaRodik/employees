@@ -121,10 +121,10 @@ const DepartmentList = () => {
 
       <DepartmentFormModal
         open={modalOpen}
-        title={editingDepartment && !copyingDepartment ? `Редагування` : "Введення"}
+        title={editingDepartment && !copyingDepartment ? `Редагування` :copyingDepartment ? "Копіювання" : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingDepartment}
+        initialValues={editingDepartment || copyingDepartment ? editingDepartment : null}
       />
     </List>
   );

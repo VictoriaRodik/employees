@@ -109,11 +109,13 @@ const OrganizationList = () => {
         title={
           editingOrganization && !copyingOrganization
             ? `Редагування`
+            : copyingOrganization
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingOrganization}
+        initialValues={editingOrganization || copyingOrganization ? editingOrganization : null}
       />
     </List>
   );

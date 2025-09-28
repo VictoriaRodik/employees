@@ -120,11 +120,13 @@ const QualificationGradeList = () => {
         title={
           editingQualificationGrade && !copyingQualificationGrade
             ? `Редагування`
+            : copyingQualificationGrade
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingQualificationGrade}
+        initialValues={editingQualificationGrade || copyingQualificationGrade ? editingQualificationGrade : null}
       />
     </List>
   );

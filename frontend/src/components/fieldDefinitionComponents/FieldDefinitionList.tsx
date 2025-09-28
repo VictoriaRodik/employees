@@ -121,11 +121,13 @@ const FieldDefinitionList = () => {
         title={
           editingFieldDefinition && !copyingFieldDefinition
             ? `Редагування`
+            : copyingFieldDefinition
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingFieldDefinition}
+        initialValues={editingFieldDefinition || copyingFieldDefinition ? editingFieldDefinition : null}
       />
     </List>
   );

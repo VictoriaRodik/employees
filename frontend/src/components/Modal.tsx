@@ -20,7 +20,7 @@ const Modal = ({ open, onClose, title, children, actions }: ModalProps) => {
       open={open}
       onClose={onClose}
       fullWidth
-      maxWidth="sm"
+      maxWidth="md"
       disableEnforceFocus={false}
       autoFocus={true}
     >

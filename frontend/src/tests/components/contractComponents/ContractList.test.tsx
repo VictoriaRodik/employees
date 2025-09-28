@@ -296,7 +296,7 @@ describe("ContractList", () => {
     render(<ContractList />);
     fireEvent.click(screen.getAllByText("Copy")[1]);
     expect(screen.getByTestId("contract-form-modal")).toBeInTheDocument();
-    expect(screen.getByText("Введення")).toBeInTheDocument();
+    expect(screen.getByText("Копіювання")).toBeInTheDocument();
     fireEvent.click(screen.getByText("Submit"));
     await waitFor(() => {
       expect(mockUseContracts.createContract.mutate).toHaveBeenCalled();

@@ -121,11 +121,13 @@ const EmploymentConditionList = () => {
         title={
           editingEmploymentCondition && !copyingEmploymentCondition
             ? `Редагування`
+            : copyingEmploymentCondition
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmploymentCondition}
+        initialValues={editingEmploymentCondition || copyingEmploymentCondition ? editingEmploymentCondition : null}
       />
     </List>
   );
