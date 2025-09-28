@@ -115,11 +115,13 @@ const ReferenceSourceList = () => {
         title={
           editingReferenceSource && !copyingReferenceSource
             ? `Редагування`
+            : copyingReferenceSource
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingReferenceSource}
+        initialValues={editingReferenceSource || copyingReferenceSource ? editingReferenceSource : null}
       />
     </List>
   );

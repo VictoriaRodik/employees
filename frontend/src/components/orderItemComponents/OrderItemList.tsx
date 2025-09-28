@@ -137,11 +137,11 @@ const OrderItemList = () => {
       <OrderItemFormModal
         open={modalOpen}
         title={
-          editingOrderItem && !copyingOrderItem ? `Редагування` : "Введення"
+          editingOrderItem && !copyingOrderItem ? `Редагування` :copyingOrderItem ? "Копіювання" : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingOrderItem}
+        initialValues={editingOrderItem || copyingOrderItem ? editingOrderItem : null}
       />
     </List>
   );

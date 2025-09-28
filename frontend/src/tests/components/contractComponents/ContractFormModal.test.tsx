@@ -1,5 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import ContractFormModal from "../../../components/contractComponents/ContractFormModal";
 import { useEmployees } from "../../../hooks/useEmployees";
 import { useOrganizations } from "../../../hooks/useOrganizations";
@@ -24,6 +25,30 @@ vi.mock("../../../components/Modal", () => ({
           {children}
         </>
       )}
+    </div>
+  ),
+}));
+
+vi.mock("../../../components/EmployeeSelector", () => ({
+  default: ({ value, onChange, label, error, helperText }: any) => (
+    <div data-testid="employee-selector">
+      <label>{label}</label>
+      <input
+        data-testid="employee-input"
+        value={value}
+        readOnly
+        placeholder="Оберіть співробітника..."
+      />
+      <button
+        data-testid="employee-select-button"
+        onClick={() => {
+          // Симулюємо вибір співробітника
+          onChange(1, "John Doe");
+        }}
+      >
+        Вибрати співробітника
+      </button>
+      {error && <div data-testid="employee-error">{helperText}</div>}
     </div>
   ),
 }));
@@ -91,7 +116,8 @@ describe("ContractFormModal", () => {
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
-    expect(screen.getAllByRole("combobox")).toHaveLength(2);
+    expect(screen.getAllByRole("combobox")).toHaveLength(1);
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
   });
 
   it("does not render Modal content when closed", () => {
@@ -135,11 +161,12 @@ describe("ContractFormModal", () => {
       <ContractFormModal {...defaultProps} initialValues={initialValues} />
     );
 
-    const selectElement = screen.getAllByRole("combobox")[1];
+    const selectElement = screen.getAllByRole("combobox")[0];
     fireEvent.mouseDown(selectElement);
     const options = screen.getAllByRole("option");
 
     expect(selectElement).toBeInTheDocument();
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
     options.forEach((option) => {
       expect(option).toBeInTheDocument();
     });
@@ -147,22 +174,22 @@ describe("ContractFormModal", () => {
     const dateInput = screen.getByLabelText(
       "Дата контракту"
     ) as HTMLInputElement;
+    const employeeInput = screen.getByTestId("employee-input") as HTMLInputElement;
+    
     expect(dateInput.value).toBe("2025-01-01");
+    expect(employeeInput.value).toBe("John Doe");
     expect(screen.getByText("Зберегти зміни")).toBeInTheDocument();
   });
 
   it("passes onSubmit to ContractForm and calls it with valid data", async () => {
     render(<ContractFormModal {...defaultProps} />);
 
+    await userEvent.click(screen.getByTestId("employee-select-button"));
+
     const selectOrg = screen.getAllByRole("combobox")[0];
     fireEvent.mouseDown(selectOrg);
     const optionOrg = screen.getAllByRole("option")[0];
     fireEvent.click(optionOrg);
-
-    const selectEmployee = screen.getAllByRole("combobox")[1];
-    fireEvent.mouseDown(selectEmployee);
-    const optionEmployee = screen.getAllByRole("option")[0];
-    fireEvent.click(optionEmployee);
 
     fireEvent.change(screen.getByLabelText("Дата контракту"), {
       target: { value: "2025-01-01" },

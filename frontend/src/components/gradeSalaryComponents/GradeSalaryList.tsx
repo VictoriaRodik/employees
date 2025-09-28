@@ -139,11 +139,13 @@ const GradeSalaryList = () => {
         title={
           editingGradeSalary && !copyingGradeSalary
             ? `Редагування`
+            : copyingGradeSalary
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingGradeSalary}
+        initialValues={editingGradeSalary || copyingGradeSalary ? editingGradeSalary : null}
       />
     </List>
   );

@@ -2,10 +2,9 @@ import { Formik, Form } from "formik";
 import * as Yup from "yup";
 import { Grid2, Button, MenuItem, TextField } from "@mui/material";
 import TextInput from "../TextInput";
+import EmployeeSelector from "../EmployeeSelector";
 import { ContractInterface } from "../../types/contract";
-import { useEmployees } from "../../hooks/useEmployees";
 import { contractFormatted } from "../../utils/contractFormatted";
-import { EmployeeInterface } from "../../types/employee";
 import { OrganizationInterface } from "../../types/organization";
 import { useOrganizations } from "../../hooks/useOrganizations";
 interface ContractFormProps {
@@ -17,8 +16,8 @@ interface ContractFormProps {
 const defaultValues: ContractInterface = {
   id: 0,
   employeeId: "",
-  contractDate: new Date().toLocaleDateString("en-CA"),
-  contractEndDate: new Date().toLocaleDateString("en-CA"),
+  contractDate: new Date().toISOString().slice(0, 10),
+  contractEndDate: new Date().toISOString().slice(0, 10),
   contractAmount: "",
   contractContent: "",
   contractNumber: "",
@@ -26,7 +25,7 @@ const defaultValues: ContractInterface = {
   fullName: "",
   passportSeries: "",
   passportNumber: "",
-  passportIssueDate: new Date().toLocaleDateString("en-CA"),
+  passportIssueDate: new Date().toISOString().slice(0, 10),
   passportIssuedBy: "",
   organizationId: "",
   name: "",
@@ -45,7 +44,6 @@ const ContractForm: React.FC<ContractFormProps> = ({
   initialValues,
   onSubmit
 }) => {
-  const { data: employees = [] } = useEmployees();
   const { data: organizations = [] } = useOrganizations();
 
   const validationSchema = Yup.object({
@@ -69,7 +67,7 @@ const ContractForm: React.FC<ContractFormProps> = ({
       validationSchema={validationSchema}
       onSubmit={onSubmit}
     >
-      {({ isSubmitting, values, handleChange }) => (
+      {({ isSubmitting, values, handleChange, setFieldValue, errors, touched }) => (
         <Form>
           <Grid2 container spacing={2} sx={{ mt: 2 }}>
           <Grid2 size={{ xs: 6 }}>
@@ -89,20 +87,16 @@ const ContractForm: React.FC<ContractFormProps> = ({
               </TextField>
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
-              <TextField
-                select
-                name="employeeId"
+              <EmployeeSelector
+                value={values.fullName || ""}
+                onChange={(employeeId, employeeName) => {
+                  setFieldValue("employeeId", employeeId);
+                  setFieldValue("fullName", employeeName);
+                }}
+                error={touched.employeeId && Boolean(errors.employeeId)}
+                helperText={touched.employeeId && errors.employeeId ? errors.employeeId : undefined}
                 label="Співробітник"
-                value={employees.length > 0 ? values.employeeId : ""}
-                onChange={handleChange}
-                fullWidth
-              >
-                {employees.map((employee: EmployeeInterface) => (
-                  <MenuItem key={employee.id} value={employee.id}>
-                    {employee.fullName} ({employee.personnelNumber})
-                  </MenuItem>
-                ))}
-              </TextField>
+              />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextInput

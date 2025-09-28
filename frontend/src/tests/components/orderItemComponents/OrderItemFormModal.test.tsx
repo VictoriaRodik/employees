@@ -36,6 +36,30 @@ vi.mock("../../../components/Modal", () => ({
   ),
 }));
 
+vi.mock("../../../components/EmployeeSelector", () => ({
+  default: ({ value, onChange, label, error, helperText }: any) => (
+    <div data-testid="employee-selector">
+      <label>{label}</label>
+      <input
+        data-testid="employee-input"
+        value={value}
+        readOnly
+        placeholder="Оберіть співробітника..."
+      />
+      <button
+        data-testid="employee-select-button"
+        onClick={() => {
+          // Симулюємо вибір співробітника
+          onChange(1, "John Doe");
+        }}
+      >
+        Вибрати співробітника
+      </button>
+      {error && <div data-testid="employee-error">{helperText}</div>}
+    </div>
+  ),
+}));
+
 describe("OrderItemFormModal", () => {
   const mockOrders: OrderInterface[] = [
     {
@@ -122,7 +146,8 @@ describe("OrderItemFormModal", () => {
     const modal = screen.getByTestId("modal");
     expect(modal).toBeInTheDocument();
     expect(screen.getByText("Test Modal")).toBeInTheDocument();
-    expect(screen.getAllByRole("combobox")).toHaveLength(3);
+    expect(screen.getAllByRole("combobox")).toHaveLength(2);
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
   });
 
   it("does not render Modal content when closed", () => {
@@ -154,9 +179,14 @@ describe("OrderItemFormModal", () => {
       />
     );
 
-    expect(screen.getAllByRole("combobox")).toHaveLength(3);
+    expect(screen.getAllByRole("combobox")).toHaveLength(2);
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
+    
     const valueInput = screen.getByRole("textbox", { name: "Field A" }) as HTMLInputElement;
+    const employeeInput = screen.getByTestId("employee-input") as HTMLInputElement;
+    
     expect(valueInput.value).toBe("Some value");
+    expect(employeeInput.value).toBe("John Doe");
     expect(screen.getByText("Зберегти зміни")).toBeInTheDocument();
   });
 
@@ -165,8 +195,9 @@ describe("OrderItemFormModal", () => {
 
     await userEvent.click(screen.getByLabelText("Наказ"));
     await userEvent.click(screen.getByText("№ ORD-1 від 2025-01-01"));
-    await userEvent.click(screen.getByLabelText("Співробітник"));
-    await userEvent.click(screen.getByText("John Doe (001)"));
+    
+    await userEvent.click(screen.getByTestId("employee-select-button"));
+    
     await userEvent.click(screen.getByLabelText("Поле"));
     await userEvent.click(screen.getByText("Field A"));
     fireEvent.change(screen.getByRole("textbox", { name: "Field A" }), {
@@ -183,7 +214,6 @@ describe("OrderItemFormModal", () => {
           fieldId: 1,
           value: "Test 2",
         }),
-
         expect.any(Object)
       );
     });

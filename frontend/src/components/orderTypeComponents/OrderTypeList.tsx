@@ -122,11 +122,13 @@ const OrderTypeList = () => {
         title={
           editingOrderType && !copyingOrderType
             ? `Редагування`
+            : copyingOrderType
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingOrderType}
+        initialValues={editingOrderType || copyingOrderType ? editingOrderType : null}
       />
     </List>
   );

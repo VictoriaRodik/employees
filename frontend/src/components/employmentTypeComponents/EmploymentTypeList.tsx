@@ -114,11 +114,13 @@ const EmploymentTypeList = () => {
         title={
           editingEmploymentType && !copyingEmploymentType
             ? `Редагування`
+            : copyingEmploymentType
+            ? "Копіювання"
             : "Введення"
         }
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmploymentType}
+        initialValues={editingEmploymentType || copyingEmploymentType ? editingEmploymentType : null}
       />
     </List>
   );

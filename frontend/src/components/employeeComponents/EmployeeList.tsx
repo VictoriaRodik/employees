@@ -122,10 +122,10 @@ const EmployeeList = () => {
 
       <EmployeeFormModal
         open={modalOpen}
-        title={editingEmployee && !copyingEmployee ? `Редагування` : "Введення"}
+        title={editingEmployee && !copyingEmployee ? `Редагування` :copyingEmployee ? "Копіювання" : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingEmployee}
+        initialValues={editingEmployee || copyingEmployee ? editingEmployee : null}
       />
     </List>
   );

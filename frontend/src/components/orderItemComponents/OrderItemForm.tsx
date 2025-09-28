@@ -4,12 +4,11 @@ import { Grid2, Button, TextField, MenuItem } from "@mui/material";
 import { OrderItemInterface } from "../../types/orderItem";
 import { orderItemFormatted } from "../../utils/orderItemFormatted";
 import { useOrders } from "../../hooks/useOrders";
-import { useEmployees } from "../../hooks/useEmployees";
 import { useFieldDefinitions } from "../../hooks/useFieldDefinitions";
-import { EmployeeInterface } from "../../types/employee";
 import { OrderInterface } from "../../types/order";
 import { FieldDefinitionInterface } from "../../types/fieldDefinition";
 import DynamicField from "../referenceSourceComponents/DynamicField";
+import EmployeeSelector from "../EmployeeSelector";
 
 interface orderItemFormProps {
   initialValues?: OrderItemInterface | null;
@@ -35,7 +34,6 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
   onSubmit,
 }) => {
   const { data: orders = [] } = useOrders();
-  const { data: employees = [] } = useEmployees();
   const { data: fieldDefinitions = [] } = useFieldDefinitions();
 
   const validationSchema = Yup.object({
@@ -96,29 +94,16 @@ const OrderItemForm: React.FC<orderItemFormProps> = ({
             </Grid2>
 
             <Grid2 size={{ xs: 6 }}>
-              <TextField
-                select
-                name="employeeId"
-                label="Співробітник"
-                value={
-                  employees.length > 0 && values.employeeId > 0
-                    ? values.employeeId
-                    : ""
-                }
-                onChange={handleChange}
-                fullWidth
+              <EmployeeSelector
+                value={values.employeeFullName || ""}
+                onChange={(employeeId, employeeName) => {
+                  setFieldValue("employeeId", employeeId);
+                  setFieldValue("employeeFullName", employeeName);
+                }}
                 error={touched.employeeId && Boolean(errors.employeeId)}
-                helperText={touched.employeeId && errors.employeeId}
-              >
-                <MenuItem value="">
-                  <em>Оберіть співробітника...</em>
-                </MenuItem>
-                {employees.map((employee: EmployeeInterface) => (
-                  <MenuItem key={employee.id} value={employee.id}>
-                    {employee.fullName} ({employee.personnelNumber})
-                  </MenuItem>
-                ))}
-              </TextField>
+                helperText={touched.employeeId && errors.employeeId ? errors.employeeId : undefined}
+                label="Співробітник"
+              />
             </Grid2>
             <Grid2 size={{ xs: 6 }}>
               <TextField

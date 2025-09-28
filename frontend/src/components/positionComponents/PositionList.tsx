@@ -128,10 +128,10 @@ const PositionList = () => {
 
       <PositionFormModal
         open={modalOpen}
-        title={editingPosition && !copyingPosition ? `Редагування` : "Введення"}
+        title={editingPosition && !copyingPosition ? `Редагування` :copyingPosition ? "Копіювання" : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingPosition}
+        initialValues={editingPosition || copyingPosition ? editingPosition : null}
       />
     </List>
   );

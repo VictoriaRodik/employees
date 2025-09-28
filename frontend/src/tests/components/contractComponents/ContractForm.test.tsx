@@ -28,6 +28,30 @@ vi.mock("../../../utils/contractFormatted", () => ({
   }),
 }));
 
+vi.mock("../../../components/EmployeeSelector", () => ({
+  default: ({ value, onChange, label, error, helperText }: any) => (
+    <div data-testid="employee-selector">
+      <label>{label}</label>
+      <input
+        data-testid="employee-input"
+        value={value}
+        readOnly
+        placeholder="Оберіть співробітника..."
+      />
+      <button
+        data-testid="employee-select-button"
+        onClick={() => {
+          // Симулюємо вибір співробітника
+          onChange(1, "John Doe");
+        }}
+      >
+        Вибрати співробітника
+      </button>
+      {error && <div data-testid="employee-error">{helperText}</div>}
+    </div>
+  ),
+}));
+
 describe("ContractForm", () => {
   const mockEmployees: EmployeeInterface[] = [
     {
@@ -86,7 +110,7 @@ describe("ContractForm", () => {
   it("renders all fields with default values", () => {
     render(<ContractForm {...defaultProps} />);
 
-    expect(screen.getByLabelText("Співробітник")).toBeInTheDocument();
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
     expect(screen.getByLabelText("Замовник")).toBeInTheDocument();
     expect(screen.getByLabelText("Дата контракту")).toBeInTheDocument();
     expect(
@@ -101,9 +125,7 @@ describe("ContractForm", () => {
   it("renders options in select fields", async () => {
     render(<ContractForm {...defaultProps} />);
 
-    await userEvent.click(screen.getByLabelText("Співробітник"));
-    expect(screen.getByText("John Doe (001)")).toBeInTheDocument();
-    expect(screen.getByText("Jane Smith (002)")).toBeInTheDocument();
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
 
     await userEvent.click(screen.getByLabelText("Замовник"));
     expect(screen.getByText("Company (32228978)")).toBeInTheDocument();
@@ -121,7 +143,7 @@ describe("ContractForm", () => {
       contractContent: "Test contract",
       contractNumber: "C123",
       taxId: "",
-      fullName: "",
+      fullName: "John Doe",
       passportSeries: "",
       passportNumber: "",
       passportIssueDate: "2023-01-01",
@@ -144,11 +166,11 @@ describe("ContractForm", () => {
     const contractDateInput = screen.getByLabelText(
       "Дата контракту"
     ) as HTMLInputElement;
+    const employeeInput = screen.getByTestId("employee-input") as HTMLInputElement;
 
     await waitFor(() => {
-      const hiddenInput = screen.getByDisplayValue("1");
-      expect(hiddenInput).toHaveAttribute("name", "employeeId");
       expect(contractDateInput.value).toBe("2023-01-01");
+      expect(employeeInput.value).toBe("John Doe");
     });
     expect(
       screen.getByRole("button", { name: "Зберегти зміни" })
@@ -160,8 +182,7 @@ describe("ContractForm", () => {
 
     const user = userEvent.setup();
 
-    await user.click(screen.getByLabelText("Співробітник"));
-    await user.click(screen.getByText("John Doe (001)"));
+    await user.click(screen.getByTestId("employee-select-button"));
 
     await userEvent.click(screen.getByLabelText("Замовник"));
     await user.click(screen.getByText("Company (32228978)"));
@@ -209,8 +230,8 @@ describe("ContractForm", () => {
     render(<ContractForm {...defaultProps} onSubmit={slowOnSubmit} />);
 
     const user = userEvent.setup();
-    await user.click(screen.getByLabelText("Співробітник"));
-    await user.click(screen.getByText("John Doe (001)"));
+    
+    await user.click(screen.getByTestId("employee-select-button"));
 
     await userEvent.click(screen.getByLabelText("Замовник"));
     await user.click(screen.getByText("Company (32228978)"));

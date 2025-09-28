@@ -26,6 +26,30 @@ vi.mock("../../../hooks/useOrderItems", () => ({
   useOrderItems: vi.fn(),
 }));
 
+vi.mock("../../../components/EmployeeSelector", () => ({
+  default: ({ value, onChange, label, error, helperText }: any) => (
+    <div data-testid="employee-selector">
+      <label>{label}</label>
+      <input
+        data-testid="employee-input"
+        value={value}
+        readOnly
+        placeholder="Оберіть співробітника..."
+      />
+      <button
+        data-testid="employee-select-button"
+        onClick={() => {
+          // Симулюємо вибір співробітника
+          onChange(1, "John Doe");
+        }}
+      >
+        Вибрати співробітника
+      </button>
+      {error && <div data-testid="employee-error">{helperText}</div>}
+    </div>
+  ),
+}));
+
 
 describe("OrderItemForm", () => {
   const mockEmployees: EmployeeInterface[] = [
@@ -108,7 +132,7 @@ describe("OrderItemForm", () => {
     render(<OrderItemForm {...defaultProps} />);
 
     expect(screen.getByLabelText("Наказ")).toBeInTheDocument();
-    expect(screen.getByLabelText("Співробітник")).toBeInTheDocument();
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
     expect(screen.getByLabelText("Поле")).toBeInTheDocument();
     expect(screen.getByLabelText("Значення")).toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Додати" })).toBeInTheDocument();
@@ -120,6 +144,8 @@ describe("OrderItemForm", () => {
     await userEvent.click(screen.getByLabelText("Наказ"));
     expect(screen.getByText("№ ORD-1 від 2025-01-01")).toBeInTheDocument();
     expect(screen.getByText("№ ORD-2 від 2025-01-02")).toBeInTheDocument();
+    
+    expect(screen.getByTestId("employee-selector")).toBeInTheDocument();
   });
 
   it("renders with initial values when provided", async () => {
@@ -141,9 +167,11 @@ describe("OrderItemForm", () => {
     );
 
     const valueInput = screen.getByRole("textbox", { name: "Field A" }) as HTMLInputElement;
+    const employeeInput = screen.getByTestId("employee-input") as HTMLInputElement;
 
     await waitFor(() => {
       expect(valueInput.value).toBe("Some value");
+      expect(employeeInput.value).toBe("John Doe");
     });
     expect(
       screen.getByRole("button", { name: "Зберегти зміни" })
@@ -155,8 +183,9 @@ describe("OrderItemForm", () => {
 
     await userEvent.click(screen.getByLabelText("Наказ"));
     await userEvent.click(screen.getByText("№ ORD-1 від 2025-01-01"));
-    await userEvent.click(screen.getByLabelText("Співробітник"));
-    await userEvent.click(screen.getByText("John Doe (001)"));
+    
+    await userEvent.click(screen.getByTestId("employee-select-button"));
+    
     await userEvent.click(screen.getByLabelText("Поле"));
     await userEvent.click(screen.getByText("Field A"));
     fireEvent.change(screen.getByRole("textbox", { name: "Field A" }), {
@@ -188,8 +217,9 @@ describe("OrderItemForm", () => {
 
     await userEvent.click(screen.getByLabelText("Наказ"));
     await userEvent.click(screen.getByText("№ ORD-1 від 2025-01-01"));
-    await userEvent.click(screen.getByLabelText("Співробітник"));
-    await userEvent.click(screen.getByText("John Doe (001)"));
+    
+    await userEvent.click(screen.getByTestId("employee-select-button"));
+    
     await userEvent.click(screen.getByLabelText("Поле"));
     await userEvent.click(screen.getByText("Field A"));
     fireEvent.change(screen.getByRole("textbox", { name: "Field A" }), {

@@ -174,10 +174,10 @@ const ContractList: React.FC = () => {
 
       <ContractFormModal
         open={modalOpen}
-        title={editingContract && !copyingContract ? `Редагування` : "Введення"}
+        title={editingContract && !copyingContract ? `Редагування` :copyingContract ? "Копіювання" : "Введення"}
         onClose={() => setModalOpen(false)}
         onSubmit={handleSubmit}
-        initialValues={editingContract}
+        initialValues={editingContract || copyingContract ? editingContract : null}
       />
 
       {previewContract && (
