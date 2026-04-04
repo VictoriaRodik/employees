@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 
 interface EmployeeProfilePDFProps {
   data: EmployeeProfile;
+  year?: number;
 }
 
 const Row = ({
@@ -30,9 +31,9 @@ const Row = ({
   </View>
 );
 
-const EmployeeProfilePDF = ({ data }: EmployeeProfilePDFProps) => {
+const EmployeeProfilePDF = ({ data, year }: EmployeeProfilePDFProps) => {
   const { employee } = data;
-  const currentYear = new Date().getFullYear();
+  const currentYear = year ?? new Date().getFullYear();
   type OrderItem = NonNullable<EmployeeProfile["orderItems"]>[number];
   const allItems = (data.orderItems || []) as OrderItem[];
   const byCurrentYear = allItems.filter(

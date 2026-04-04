@@ -16,6 +16,26 @@ const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
   const [year, setYear] = useState<number>(new Date().getFullYear());
   type OrderItem = NonNullable<EmployeeProfile["orderItems"]>[number];
 
+  const shouldIncludeEmployee = (profile: EmployeeProfile): boolean => {
+    const items: OrderItem[] = (profile.orderItems ?? []) as OrderItem[];
+    const hasOrderInYear = items.some(
+      (oi) => new Date(oi.orderDate).getFullYear() === year
+    );
+    const hasPositionDeptGrade =
+      !!profile.currentPosition ||
+      !!profile.currentDepartment ||
+      !!profile.currentQualification;
+    const contracts = profile.contracts ?? [];
+    const hasContractInYear = contracts.some((c) => {
+      const start = new Date(c.contractDate);
+      const end = c.contractEndDate ? new Date(c.contractEndDate) : null;
+      const yearStart = new Date(year, 0, 1);
+      const yearEnd = new Date(year, 11, 31);
+      return start <= yearEnd && (end === null || end >= yearStart);
+    });
+    return hasOrderInYear || hasPositionDeptGrade || hasContractInYear;
+  };
+
   const handleExportAll = async () => {
     setExporting(true);
     try {
@@ -32,6 +52,7 @@ const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
         if (!res.ok) continue;
         const raw: ApiEmployeeProfile = await res.json();
         const profile: EmployeeProfile = mapFromApiEmployeeProfile(raw);
+        if (!shouldIncludeEmployee(profile)) continue;
         const items: OrderItem[] = (profile.orderItems ?? []) as OrderItem[];
         const blob = await pdf(
           <EmployeeProfilePDF
@@ -39,6 +60,7 @@ const ExportProfilesButton = ({ employees }: ExportProfilesButtonProps) => {
               ...profile,
               orderItems: items.filter((oi) => new Date(oi.orderDate).getFullYear() === year),
             }}
+            year={year}
           />
         ).toBlob();
         const arrBuf = await blob.arrayBuffer();

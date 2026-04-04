@@ -55,6 +55,12 @@ export interface EmployeeProfile {
       value?: string | null;
       valueId?: number | null;
     }>;
+    contracts?: Array<{
+      id: number;
+      contractDate: string;
+      contractEndDate?: string | null;
+      contractNumber?: string;
+    }>;
 }
 
 export interface ApiEmployeeProfile {
@@ -105,6 +111,18 @@ export interface ApiEmployeeProfile {
     grade?: string;
   } | null;
   order_items?: Array<ApiOrderItem>;
+  contracts?: Array<{
+    id: number;
+    contract_date: string;
+    contract_end_date?: string | null;
+    contract_number?: string;
+  }>;
+  latest_contract?: {
+    id: number;
+    contract_date: string;
+    contract_end_date?: string | null;
+    contract_number?: string;
+  } | null;
 }
 
 export interface ApiOrderItem {

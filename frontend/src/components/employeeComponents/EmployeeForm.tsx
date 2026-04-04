@@ -34,8 +34,8 @@ const EmployeeForm: React.FC<EmployeeFormProps> = ({
       .required("Обов'язкове поле"),
     fullName: Yup.string().required("Обов'язкове поле"),
     passportSeries: Yup.string().matches(
-      /^[А-ЯІЄҐA-Z]{2}$/,
-      "Має бути 2 літери"
+      /^[А-ЯІЄҐA-Z]{3}$/,
+      "Має бути 3 літери"
     ),
     passportNumber: Yup.string()
       .matches(/^\d+$/, "Має містити лише цифри")

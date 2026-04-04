@@ -81,5 +81,12 @@ export const mapFromApiEmployeeProfile = (p: ApiEmployeeProfile): EmployeeProfil
         value: oi.value ?? null,
         valueId: oi.value_id ?? null,
       })),
+
+    contracts: (p.contracts ?? []).map((c) => ({
+      id: c.id,
+      contractDate: c.contract_date,
+      contractEndDate: c.contract_end_date ?? null,
+      contractNumber: c.contract_number,
+    })),
   };
 };
