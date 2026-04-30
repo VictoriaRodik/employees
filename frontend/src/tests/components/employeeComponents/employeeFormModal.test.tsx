@@ -49,7 +49,7 @@ describe("EmployeeFormModal", () => {
       taxId: "1234567890",
       fullName: "John Doe",
       address: "123 Main St",
-      passportSeries: "АБВ",
+      passportSeries: "АБ",
       passportNumber: "123456",
       passportIssueDate: "2023-01-01",
       passportIssuedBy: "Local Office",
@@ -79,7 +79,7 @@ describe("EmployeeFormModal", () => {
       target: { value: "John Doe" },
     });
     fireEvent.change(screen.getByLabelText("Серія паспорта"), {
-      target: { value: "АБВ" },
+      target: { value: "АБ" },
     });
     fireEvent.change(screen.getByLabelText("Номер паспорта або ID-картки"), {
       target: { value: "123456" },
@@ -100,7 +100,7 @@ describe("EmployeeFormModal", () => {
         expect.objectContaining({
           taxId: "1234567890",
           fullName: "John Doe",
-          passportSeries: "АБВ",
+          passportSeries: "АБ",
           passportNumber: "123456",
           passportIssueDate: "2023-01-01",
           passportIssuedBy: "5600",
